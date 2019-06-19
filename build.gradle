@@ -70,6 +70,8 @@ dependencies {
 
 	compile('org.springframework.boot:spring-boot-starter-actuator')
 
+	compile('org.bouncycastle:bcpg-jdk16:1.45')
+
 	compile("org.projectlombok:lombok")
 	annotationProcessor("org.projectlombok:lombok")
 
