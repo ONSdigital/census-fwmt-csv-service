@@ -22,7 +22,7 @@ management:
 logging:
   level:
     root: WARN
-    uk.gov.ons.fwmt: INFO
+    uk.gov.ons.census.fwmt: DEBUG
     org.springframework.security: INFO
     org.springframework.web: INFO
     org.springframework.amqp: INFO

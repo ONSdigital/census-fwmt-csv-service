@@ -34,3 +34,5 @@ local.properties
 .recommenders
 .project
 .classpath
+
+application-location.yml

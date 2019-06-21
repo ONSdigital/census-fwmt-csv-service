@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Component;
+import uk.gov.ons.census.fwmt.canonical.v1.CreateFieldWorkerJobRequest;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.csvservice.config.GatewayActionsQueueConfig;
 
@@ -27,15 +28,15 @@ public class GatewayActionProducer {
   private ObjectMapper objectMapper;
 
   @Retryable
-  public void sendMessage(Object dto) throws GatewayException {
+  public void sendMessage(CreateFieldWorkerJobRequest dto) throws GatewayException {
     String JSONJobRequest = convertToJSON(dto);
     rabbitTemplate
         .convertAndSend(gatewayActionsExchange.getName(), GatewayActionsQueueConfig.GATEWAY_ACTIONS_ROUTING_KEY,
             JSONJobRequest);
-    log.info("Message send to queue");
+    log.info("Message sent to queue");
   }
 
-  protected String convertToJSON(Object dto) throws GatewayException {
+  protected String convertToJSON(CreateFieldWorkerJobRequest dto) throws GatewayException {
     String JSONJobRequest;
     try {
       JSONJobRequest = objectMapper.writeValueAsString(dto);
