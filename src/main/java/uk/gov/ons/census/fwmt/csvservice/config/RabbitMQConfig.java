@@ -1,4 +1,4 @@
-package uk.gov.ons.census.fwmt.csvserivce.config;
+package uk.gov.ons.census.fwmt.csvservice.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

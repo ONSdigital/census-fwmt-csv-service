@@ -30,7 +30,7 @@ plugins {
 
 description = 'census-fwmt-csv-service'
 group = 'uk.gov.ons.census.fwmt'
-mainClassName = 'uk.gov.ons.census.fwmt.csvserive.Application'
+mainClassName = 'uk.gov.ons.census.fwmt.csvservice.Application'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '11'
 targetCompatibility = '11'
@@ -66,15 +66,23 @@ dependencies {
 	implementation('org.springframework.boot:spring-boot-starter-amqp')
 	implementation('org.springframework.boot:spring-boot-starter-integration')
 	implementation('org.springframework.boot:spring-boot-starter-web')
+	implementation 'org.springframework.cloud:spring-cloud-gcp-starter-storage'
+
 	testImplementation('org.springframework.boot:spring-boot-starter-test')
 
 	compile('org.springframework.boot:spring-boot-starter-actuator')
-
-	compile('org.bouncycastle:bcpg-jdk16:1.45')
-
 	compile("org.projectlombok:lombok")
 	annotationProcessor("org.projectlombok:lombok")
 
+	compile 'com.google.cloud:google-cloud-nio:0.30.0-alpha'
+
+
+}
+
+dependencyManagement {
+	imports {
+		mavenBom "org.springframework.cloud:spring-cloud-dependencies:Greenwich.SR1"
+	}
 }
 
 jacoco {

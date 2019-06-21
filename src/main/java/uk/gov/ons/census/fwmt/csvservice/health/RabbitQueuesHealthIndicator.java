@@ -1,4 +1,4 @@
-package uk.gov.ons.census.fwmt.csvserivce.health;
+package uk.gov.ons.census.fwmt.csvservice.health;
 
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitAdmin;
@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.actuate.health.AbstractHealthIndicator;
 import org.springframework.boot.actuate.health.Health;
 import org.springframework.stereotype.Component;
-import uk.gov.ons.census.fwmt.csvserivce.config.GatewayActionsQueueConfig;
+import uk.gov.ons.census.fwmt.csvservice.config.GatewayActionsQueueConfig;
 
 import java.util.Collections;
 import java.util.List;

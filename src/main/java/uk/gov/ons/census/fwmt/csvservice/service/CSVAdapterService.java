@@ -1,4 +1,4 @@
-package uk.gov.ons.census.fwmt.csvserivce.service;
+package uk.gov.ons.census.fwmt.csvservice.service;
 
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
 

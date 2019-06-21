@@ -1,4 +1,4 @@
-package uk.gov.ons.census.fwmt.csvserivce.message;
+package uk.gov.ons.census.fwmt.csvservice.message;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Component;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
-import uk.gov.ons.census.fwmt.csvserivce.config.GatewayActionsQueueConfig;
+import uk.gov.ons.census.fwmt.csvservice.config.GatewayActionsQueueConfig;
 
 @Slf4j
 @Component
