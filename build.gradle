@@ -63,6 +63,9 @@ dependencies {
 	
 	compile('uk.gov.ons.census.fwmt:census-fwmt-common:1.0.13-RELEASE')
 	compile('uk.gov.ons.census.fwmt:census-fwmt-canonical:1.0.14-RELEASE')
+	compile("uk.gov.ons.census.fwmt:census-fwmt-events:1.0.5-RELEASE")
+
+	compile("com.google.guava:guava:27.0.1-jre")
 
 
 	implementation('org.springframework.boot:spring-boot-starter-amqp')
@@ -74,6 +77,8 @@ dependencies {
 
 	compile('org.springframework.boot:spring-boot-starter-actuator')
 	compile("org.projectlombok:lombok")
+	compile("com.fasterxml.jackson.dataformat:jackson-dataformat-xml")
+	compile("com.rabbitmq:amqp-client")
 
 	compile('io.springfox:springfox-swagger2:2.9.2')
 	compile('io.springfox:springfox-swagger-ui:2.9.2')
@@ -82,8 +87,6 @@ dependencies {
 	compile 'com.google.cloud:google-cloud-nio:0.30.0-alpha'
 
 	compile 'com.opencsv:opencsv:4.5'
-
-	compile("uk.gov.ons.census.fwmt:census-fwmt-events:1.0.5-RELEASE")
 
 }
 

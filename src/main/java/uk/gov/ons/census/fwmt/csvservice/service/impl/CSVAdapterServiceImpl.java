@@ -17,12 +17,11 @@ import static uk.gov.ons.census.fwmt.csvservice.config.GatewayEventsConfig.CANON
 @Component
 public class CSVAdapterServiceImpl implements CSVAdapterService {
 
+  @Autowired
+  private GatewayEventManager gatewayEventManager;
 
   @Autowired
-  private GatewayEventManager gatewayEventManager = new GatewayEventManager();
-
-  @Autowired
-  private GatewayActionProducer jobServiceProducer = new GatewayActionProducer();
+  private GatewayActionProducer jobServiceProducer;
 
   @Override
   public void sendJobRequest(CreateFieldWorkerJobRequest ceCreateCase) throws GatewayException {

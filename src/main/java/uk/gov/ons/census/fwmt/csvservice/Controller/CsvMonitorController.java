@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import uk.gov.ons.census.fwmt.csvservice.service.CSVConverterService;
+import uk.gov.ons.census.fwmt.csvservice.service.impl.CSVConverterServiceImpl;
 
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
@@ -13,12 +14,12 @@ import java.util.concurrent.TimeoutException;
 public class CsvMonitorController {
 
   @Autowired
-  private CSVConverterService csvConverterService;
+  private CSVConverterServiceImpl csvConverterServiceImpl;
 
   @GetMapping("/enableCsvService")
   public ResponseEntity enableCsvService()
       throws Exception {
-    csvConverterService.convertCSVToObject();
+    csvConverterServiceImpl.convertCSVToObject();
     return ResponseEntity.ok("CSV adapter service activated");
   }
 
