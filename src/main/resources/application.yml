@@ -44,5 +44,7 @@ rabbitmq:
   multiplier: 3.0
   maxInterval: 45000
 
-gcpBucketLocation: placeholder
+
+gcpBucket:
+  location: "gs://ce-csv-bucket-dev/ceTestCSV.csv"
 

@@ -2,32 +2,34 @@ package uk.gov.ons.census.fwmt.csvservice.service.impl;
 
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import uk.gov.ons.census.fwmt.canonical.v1.CreateFieldWorkerJobRequest;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.csvservice.dto.CSVRecordDTO;
 import uk.gov.ons.census.fwmt.csvservice.service.CSVConverterService;
 
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 
-@Component
+@Service
 public class CSVConverterServiceImpl implements CSVConverterService {
-  @Value("${gcpBucketLocation}")
+  @Value("${gcpBucket.location}")
   private Resource path;
 
-  private CSVAdapterServiceImpl csvAdapterService = new CSVAdapterServiceImpl();
+  @Autowired
+  private CSVAdapterServiceImpl csvAdapterService;
 
   @Override
-  public void convertCSVToObject() throws IOException, GatewayException {
+  public void convertCSVToObject() throws GatewayException {
 
 
     try {
       CsvToBean<CSVRecordDTO> csvToBean = new CsvToBeanBuilder(new InputStreamReader(path.getInputStream(), StandardCharsets.UTF_8))
-          .withType(CSVRecordDTO.class).build();
+          .withType(CSVRecordDTO.class)
+          .build();
 
       for (CSVRecordDTO csvRecordDTO : csvToBean) {
         CreateFieldWorkerJobRequest createFieldWorkerJobRequest = csvRecordDTO.createCE();
