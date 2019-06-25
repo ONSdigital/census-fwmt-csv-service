@@ -56,11 +56,14 @@ public class CSVRecordDTO {
     Contact contact = new Contact();
     CreateFieldWorkerJobRequest createJobRequest = new CreateFieldWorkerJobRequest();
 
+    createJobRequest.setActionType("Create");
     createJobRequest.setCaseId(UUID.fromString(caseId));
     createJobRequest.setCaseReference(caseReference);
+    createJobRequest.setCaseType("CE");
     createJobRequest.setEstablishmentType(establishmentType);
     createJobRequest.setMandatoryResource(mandatoryResource);
     createJobRequest.setCoordinatorId(coordinatorId);
+    createJobRequest.setCategory("Not applicable");
 
     contact.setOrganisationName(organisationName);
     createJobRequest.setContact(contact);
@@ -78,6 +81,9 @@ public class CSVRecordDTO {
     createJobRequest.setAddress(address);
 
     createJobRequest.setCeExpectedResponses(ceExpectedResponses);
+    createJobRequest.setUua(false);
+    createJobRequest.setBlankFormReturned(false);
+    createJobRequest.setSai(false);
 
     return createJobRequest;
   }

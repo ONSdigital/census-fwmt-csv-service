@@ -25,7 +25,7 @@ public class GatewayActionProducer {
   private DirectExchange gatewayActionsExchange;
 
   @Autowired
-  private ObjectMapper objectMapper = new ObjectMapper();
+  private ObjectMapper objectMapper;
 
   @Retryable
   public void sendMessage(CreateFieldWorkerJobRequest dto) throws GatewayException {

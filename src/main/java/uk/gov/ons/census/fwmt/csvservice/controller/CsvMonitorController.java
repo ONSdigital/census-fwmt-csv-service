@@ -1,14 +1,10 @@
-package uk.gov.ons.census.fwmt.csvservice.Controller;
+package uk.gov.ons.census.fwmt.csvservice.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import uk.gov.ons.census.fwmt.csvservice.service.CSVConverterService;
 import uk.gov.ons.census.fwmt.csvservice.service.impl.CSVConverterServiceImpl;
-
-import java.io.IOException;
-import java.util.concurrent.TimeoutException;
 
 @Controller
 public class CsvMonitorController {
