@@ -22,7 +22,7 @@ public class CsvMonitorControllerTest {
   @Test
   public void testCsvMonitorController() throws Exception {
 
-    ResponseEntity responseEntity = csvMonitorController.enableCsvService();
+    ResponseEntity responseEntity = csvMonitorController.ingestCeCsvFile();
 
     assertEquals("CSV adapter service activated", responseEntity.getBody());
     assertEquals(200, responseEntity.getStatusCodeValue());

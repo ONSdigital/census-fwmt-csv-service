@@ -33,7 +33,7 @@ public class CSVConverterServiceImpl implements CSVConverterService {
   private GatewayEventManager gatewayEventManager;
 
   @Override
-  public void convertCSVToObject() throws GatewayException {
+  public void convertCeCSVToCanonical() throws GatewayException {
 
     CsvToBean<CSVRecordDTO> csvToBean;
     try {

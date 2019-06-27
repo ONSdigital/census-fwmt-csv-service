@@ -12,10 +12,10 @@ public class CsvMonitorController {
   @Autowired
   private CSVConverterServiceImpl csvConverterServiceImpl;
 
-  @GetMapping("/enableCsvService")
-  public ResponseEntity enableCsvService()
+  @GetMapping("/ingestCeCsvFile")
+  public ResponseEntity ingestCeCsvFile()
       throws Exception {
-    csvConverterServiceImpl.convertCSVToObject();
+    csvConverterServiceImpl.convertCeCSVToCanonical();
     return ResponseEntity.ok("CSV adapter service activated");
   }
 }
