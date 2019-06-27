@@ -16,7 +16,6 @@ import uk.gov.ons.fwmt.csvservice.helper.FieldWorkerRequestMessageBuilder;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
-
 import static uk.gov.ons.census.fwmt.csvservice.config.GatewayEventsConfig.CANONICAL_CREATE_SENT;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -31,11 +30,11 @@ public class CSVAdapterServiceImplTest {
   @Mock
   private GatewayActionProducer gatewayActionProducer;
 
-
   @Test
   public void sendRequestToJobService() throws GatewayException {
     // Given
-    CreateFieldWorkerJobRequest createJobRequest = new FieldWorkerRequestMessageBuilder().buildCreateFieldWorkerJobRequest();
+    CreateFieldWorkerJobRequest createJobRequest = new FieldWorkerRequestMessageBuilder()
+        .buildCreateFieldWorkerJobRequest();
 
     // When
     csvAdapterServiceImpl.sendJobRequest(createJobRequest);
@@ -43,6 +42,5 @@ public class CSVAdapterServiceImplTest {
     // Then
     Mockito.verify(gatewayEventManager).triggerEvent(anyString(), eq(CANONICAL_CREATE_SENT), any());
   }
-
 
 }

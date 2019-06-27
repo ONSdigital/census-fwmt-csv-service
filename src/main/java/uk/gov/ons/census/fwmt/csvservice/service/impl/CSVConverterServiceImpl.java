@@ -7,8 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
-import uk.gov.ons.census.fwmt.canonical.v1.CreateFieldWorkerJobRequest;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
+import uk.gov.ons.census.fwmt.csvservice.canonical.CanonicalJobHelper;
 import uk.gov.ons.census.fwmt.csvservice.dto.CSVRecordDTO;
 import uk.gov.ons.census.fwmt.csvservice.service.CSVConverterService;
 
@@ -27,17 +27,18 @@ public class CSVConverterServiceImpl implements CSVConverterService {
   @Override
   public void convertCSVToObject() throws GatewayException {
     try {
-      CsvToBean<CSVRecordDTO> csvToBean = new CsvToBeanBuilder(new InputStreamReader(path.getInputStream(), StandardCharsets.UTF_8))
+      CsvToBean<CSVRecordDTO> csvToBean = new CsvToBeanBuilder(
+          new InputStreamReader(path.getInputStream(), StandardCharsets.UTF_8))
           .withType(CSVRecordDTO.class)
           .build();
 
       for (CSVRecordDTO csvRecordDTO : csvToBean) {
-        CreateFieldWorkerJobRequest createFieldWorkerJobRequest = csvRecordDTO.createCE();
-        csvAdapterService.sendJobRequest(createFieldWorkerJobRequest);
+        csvAdapterService.sendJobRequest(CanonicalJobHelper.createCEJob(csvRecordDTO));
       }
 
-    } catch (Exception e){
-        throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, e);
+    } catch (Exception e) {
+      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, e,
+          "Failed to convert CSV record to Canonical job");
     }
   }
 }
