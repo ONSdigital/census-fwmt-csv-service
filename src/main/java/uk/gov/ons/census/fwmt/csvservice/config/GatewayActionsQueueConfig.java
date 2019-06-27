@@ -18,6 +18,7 @@ public class GatewayActionsQueueConfig {
   public static final String GATEWAY_ACTIONS_EXCHANGE = "Gateway.Actions.Exchange";
   public static final String GATEWAY_ACTIONS_ROUTING_KEY = "Gateway.Action.Request";
   public static final String GATEWAY_ACTIONS_DLQ = "Gateway.ActionsDLQ";
+
   @Autowired
   private AmqpAdmin amqpAdmin;
 
