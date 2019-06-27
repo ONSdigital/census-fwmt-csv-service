@@ -34,7 +34,8 @@ public class CSVConverterServiceImpl implements CSVConverterService {
   @Override
   public void convertCSVToObject() throws GatewayException {
     try {
-      CsvToBean<CSVRecordDTO> csvToBean = new CsvToBeanBuilder(new InputStreamReader(path.getInputStream(), StandardCharsets.UTF_8))
+      CsvToBean<CSVRecordDTO> csvToBean = new CsvToBeanBuilder(
+          new InputStreamReader(path.getInputStream(), StandardCharsets.UTF_8))
           .withType(CSVRecordDTO.class)
           .build();
 
@@ -46,8 +47,9 @@ public class CSVConverterServiceImpl implements CSVConverterService {
             .triggerEvent(String.valueOf(createFieldWorkerJobRequest.getCaseId()), CSV_REQUEST_EXTRACTED, LocalTime.now());
       }
 
-    } catch (Exception e){
-        throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, e);
+    } catch (Exception e) {
+      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, e,
+          "Failed to convert CSV record to Canonical job");
     }
   }
 }

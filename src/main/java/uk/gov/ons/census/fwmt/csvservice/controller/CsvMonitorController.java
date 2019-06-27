@@ -18,5 +18,4 @@ public class CsvMonitorController {
     csvConverterServiceImpl.convertCSVToObject();
     return ResponseEntity.ok("CSV adapter service activated");
   }
-
 }

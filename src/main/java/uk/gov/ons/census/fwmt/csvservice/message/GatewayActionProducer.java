@@ -36,7 +36,7 @@ public class GatewayActionProducer {
     log.info("Message sent to queue");
   }
 
-  protected String convertToJSON(CreateFieldWorkerJobRequest dto) throws GatewayException {
+  private String convertToJSON(CreateFieldWorkerJobRequest dto) throws GatewayException {
     String JSONJobRequest;
     try {
       JSONJobRequest = objectMapper.writeValueAsString(dto);

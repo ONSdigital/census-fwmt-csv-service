@@ -57,5 +57,4 @@ public class GatewayActionsQueueConfig {
     binding.setAdminsThatShouldDeclare(amqpAdmin);
     return binding;
   }
-
 }

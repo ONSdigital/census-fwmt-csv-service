@@ -1,9 +1,7 @@
 package uk.gov.ons.fwmt.csvservice.helper;
 
-import uk.gov.ons.census.fwmt.canonical.v1.Address;
 import uk.gov.ons.census.fwmt.canonical.v1.CreateFieldWorkerJobRequest;
 
-import java.math.BigDecimal;
 import java.util.UUID;
 
 public class FieldWorkerRequestMessageBuilder {
