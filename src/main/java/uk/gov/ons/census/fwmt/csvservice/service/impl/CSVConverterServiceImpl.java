@@ -11,9 +11,13 @@ import uk.gov.ons.census.fwmt.canonical.v1.CreateFieldWorkerJobRequest;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.csvservice.dto.CSVRecordDTO;
 import uk.gov.ons.census.fwmt.csvservice.service.CSVConverterService;
+import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
 
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalTime;
+
+import static uk.gov.ons.census.fwmt.csvservice.config.GatewayEventsConfig.CSV_REQUEST_EXTRACTED;
 
 @Slf4j
 @Service
@@ -24,6 +28,9 @@ public class CSVConverterServiceImpl implements CSVConverterService {
   @Autowired
   private CSVAdapterServiceImpl csvAdapterService;
 
+  @Autowired
+  private GatewayEventManager gatewayEventManager;
+
   @Override
   public void convertCSVToObject() throws GatewayException {
     try {
@@ -31,9 +38,12 @@ public class CSVConverterServiceImpl implements CSVConverterService {
           .withType(CSVRecordDTO.class)
           .build();
 
+
       for (CSVRecordDTO csvRecordDTO : csvToBean) {
         CreateFieldWorkerJobRequest createFieldWorkerJobRequest = csvRecordDTO.createCE();
         csvAdapterService.sendJobRequest(createFieldWorkerJobRequest);
+        gatewayEventManager
+            .triggerEvent(String.valueOf(createFieldWorkerJobRequest.getCaseId()), CSV_REQUEST_EXTRACTED, LocalTime.now());
       }
 
     } catch (Exception e){
