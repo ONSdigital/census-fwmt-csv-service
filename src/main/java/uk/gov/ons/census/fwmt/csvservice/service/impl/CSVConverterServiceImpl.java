@@ -9,6 +9,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import uk.gov.ons.census.fwmt.canonical.v1.CreateFieldWorkerJobRequest;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
+import uk.gov.ons.census.fwmt.csvservice.canonical.CanonicalJobHelper;
 import uk.gov.ons.census.fwmt.csvservice.dto.CSVRecordDTO;
 import uk.gov.ons.census.fwmt.csvservice.service.CSVConverterService;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
@@ -31,6 +32,9 @@ public class CSVConverterServiceImpl implements CSVConverterService {
   @Autowired
   private GatewayEventManager gatewayEventManager;
 
+  @Autowired
+  private CanonicalJobHelper canonicalJobHelper;
+
   @Override
   public void convertCSVToObject() throws GatewayException {
     try {
@@ -41,10 +45,9 @@ public class CSVConverterServiceImpl implements CSVConverterService {
 
 
       for (CSVRecordDTO csvRecordDTO : csvToBean) {
-        CreateFieldWorkerJobRequest createFieldWorkerJobRequest = csvRecordDTO.createCE();
-        csvAdapterService.sendJobRequest(createFieldWorkerJobRequest);
+        csvAdapterService.sendJobRequest(CanonicalJobHelper.createCEJob(csvRecordDTO));
         gatewayEventManager
-            .triggerEvent(String.valueOf(createFieldWorkerJobRequest.getCaseId()), CSV_REQUEST_EXTRACTED, LocalTime.now());
+            .triggerEvent(String.valueOf(csvRecordDTO.getCaseId()), CSV_REQUEST_EXTRACTED, LocalTime.now());
       }
 
     } catch (Exception e) {
