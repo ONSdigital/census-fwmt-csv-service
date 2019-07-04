@@ -34,7 +34,7 @@ public final class CanonicalJobHelper {
     address.setTownName(csvRecordDTO.getTownName());
     address.setPostCode(csvRecordDTO.getPostCode());
     address.setOa(csvRecordDTO.getOa());
-    address.setLatitude(csvRecordDTO.getLattitude());
+    address.setLatitude(csvRecordDTO.getLatitude());
     address.setLongitude(csvRecordDTO.getLongitude());
     createJobRequest.setAddress(address);
 
@@ -42,6 +42,24 @@ public final class CanonicalJobHelper {
     createJobRequest.setUua(false);
     createJobRequest.setBlankFormReturned(false);
     createJobRequest.setSai(false);
+
+    return createJobRequest;
+  }
+
+  public static CreateFieldWorkerJobRequest createCCSJob(CSVRecordDTO csvRecordDTO) {
+    Address address = new Address();
+    CreateFieldWorkerJobRequest createJobRequest = new CreateFieldWorkerJobRequest();
+
+    createJobRequest.setActionType("Create");
+    createJobRequest.setCaseId(UUID.randomUUID());
+    createJobRequest.setCaseType("CCS");
+    createJobRequest.setCoordinatorId(csvRecordDTO.getCoordinatorId());
+    createJobRequest.setMandatoryResource(csvRecordDTO.getCcsInterviewer());
+
+    address.setPostCode(csvRecordDTO.getPostCode());
+    address.setLatitude(csvRecordDTO.getLatitude());
+    address.setLongitude(csvRecordDTO.getLongitude());
+    createJobRequest.setAddress(address);
 
     return createJobRequest;
   }

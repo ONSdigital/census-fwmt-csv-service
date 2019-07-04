@@ -29,10 +29,6 @@ logging:
     org.hibernate: INFO
     org.apache.commons.dbcp2: INFO
     org.springframework: INFO
-  file: target/SpringErrors/spring.log
-  pattern:
-    console: "%d{yyyy-MMM-dd HH:mm:ss.SSS} %-5level [%thread] [%X{CID}] %logger{1}::%M - %msg%n"
-    file: "%d{yyyy-MMM-dd HH:mm:ss.SSS} %-5level [%thread] [%X{CID}] %logger{1}::%M - %msg%n"
 
 rabbitmq:
   username: "guest"
@@ -45,5 +41,6 @@ rabbitmq:
   maxInterval: 45000
 
 gcpBucket:
-  location: "gs://ce-csv-bucket-dev/ceTestCSV.csv"
+  celocation: "gs://ce-csv-bucket-dev/ceTestCSV.csv"
+  ccslocation: "gs://ce-csv-bucket-dev/Main.csv"
 

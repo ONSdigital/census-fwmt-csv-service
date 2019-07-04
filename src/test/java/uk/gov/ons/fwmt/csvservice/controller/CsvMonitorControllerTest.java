@@ -20,9 +20,18 @@ public class CsvMonitorControllerTest {
   private CSVConverterServiceImpl csvConverterService;
 
   @Test
-  public void testCsvMonitorController() throws Exception {
+  public void testCECsvMonitorController() throws Exception {
 
     ResponseEntity responseEntity = csvMonitorController.ingestCeCsvFile();
+
+    assertEquals("CSV adapter service activated", responseEntity.getBody());
+    assertEquals(200, responseEntity.getStatusCodeValue());
+  }
+
+  @Test
+  public void testCCSCsvMonitorController() throws Exception {
+
+    ResponseEntity responseEntity = csvMonitorController.ingestCSSCsvFile();
 
     assertEquals("CSV adapter service activated", responseEntity.getBody());
     assertEquals(200, responseEntity.getStatusCodeValue());

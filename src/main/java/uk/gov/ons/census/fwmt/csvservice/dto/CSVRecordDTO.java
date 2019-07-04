@@ -53,12 +53,15 @@ public class CSVRecordDTO {
   @CsvBindByName(column = "oa")
   private String oa;
 
-  @CsvBindByName(column = "lattitude")
-  private BigDecimal lattitude;
+  @CsvBindByName(column = "latitude")
+  private BigDecimal latitude;
 
   @CsvBindByName(column = "longitude")
   private BigDecimal longitude;
 
   @CsvBindByName(column = "ceExpectedCapacity")
   private int ceExpectedResponses;
+
+  @CsvBindByName(column = "ccsInterviewer")
+  private String ccsInterviewer;
 }

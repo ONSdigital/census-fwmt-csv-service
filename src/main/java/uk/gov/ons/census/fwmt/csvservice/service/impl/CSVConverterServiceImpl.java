@@ -18,13 +18,17 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalTime;
 
-import static uk.gov.ons.census.fwmt.csvservice.config.GatewayEventsConfig.CSV_REQUEST_EXTRACTED;
+import static uk.gov.ons.census.fwmt.csvservice.config.GatewayEventsConfig.CSV_CCS_REQUEST_EXTRACTED;
+import static uk.gov.ons.census.fwmt.csvservice.config.GatewayEventsConfig.CSV_CE_REQUEST_EXTRACTED;
 
 @Slf4j
 @Service
 public class CSVConverterServiceImpl implements CSVConverterService {
-  @Value("${gcpBucket.location}")
-  private Resource path;
+  @Value("${gcpBucket.celocation}")
+  private Resource cePath;
+
+  @Value("${gcpBucket.ccslocation}")
+  private Resource ccsPath;
 
   @Autowired
   private CSVAdapterServiceImpl csvAdapterService;
@@ -32,13 +36,22 @@ public class CSVConverterServiceImpl implements CSVConverterService {
   @Autowired
   private GatewayEventManager gatewayEventManager;
 
-  @Override
-  public void convertCeCSVToCanonical() throws GatewayException {
+  public void convertCSVToCanonical(String ingestType) throws GatewayException {
 
+    CanonicalJobHelper canonicalJobHelper;
     CsvToBean<CSVRecordDTO> csvToBean;
+    Resource csvGCPFile;
+
+    if (ingestType.equals("CEIngest")) {
+      csvGCPFile = cePath;
+
+    } else {
+      csvGCPFile = ccsPath;
+    }
+
     try {
       csvToBean = new CsvToBeanBuilder(
-          new InputStreamReader(path.getInputStream(), StandardCharsets.UTF_8))
+          new InputStreamReader(csvGCPFile.getInputStream(), StandardCharsets.UTF_8))
           .withType(CSVRecordDTO.class)
           .build();
     } catch (IOException e) {
@@ -46,10 +59,19 @@ public class CSVConverterServiceImpl implements CSVConverterService {
           "Failed to convert CSV to Bean.");
     }
 
-    for (CSVRecordDTO csvRecordDTO : csvToBean) {
-      csvAdapterService.sendJobRequest(CanonicalJobHelper.createCEJob(csvRecordDTO));
-      gatewayEventManager
-          .triggerEvent(String.valueOf(csvRecordDTO.getCaseId()), CSV_REQUEST_EXTRACTED, LocalTime.now());
+    if (ingestType.equals("CEIngest")) {
+      for (CSVRecordDTO csvRecordDTO : csvToBean) {
+        csvAdapterService.sendJobRequest(CanonicalJobHelper.createCEJob(csvRecordDTO));
+        gatewayEventManager
+                .triggerEvent(String.valueOf(csvRecordDTO.getCaseId()), CSV_CE_REQUEST_EXTRACTED, LocalTime.now());
+      }
+
+    } else {
+      for (CSVRecordDTO csvRecordDTO : csvToBean) {
+        csvAdapterService.sendJobRequest(CanonicalJobHelper.createCCSJob(csvRecordDTO));
+        gatewayEventManager
+                .triggerEvent(String.valueOf(csvRecordDTO.getCaseId()), CSV_CCS_REQUEST_EXTRACTED, LocalTime.now());
+      }
     }
   }
 }
