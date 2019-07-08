@@ -25,6 +25,7 @@ public final class CanonicalJobHelper {
 
     contact.setForename(csvRecordDTO.getName());
     contact.setOrganisationName(csvRecordDTO.getOrganisationName());
+    contact.setPhoneNumber(csvRecordDTO.getPhoneNumber());
     createJobRequest.setContact(contact);
 
     address.setUprn(csvRecordDTO.getUprn());

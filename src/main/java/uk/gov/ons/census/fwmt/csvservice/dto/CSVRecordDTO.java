@@ -32,6 +32,9 @@ public class CSVRecordDTO {
   @CsvBindByName(column = "organisationName")
   private String organisationName;
 
+  @CsvBindByName(column = "phoneNumber")
+  private String phoneNumber;
+
   @CsvBindByName(column = "uprn")
   private String uprn;
 
