@@ -26,14 +26,14 @@ public class CSVRecordDTO {
   @CsvBindByName(column = "coordinatorId")
   private String coordinatorId;
 
-  @CsvBindByName(column = "name")
-  private String name;
-
   @CsvBindByName(column = "organisationName")
   private String organisationName;
 
   @CsvBindByName(column = "phoneNumber")
   private String phoneNumber;
+
+  @CsvBindByName(column = "arid")
+  private String arid;
 
   @CsvBindByName(column = "uprn")
   private String uprn;
@@ -69,5 +69,5 @@ public class CSVRecordDTO {
   private Boolean ceCE1Complete;
 
   @CsvBindByName(column = "ceExpectedCapacity")
-  private int ceExpectedResponses;
+  private int ceExpectedCapacity;
 }

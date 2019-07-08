@@ -18,16 +18,16 @@ public final class CanonicalJobHelper {
     createJobRequest.setCaseId(UUID.fromString(csvRecordDTO.getCaseId()));
     createJobRequest.setCaseReference(csvRecordDTO.getCaseReference());
     createJobRequest.setCaseType("CE");
+    createJobRequest.setSurveyType("CE-EST");
     createJobRequest.setEstablishmentType(csvRecordDTO.getEstablishmentType());
     createJobRequest.setMandatoryResource(csvRecordDTO.getMandatoryResource());
     createJobRequest.setCoordinatorId(csvRecordDTO.getCoordinatorId());
     createJobRequest.setCategory("Not applicable");
 
-    contact.setForename(csvRecordDTO.getName());
     contact.setOrganisationName(csvRecordDTO.getOrganisationName());
-    contact.setPhoneNumber(csvRecordDTO.getPhoneNumber());
     createJobRequest.setContact(contact);
 
+    address.setArid(csvRecordDTO.getArid());
     address.setUprn(csvRecordDTO.getUprn());
     address.setLine1(csvRecordDTO.getLine1());
     address.setLine2(csvRecordDTO.getLine2());
@@ -39,9 +39,10 @@ public final class CanonicalJobHelper {
     address.setLongitude(csvRecordDTO.getLongitude());
     createJobRequest.setAddress(address);
 
-    createJobRequest.setCeDeliveryRequired(csvRecordDTO.getCeDeliveryReqd());
-    createJobRequest.setCeCE1Complete(csvRecordDTO.getCeCE1Complete());
-    createJobRequest.setCeExpectedResponses(csvRecordDTO.getCeExpectedResponses());
+    createJobRequest.setCeDeliveryRequired(true);
+    createJobRequest.setCeCE1Complete(false);
+    createJobRequest.setCeExpectedResponses(csvRecordDTO.getCeExpectedCapacity());
+    createJobRequest.setCeActualResponses(0);
     createJobRequest.setUua(false);
     createJobRequest.setBlankFormReturned(false);
     createJobRequest.setSai(false);
