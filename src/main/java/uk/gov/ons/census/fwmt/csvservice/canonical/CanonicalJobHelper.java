@@ -23,10 +23,10 @@ public final class CanonicalJobHelper {
     createJobRequest.setCoordinatorId(csvRecordDTO.getCoordinatorId());
     createJobRequest.setCategory("Not applicable");
 
+    contact.setForename(csvRecordDTO.getName());
     contact.setOrganisationName(csvRecordDTO.getOrganisationName());
     createJobRequest.setContact(contact);
 
-    address.setArid(csvRecordDTO.getArid());
     address.setUprn(csvRecordDTO.getUprn());
     address.setLine1(csvRecordDTO.getLine1());
     address.setLine2(csvRecordDTO.getLine2());
@@ -38,6 +38,8 @@ public final class CanonicalJobHelper {
     address.setLongitude(csvRecordDTO.getLongitude());
     createJobRequest.setAddress(address);
 
+    createJobRequest.setCeDeliveryRequired(csvRecordDTO.getCeDeliveryReqd());
+    createJobRequest.setCeCE1Complete(csvRecordDTO.getCeCE1Complete());
     createJobRequest.setCeExpectedResponses(csvRecordDTO.getCeExpectedResponses());
     createJobRequest.setUua(false);
     createJobRequest.setBlankFormReturned(false);
