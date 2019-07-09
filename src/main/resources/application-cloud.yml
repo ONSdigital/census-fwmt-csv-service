@@ -1,0 +1,20 @@
+spring:
+  application:
+    name: census-fwmt-csvservice
+
+rabbitmq:
+  rm:
+    username: ${cloud.services.rm-rabbitmq.connection.username}
+    password: ${cloud.services.rm-rabbitmq.connection.password}
+    hostname: ${cloud.services.rm-rabbitmq.connection.host}
+    port: ${cloud.services.rm-rabbitmq.connection.port}
+    virtualHost: ${cloud.services.rm-rabbitmq.connection.virtualhost}
+  fwmt:
+    username: ${cloud.services.fwmt-rabbitmq.connection.username}
+    password: ${cloud.services.fwmt-rabbitmq.connection.password}
+    hostname: ${cloud.services.fwmt-rabbitmq.connection.host}
+    port: ${cloud.services.fwmt-rabbitmq.connection.port}
+    virtualHost: ${cloud.services.fwmt-rabbitmq.connection.virtualhost}
+  initialinterval: 5000
+  multiplier: 3.0
+  maxInterval: 45000

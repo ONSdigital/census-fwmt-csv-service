@@ -1,0 +1,208 @@
+import com.github.spotbugs.SpotBugsTask
+
+buildscript {
+	ext {
+		springBootVersion = '2.1.6.RELEASE'
+	}
+	repositories {
+		mavenCentral()
+		jcenter()
+	}
+	dependencies {
+		classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
+		classpath 'org.jfrog.buildinfo:build-info-extractor-gradle:4.7.2'
+	}
+}
+
+plugins {
+	id 'java'
+	id 'application'
+	id 'idea'
+	id 'maven'
+	id 'maven-publish'
+	id 'org.springframework.boot' version '2.1.0.RELEASE'
+	id 'io.spring.dependency-management' version '1.0.6.RELEASE'
+	id 'jacoco'
+	id 'com.jfrog.artifactory' version '4.8.1'
+	id 'org.ajoberstar.grgit' version '3.0.0'
+	id 'com.github.spotbugs' version '1.6.5'
+}
+
+description = 'census-fwmt-csv-service'
+
+group = 'uk.gov.ons.census.fwmt'
+
+mainClassName = 'uk.gov.ons.census.fwmt.csvservice.Application'
+
+version = '0.0.1-SNAPSHOT'
+
+sourceCompatibility = '11'
+
+targetCompatibility = '11'
+
+repositories {
+	mavenLocal()
+	if (!project.hasProperty('omitSDCArtifactory')) {
+		maven { url 'http://artifactory-sdc.onsdigital.uk/artifactory/libs-release' }
+		maven { url 'http://artifactory-sdc.onsdigital.uk/artifactory/libs-snapshot' }
+	}
+	mavenCentral()
+}
+
+springBoot {
+	buildInfo {
+		properties {
+			additional = [
+					'Git-Commit': grgit.head().getAbbreviatedId(8)
+			]
+		}
+	}
+}
+
+configurations {
+	integrationTestCompile.extendsFrom testCompile
+	integrationTestRuntime.extendsFrom testRuntime
+}
+
+dependencies {
+	
+	compile('uk.gov.ons.census.fwmt:census-fwmt-common:1.0.17-RELEASE')
+	compile('uk.gov.ons.census.fwmt:census-fwmt-canonical:1.0.14-RELEASE')
+	compile("uk.gov.ons.census.fwmt:census-fwmt-events:1.0.5-RELEASE")
+
+	compile("com.google.guava:guava:27.0.1-jre")
+
+
+	implementation('org.springframework.boot:spring-boot-starter-amqp')
+	implementation('org.springframework.boot:spring-boot-starter-integration')
+	implementation('org.springframework.boot:spring-boot-starter-web')
+	implementation 'org.springframework.cloud:spring-cloud-gcp-starter-storage'
+
+	testImplementation('org.springframework.boot:spring-boot-starter-test')
+	
+	compile("org.projectlombok:lombok")
+	compile("com.fasterxml.jackson.dataformat:jackson-dataformat-xml")
+	compile('org.springframework.boot:spring-boot-starter-actuator')
+	compile("com.rabbitmq:amqp-client")
+	compile('org.springframework.boot:spring-boot-starter-security')
+
+	compile('io.springfox:springfox-swagger2:2.9.2')
+	compile('io.springfox:springfox-swagger-ui:2.9.2')
+	annotationProcessor("org.projectlombok:lombok")
+
+	compile 'com.google.cloud:google-cloud-nio:0.30.0-alpha'
+
+	compile 'com.opencsv:opencsv:4.5'
+
+}
+
+dependencyManagement {
+	imports {
+		mavenBom "org.springframework.cloud:spring-cloud-dependencies:Greenwich.SR1"
+	}
+}
+
+jacoco {
+	toolVersion = "0.8.2"
+}
+
+jacocoTestReport {
+	reports {
+		xml.enabled true
+		html.enabled false
+	}
+}
+
+test.finalizedBy(project.tasks.jacocoTestReport)
+
+
+sourceSets {
+	integrationTest {
+		java {
+			compileClasspath += main.output
+			runtimeClasspath += main.output
+			srcDir file('src/integration-test/java')
+		}
+		resources.srcDir file('src/integration-test/resources')
+	}
+}
+
+task integrationTest(type: Test) {
+	jacoco {
+		destinationFile = file("$buildDir/jacoco/jacocoTest.exec")
+		classDumpDir = file("$buildDir/jacoco/classpathdumps")
+	}
+	testClassesDirs = sourceSets.integrationTest.output.classesDirs
+	classpath = sourceSets.integrationTest.runtimeClasspath
+	outputs.upToDateWhen { false }
+}
+
+bootJar {
+	baseName = 'census-fwmt-csv-service'
+	group = 'uk.gov.ons.census.fwmt'
+	version = version
+	manifest {
+		attributes(['Git-Commit': grgit.head().getAbbreviatedId(8),
+					'Git-Branch': grgit.branch.getCurrent().getName()], 'common')
+	}
+}
+
+check.dependsOn jacocoTestReport
+check.dependsOn integrationTest
+check.dependsOn jacocoTestReport
+integrationTest.mustRunAfter test
+/*
+processResources {
+    filter ReplaceTokens, tokens: [
+            'project.artifactId': 'name',
+            'project.version'   : 'version',
+            'scm.url'           : 'url',
+            'buildNumber'       : 'buildnumber',
+            'scmBranch'         : 'branch',
+            'timestamp'         : 'timestamp',
+    ]
+}
+*/
+
+artifactory {
+	contextUrl = System.getenv('ARTIFACTORY_URL')
+	publish {
+		repository {
+			repoKey = 'libs-snapshot-local'
+			username = System.getenv('ARTIFACTORY_USERNAME')
+			password = System.getenv('ARTIFACTORY_PASSWORD')
+		}
+	}
+}
+
+publishing {
+	publications {
+		maven(MavenPublication) {
+			groupId = group
+			artifactId = 'census-fwmt-csv-service'
+			version = version
+
+			from components.java
+		}
+	}
+}
+
+artifactoryPublish {
+	publications 'maven'
+}
+
+spotbugs {
+	toolVersion = '3.1.9'
+}
+
+tasks.withType(SpotBugsTask) {
+	reports {
+		xml.enabled = false
+		html.enabled = true
+	}
+}
+
+bootRun {
+	String activeProfile = System.properties['spring.profiles.active']
+	systemProperty "spring.profiles.active", activeProfile
+}

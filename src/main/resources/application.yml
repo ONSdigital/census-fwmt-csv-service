@@ -1,0 +1,46 @@
+server:
+  port: 8060
+
+spring:
+  application:
+    name: census-fwmt-csvservice
+  jackson:
+    serialization:
+      WRITE_DATES_AS_TIMESTAMPS: false
+  security:
+    user:
+      name: "user"
+      password: "password"
+
+management:
+  # Place /info and /health in the root
+  endpoints.web.base-path: ''
+  endpoint:
+    health:
+      show-details: always
+
+logging:
+  level:
+    root: WARN
+    uk.gov.ons.census.fwmt: INFO
+    org.springframework.security: INFO
+    org.springframework.web: INFO
+    org.springframework.amqp: INFO
+    org.hibernate: INFO
+    org.apache.commons.dbcp2: INFO
+    org.springframework: INFO
+
+rabbitmq:
+  username: "guest"
+  password: "guest"
+  hostname: "localhost"
+  port: 5672
+  virtualHost: "/"
+  initialinterval: 5000
+  multiplier: 3.0
+  maxInterval: 45000
+
+gcpBucket:
+  celocation: "gs://ce-csv-bucket-dev/ceTestCSV.csv"
+  ccslocation: "gs://ce-csv-bucket-dev/ccsTestCSV.csv"
+

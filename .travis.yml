@@ -1,0 +1,51 @@
+language: java
+jdk: openjdk11
+services:
+- docker
+before_install:
+- docker run -d --name rabbit -p 5672:5672 rabbitmq:3.6
+install: true
+script:
+- |
+  if [[ $TRAVIS_COMMIT_MESSAGE != 'SNAPSHOT UPDATE' ]]; then
+    ./gradlew build --info;
+  fi
+env:
+  global:
+  - SPRING_PROFILES_ACTIVE=default,integration-tests
+branches:
+  only:
+  - master
+before_cache:
+- rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+- rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+cache:
+  directories:
+  - "$HOME/.gradle/caches/"
+  - "$HOME/.gradle/wrapper/"
+after_success:
+- bash <(curl -s https://codecov.io/bash)
+- |
+  set -e
+  if [[ "$TRAVIS_BRANCH" = "master" ]] && [[ "$TRAVIS_PULL_REQUEST" = "false" ]] && [[ $TRAVIS_COMMIT_MESSAGE != "SNAPSHOT UPDATE" ]]; then
+    echo "$DOCKER_PASSWORD" | base64 --decode | docker login "$DOCKER_REGISTRY" --username "$DOCKER_USERNAME" --password-stdin
+    docker build -t "$DOCKER_LOCATION"/census-rm-fwmtcsvservice -t "$DOCKER_LOCATION"/census-rm-fwmtcsvservice:census-fwmt-csv-service-$TRAVIS_BUILD_NUMBER -t "$DOCKER_LOCATION"/census-rm-fwmtcsvservice:snapshot --build-arg jar=build/libs/census-fwmt-csv-service-*.jar .
+    docker push "$DOCKER_LOCATION"/census-rm-fwmtcsvservice
+  fi
+- |
+  set -e
+  if [[ "$TRAVIS_BRANCH" = "master" ]] && [[ "$TRAVIS_PULL_REQUEST" = "false" ]] && [[ $TRAVIS_COMMIT_MESSAGE != "SNAPSHOT UPDATE" ]]; then
+    ./gradlew artifactPublish
+  fi
+- |
+  set -e
+  if [[ "$TRAVIS_BRANCH" = "master" ]] && [[ "$TRAVIS_PULL_REQUEST" = "false" ]] && [[ $TRAVIS_COMMIT_MESSAGE != "SNAPSHOT UPDATE" ]]; then
+    git config --global user.email "$EMAIL"
+    git config --global user.name "$UNAME"
+    git checkout master
+    num=$(($(grep "version = .*\-SNAPSHOT" build.gradle | sed -e 's/^.*\.\([0-9]*\)-.*$/\1/')+1))
+    sed -ie "s/\(^version.*[0-9]*\.[0-9]*\.\)[0-9]*/\1${num}/" build.gradle
+    git add build.gradle
+    git commit -m "SNAPSHOT UPDATE"
+    git push https://$UNAME:$PASSWD@$REPO
+  fi
