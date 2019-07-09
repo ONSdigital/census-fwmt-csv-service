@@ -42,5 +42,5 @@ rabbitmq:
 
 gcpBucket:
   celocation: "gs://ce-csv-bucket-dev/ceTestCSV.csv"
-  ccslocation: "gs://ce-csv-bucket-dev/Main.csv"
+  ccslocation: "gs://ce-csv-bucket-dev/ccsTestCSV.csv"
 

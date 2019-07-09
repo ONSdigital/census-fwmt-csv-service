@@ -50,15 +50,21 @@ public final class CanonicalJobHelper {
     Address address = new Address();
     CreateFieldWorkerJobRequest createJobRequest = new CreateFieldWorkerJobRequest();
 
+    UUID createCaseId = UUID.randomUUID();
+
     createJobRequest.setActionType("Create");
-    createJobRequest.setCaseId(UUID.randomUUID());
-    createJobRequest.setCaseType("CCS");
+    createJobRequest.setCaseId(createCaseId);
+    createJobRequest.setCaseReference(createCaseId.toString());
+    createJobRequest.setCaseType("CCSPL");
     createJobRequest.setCoordinatorId(csvRecordDTO.getCoordinatorId());
     createJobRequest.setMandatoryResource(csvRecordDTO.getCcsInterviewer());
+    createJobRequest.setSurveyType("surveyType");
+    createJobRequest.setEstablishmentType("HH");
 
     address.setPostCode(csvRecordDTO.getPostCode());
     address.setLatitude(csvRecordDTO.getLatitude());
     address.setLongitude(csvRecordDTO.getLongitude());
+    address.setOa(csvRecordDTO.getOa());
     createJobRequest.setAddress(address);
 
     return createJobRequest;
