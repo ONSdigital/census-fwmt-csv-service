@@ -69,7 +69,7 @@ public class CSVRecordDTO {
   private Boolean ceCE1Complete;
 
   @CsvBindByName(column = "ceExpectedCapacity")
-  private int ceExpectedResponses;
+  private int ceExpectedCapacity;
 
   @CsvBindByName(column = "ccsInterviewer")
   private String ccsInterviewer;
