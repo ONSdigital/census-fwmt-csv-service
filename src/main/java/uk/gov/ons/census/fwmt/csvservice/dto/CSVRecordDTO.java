@@ -29,6 +29,9 @@ public class CSVRecordDTO {
   @CsvBindByName(column = "organisationName")
   private String organisationName;
 
+  @CsvBindByName(column = "phoneNumber")
+  private String phoneNumber;
+
   @CsvBindByName(column = "arid")
   private String arid;
 
@@ -58,6 +61,12 @@ public class CSVRecordDTO {
 
   @CsvBindByName(column = "longitude")
   private BigDecimal longitude;
+
+  @CsvBindByName(column = "ceDeliveryReqd")
+  private Boolean ceDeliveryReqd;
+
+  @CsvBindByName(column = "ceCE1Complete")
+  private Boolean ceCE1Complete;
 
   @CsvBindByName(column = "ceExpectedCapacity")
   private int ceExpectedResponses;
