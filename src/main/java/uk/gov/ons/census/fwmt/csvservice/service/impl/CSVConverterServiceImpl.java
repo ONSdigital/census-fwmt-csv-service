@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
+import uk.gov.ons.census.fwmt.canonical.v1.CreateFieldWorkerJobRequest;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.csvservice.canonical.CanonicalJobHelper;
 import uk.gov.ons.census.fwmt.csvservice.dto.CSVRecordDTO;
@@ -68,9 +69,10 @@ public class CSVConverterServiceImpl implements CSVConverterService {
 
     } else {
       for (CSVRecordDTO csvRecordDTO : csvToBean) {
-        csvAdapterService.sendJobRequest(CanonicalJobHelper.createCCSJob(csvRecordDTO));
+        CreateFieldWorkerJobRequest createCCSRequest = CanonicalJobHelper.createCCSJob(csvRecordDTO);
+        csvAdapterService.sendJobRequest(createCCSRequest);
         gatewayEventManager
-                .triggerEvent(String.valueOf(csvRecordDTO.getCaseId()), CSV_CCS_REQUEST_EXTRACTED, LocalTime.now());
+                .triggerEvent(String.valueOf(createCCSRequest.getCaseId()), CSV_CCS_REQUEST_EXTRACTED, LocalTime.now());
       }
     }
   }
