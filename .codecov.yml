@@ -4,3 +4,4 @@ ignore:
   - ".*/health/.*" # ignore folders and all its contents
   - ".*/ApplicationConfig.java"
   - ".*/WebConfig.java"
+  - ".*/interceptor/.*"
