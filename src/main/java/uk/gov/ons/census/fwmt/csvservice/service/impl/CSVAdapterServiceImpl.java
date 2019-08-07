@@ -11,7 +11,7 @@ import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
 
 import java.time.LocalTime;
 
-import static uk.gov.ons.census.fwmt.csvservice.config.GatewayEventsConfig.CANONICAL_CREATE_SENT;
+import static uk.gov.ons.census.fwmt.csvservice.config.GatewayEventsConfig.CANONICAL_CE_CREATE_SENT;
 
 @Slf4j
 @Service
@@ -26,7 +26,6 @@ public class CSVAdapterServiceImpl implements CSVAdapterService {
   @Override
   public void sendJobRequest(CreateFieldWorkerJobRequest ceCreateCase) throws GatewayException {
     jobServiceProducer.sendMessage(ceCreateCase);
-    gatewayEventManager
-        .triggerEvent(ceCreateCase.getCaseId().toString(), CANONICAL_CREATE_SENT, LocalTime.now());
+    gatewayEventManager.triggerEvent(ceCreateCase.getCaseId().toString(), CANONICAL_CE_CREATE_SENT);
   }
 }
