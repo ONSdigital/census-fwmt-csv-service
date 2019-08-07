@@ -9,6 +9,8 @@ import java.util.UUID;
 
 public final class CanonicalJobHelper {
 
+  private static final String CREATE_ACTION_TYPE = "Create";
+
   public static CreateFieldWorkerJobRequest createCEJob(CSVRecordDTO csvRecordDTO) {
     Address address = new Address();
     Contact contact = new Contact();
@@ -38,6 +40,7 @@ public final class CanonicalJobHelper {
     address.setLatitude(csvRecordDTO.getLatitude());
     address.setLongitude(csvRecordDTO.getLongitude());
     createJobRequest.setAddress(address);
+    createJobRequest.setGatewayType(CREATE_ACTION_TYPE);
 
     createJobRequest.setCeDeliveryRequired(true);
     createJobRequest.setCeCE1Complete(false);
@@ -64,6 +67,7 @@ public final class CanonicalJobHelper {
     createJobRequest.setMandatoryResource(csvRecordDTO.getCcsInterviewer());
     createJobRequest.setSurveyType("surveyType");
     createJobRequest.setEstablishmentType("HH");
+    createJobRequest.setGatewayType(CREATE_ACTION_TYPE);
 
     address.setPostCode(csvRecordDTO.getPostCode());
     address.setLatitude(csvRecordDTO.getLatitude());
