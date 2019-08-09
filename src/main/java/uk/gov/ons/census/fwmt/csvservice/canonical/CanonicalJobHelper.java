@@ -20,7 +20,7 @@ public final class CanonicalJobHelper {
     createJobRequest.setCaseId(UUID.fromString(csvRecordDTO.getCaseId()));
     createJobRequest.setCaseReference(csvRecordDTO.getCaseReference());
     createJobRequest.setCaseType("CE");
-    createJobRequest.setSurveyType("CE-EST");
+    createJobRequest.setSurveyType("CE EST");
     createJobRequest.setEstablishmentType(csvRecordDTO.getEstablishmentType());
     createJobRequest.setMandatoryResource(csvRecordDTO.getMandatoryResource());
     createJobRequest.setCoordinatorId(csvRecordDTO.getCoordinatorId());
@@ -62,7 +62,7 @@ public final class CanonicalJobHelper {
     createJobRequest.setActionType("Create");
     createJobRequest.setCaseId(createCaseId);
     createJobRequest.setCaseReference(createCaseId.toString());
-    createJobRequest.setCaseType("CCSPL");
+    createJobRequest.setCaseType("CCS PL");
     createJobRequest.setCoordinatorId(csvRecordDTO.getCoordinatorId());
     createJobRequest.setMandatoryResource(csvRecordDTO.getCcsInterviewer());
     createJobRequest.setSurveyType("surveyType");
