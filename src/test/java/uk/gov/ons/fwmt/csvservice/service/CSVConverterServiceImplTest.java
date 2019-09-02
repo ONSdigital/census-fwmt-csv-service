@@ -38,7 +38,7 @@ public class CSVConverterServiceImplTest {
         csvConverterServiceImpl.convertCSVToCanonical("CCSIngest");
 
         // Then
-        Mockito.verify(gatewayEventManager).triggerEvent(anyString(), eq(CSV_CCS_REQUEST_EXTRACTED), any());
+        Mockito.verify(gatewayEventManager).triggerEvent(anyString(), eq(CSV_CCS_REQUEST_EXTRACTED));
 
     }
 
@@ -52,7 +52,7 @@ public class CSVConverterServiceImplTest {
         csvConverterServiceImpl.convertCSVToCanonical("CEIngest");
 
         // Then
-        Mockito.verify(gatewayEventManager).triggerEvent(anyString(), eq(CSV_CE_REQUEST_EXTRACTED), any());
+        Mockito.verify(gatewayEventManager).triggerEvent(anyString(), eq(CSV_CE_REQUEST_EXTRACTED));
 
     }
 }

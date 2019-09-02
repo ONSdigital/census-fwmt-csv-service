@@ -15,6 +15,7 @@ import uk.gov.ons.census.fwmt.canonical.v1.CreateFieldWorkerJobRequest;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.csvservice.config.GatewayActionsQueueConfig;
 import uk.gov.ons.census.fwmt.csvservice.message.GatewayActionProducer;
+import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
 import uk.gov.ons.fwmt.csvservice.helper.FieldWorkerRequestMessageBuilder;
 
 import static org.junit.Assert.assertEquals;
@@ -41,6 +42,9 @@ public class GatewayActionProducerTest {
 
   @Mock
   private ObjectMapper objectMapper;
+
+  @Mock
+  private GatewayEventManager gatewayEventManager;
 
   @Test
   public void sendMessage() throws JsonProcessingException, GatewayException {

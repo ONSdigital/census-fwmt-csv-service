@@ -40,7 +40,7 @@ public class CSVAdapterServiceImplTest {
     csvAdapterServiceImpl.sendJobRequest(createJobRequest);
 
     // Then
-    Mockito.verify(gatewayEventManager).triggerEvent(anyString(), eq(CANONICAL_CE_CREATE_SENT), any());
+    Mockito.verify(gatewayEventManager).triggerEvent(anyString(), eq(CANONICAL_CE_CREATE_SENT));
   }
 
 }
