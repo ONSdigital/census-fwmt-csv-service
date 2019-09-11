@@ -1,7 +1,11 @@
 package uk.gov.ons.census.fwmt.csvservice.message;
 
 import org.springframework.amqp.core.DirectExchange;
+import org.springframework.amqp.core.Message;
+import org.springframework.amqp.core.MessageProperties;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
+import org.springframework.amqp.support.converter.MessageConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.retry.annotation.Retryable;
@@ -37,7 +41,9 @@ public class GatewayActionProducer {
   @Retryable
   public void sendMessage(CreateFieldWorkerJobRequest dto) throws GatewayException {
     String JSONJobRequest = convertToJSON(dto);
-    rabbitTemplate.convertAndSend(gatewayActionsExchange.getName(), GatewayActionsQueueConfig.GATEWAY_ACTIONS_ROUTING_KEY, JSONJobRequest);
+    Message gatewayMessage = convertJSONToMessage(JSONJobRequest);
+
+    rabbitTemplate.convertAndSend(gatewayActionsExchange.getName(), GatewayActionsQueueConfig.GATEWAY_ACTIONS_ROUTING_KEY, gatewayMessage);
   }
 
   private String convertToJSON(CreateFieldWorkerJobRequest dto) throws GatewayException {
@@ -50,5 +56,13 @@ public class GatewayActionProducer {
       throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, msg, e);
     }
     return JSONJobRequest;
+  }
+  
+  private Message convertJSONToMessage(String messageJSON) {
+    MessageProperties messageProperties = new MessageProperties();
+    messageProperties.setContentType("application/json");
+    MessageConverter messageConverter = new Jackson2JsonMessageConverter();
+
+    return messageConverter.toMessage(messageJSON, messageProperties);
   }
 }
