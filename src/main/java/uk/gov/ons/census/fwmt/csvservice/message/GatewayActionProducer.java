@@ -1,5 +1,6 @@
 package uk.gov.ons.census.fwmt.csvservice.message;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.amqp.core.DirectExchange;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.core.MessageProperties;
@@ -15,15 +16,23 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.extern.slf4j.Slf4j;
+import uk.gov.ons.census.fwmt.canonical.v1.CancelFieldWorkerJobRequest;
 import uk.gov.ons.census.fwmt.canonical.v1.CreateFieldWorkerJobRequest;
+import uk.gov.ons.census.fwmt.canonical.v1.UpdateFieldWorkerJobRequest;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.csvservice.config.GatewayActionsQueueConfig;
 import uk.gov.ons.census.fwmt.csvservice.config.GatewayEventsConfig;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
 
+import java.io.IOException;
+import java.util.UUID;
+
 @Slf4j
 @Component
 public class GatewayActionProducer {
+
+  @Autowired
+  private GatewayEventManager gatewayEventManager;
 
   @Autowired
   private RabbitTemplate rabbitTemplate;
@@ -35,34 +44,54 @@ public class GatewayActionProducer {
   @Autowired
   private ObjectMapper objectMapper;
 
-  @Autowired
-  private GatewayEventManager gatewayEventManager;
-  
   @Retryable
-  public void sendMessage(CreateFieldWorkerJobRequest dto) throws GatewayException {
+  public void sendMessage(Object dto) throws GatewayException {
     String JSONJobRequest = convertToJSON(dto);
+
     Message gatewayMessage = convertJSONToMessage(JSONJobRequest);
 
-    rabbitTemplate.convertAndSend(gatewayActionsExchange.getName(), GatewayActionsQueueConfig.GATEWAY_ACTIONS_ROUTING_KEY, gatewayMessage);
+    rabbitTemplate.convertAndSend(gatewayActionsExchange.getName(),
+            GatewayActionsQueueConfig.GATEWAY_ACTIONS_ROUTING_KEY, gatewayMessage);
   }
 
-  private String convertToJSON(CreateFieldWorkerJobRequest dto) throws GatewayException {
+  protected String convertToJSON(Object dto) throws GatewayException {
     String JSONJobRequest;
     try {
       JSONJobRequest = objectMapper.writeValueAsString(dto);
+      return JSONJobRequest;
     } catch (JsonProcessingException e) {
-      String msg = "Failed to process JSON.";
-      gatewayEventManager.triggerErrorEvent(this.getClass(), e, msg, "<UNKNOWN>", GatewayEventsConfig.FAILED_TO_MARSHALL_CANONICAL);
-      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, msg, e);
+      String msg = "Failed to convert to JSON.";
+      gatewayEventManager
+              .triggerErrorEvent(this.getClass(), e, msg, getCaseId(dto), GatewayEventsConfig.FAILED_TO_MARSHALL_CANONICAL);
+      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, ".", e);
     }
-    return JSONJobRequest;
   }
-  
-  private Message convertJSONToMessage(String messageJSON) {
+
+  private String getCaseId(Object dto) {
+    String caseId = "<NULL>";
+    UUID uuid = null;
+    if (dto instanceof CreateFieldWorkerJobRequest) {
+      uuid = ((CreateFieldWorkerJobRequest) dto).getCaseId();
+    } else if (dto instanceof CancelFieldWorkerJobRequest) {
+      uuid = ((CancelFieldWorkerJobRequest) dto).getCaseId();
+    } else if (dto instanceof UpdateFieldWorkerJobRequest) {
+      uuid = ((UpdateFieldWorkerJobRequest) dto).getCaseId();
+    }
+    if (uuid != null)
+      caseId = uuid.toString();
+    return caseId;
+  }
+
+  public Message convertJSONToMessage(String messageJSON) throws GatewayException {
     MessageProperties messageProperties = new MessageProperties();
     messageProperties.setContentType("application/json");
     MessageConverter messageConverter = new Jackson2JsonMessageConverter();
 
-    return messageConverter.toMessage(messageJSON, messageProperties);
+    try {
+      JsonNode object = objectMapper.readTree(messageJSON);
+      return messageConverter.toMessage(object, messageProperties);
+    } catch (IOException e) {
+      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, "Unable to convert JSON to message");
+    }
   }
 }
