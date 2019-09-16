@@ -1,14 +1,7 @@
 package uk.gov.ons.fwmt.csvservice.message;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.google.api.client.json.Json;
-import com.google.api.client.json.JsonParser;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
@@ -28,13 +21,11 @@ import uk.gov.ons.census.fwmt.csvservice.message.GatewayActionProducer;
 import uk.gov.ons.fwmt.csvservice.helper.FieldWorkerRequestMessageBuilder;
 
 import java.io.IOException;
-import java.util.ArrayList;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.any;
 
 @RunWith(MockitoJUnitRunner.class)
 public class GatewayActionProducerTest {
@@ -64,7 +55,6 @@ public class GatewayActionProducerTest {
     //Given
     Message message;
     MessageConverter messageConverter = new Jackson2JsonMessageConverter();
-    ObjectMapper jsonMapper = new ObjectMapper();
     JsonNode jsonNode = null;
     ObjectMapper objectMapper1 = new ObjectMapper();
     FieldWorkerRequestMessageBuilder messageBuilder = new FieldWorkerRequestMessageBuilder();
