@@ -62,12 +62,10 @@ public final class CanonicalJobHelper {
     createJobRequest.setActionType("Create");
     createJobRequest.setCaseId(createCaseId);
     createJobRequest.setCaseReference(createCaseId.toString());
-    // Case type needs to be changed to below after tests are completed
-    //createJobRequest.setCaseType("CCS PL");
     createJobRequest.setCaseType("CCSPL");
     createJobRequest.setCoordinatorId(csvRecordDTO.getCoordinatorId());
     createJobRequest.setMandatoryResource(csvRecordDTO.getCcsInterviewer());
-    createJobRequest.setSurveyType("surveyType");
+    createJobRequest.setSurveyType("CCS PL");
     createJobRequest.setEstablishmentType("HH");
     createJobRequest.setGatewayType(CREATE_ACTION_TYPE);
 
