@@ -68,6 +68,7 @@ public final class CanonicalJobHelper {
     createJobRequest.setSurveyType("CCS PL");
     createJobRequest.setEstablishmentType("HH");
     createJobRequest.setGatewayType(CREATE_ACTION_TYPE);
+    createJobRequest.setCategory("Not applicable");
 
     address.setPostCode(csvRecordDTO.getPostCode());
     address.setLatitude(csvRecordDTO.getLatitude());
