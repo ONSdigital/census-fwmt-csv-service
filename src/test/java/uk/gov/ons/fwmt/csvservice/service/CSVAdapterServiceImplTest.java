@@ -32,16 +32,29 @@ public class CSVAdapterServiceImplTest {
   private GatewayActionProducer gatewayActionProducer;
 
   @Test
-  public void sendRequestToJobService() throws GatewayException {
+  public void sendCCSRequestToJobService() throws GatewayException {
     // Given
     CreateFieldWorkerJobRequest createJobRequest = new FieldWorkerRequestMessageBuilder()
-        .buildCreateFieldWorkerJobRequest();
+        .buildCreateFieldWorkerJobRequestCCS();
 
     // When
     csvAdapterServiceImpl.sendJobRequest(createJobRequest);
 
     // Then
     Mockito.verify(gatewayEventManager).triggerEvent(anyString(), eq(CANONICAL_CCS_CREATE_SENT));
+  }
+
+  @Test
+  public void sendCERequestToJobService() throws GatewayException {
+    // Given
+    CreateFieldWorkerJobRequest createJobRequest = new FieldWorkerRequestMessageBuilder()
+            .buildCreateFieldWorkerJobRequestCE();
+
+    // When
+    csvAdapterServiceImpl.sendJobRequest(createJobRequest);
+
+    // Then
+    Mockito.verify(gatewayEventManager).triggerEvent(anyString(), eq(CANONICAL_CE_CREATE_SENT));
   }
 
 }
