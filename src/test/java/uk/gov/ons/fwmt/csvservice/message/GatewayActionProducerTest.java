@@ -86,7 +86,7 @@ public class GatewayActionProducerTest {
   public void sendBadMessage() throws JsonProcessingException, GatewayException {
     //Given
     FieldWorkerRequestMessageBuilder messageBuilder = new FieldWorkerRequestMessageBuilder();
-    CreateFieldWorkerJobRequest createJobRequest = messageBuilder.buildCreateFieldWorkerJobRequest();
+    CreateFieldWorkerJobRequest createJobRequest = messageBuilder.buildCreateFieldWorkerJobRequestCCS();
     when(objectMapper.writeValueAsString(eq(createJobRequest))).thenThrow(new JsonProcessingException("Error") {
     });
 
