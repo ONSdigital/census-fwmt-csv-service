@@ -42,8 +42,10 @@ public class CSVConverterServiceImplTest {
     @Test
     public void convertCCSCSVToCanonicalTest () throws GatewayException {
         // Given
-        Resource testResource = new ClassPathResource("testCCSCSV.csv");
-        Path testPath = Paths.get("/Users/scorfs/Documents/Dev/census-fwmt-csv-service/src/test/resources/testCCSCSV.csv");
+        ClassLoader classLoader = getClass().getClassLoader();
+        String testPathString = classLoader.getResource("testCCSCSV.csv").getPath();
+        Path testPath = Path.of("/", testPathString);
+        Resource testResource = new FileSystemResource(testPathString);
         ReflectionTestUtils.setField(csvConverterServiceImpl, "ccsPath", testResource);
         ReflectionTestUtils.setField(csvConverterServiceImpl, "ccsPathFileName", testPath);
 
@@ -58,8 +60,13 @@ public class CSVConverterServiceImplTest {
     @Test
     public void convertCECSVToCanonicalTest () throws GatewayException {
         // Given
-        Resource testResource = new ClassPathResource("testCECSV.csv");
+        ClassLoader classLoader = getClass().getClassLoader();
+        String testPathString = classLoader.getResource("testCECSV.csv").getPath();
+        Path testPath = Path.of("/", testPathString);
+       
+        Resource testResource = new FileSystemResource(testPathString);
         ReflectionTestUtils.setField(csvConverterServiceImpl, "cePath", testResource);
+        ReflectionTestUtils.setField(csvConverterServiceImpl, "cePathFileName", testPath);
 
         // When
         csvConverterServiceImpl.convertCSVToCanonical("CEIngest");
