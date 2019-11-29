@@ -1,14 +1,13 @@
-package uk.gov.ons.census.fwmt.csvservice.canonical;
+package uk.gov.ons.census.fwmt.csvservice.service.ce;
 
 import uk.gov.ons.census.fwmt.canonical.v1.Address;
 import uk.gov.ons.census.fwmt.canonical.v1.Contact;
 import uk.gov.ons.census.fwmt.canonical.v1.CreateFieldWorkerJobRequest;
-import uk.gov.ons.census.fwmt.csvservice.dto.CCSPropertyListing;
 import uk.gov.ons.census.fwmt.csvservice.dto.CEJobListing;
 
 import java.util.UUID;
 
-public final class CanonicalJobHelper {
+public final class CECanonicalBuilder {
 
   private static final String CREATE_ACTION_TYPE = "Create";
 
@@ -54,29 +53,4 @@ public final class CanonicalJobHelper {
     return createJobRequest;
   }
 
-  public static CreateFieldWorkerJobRequest createCCSJob(CCSPropertyListing ccsPropertyListing) {
-    Address address = new Address();
-    CreateFieldWorkerJobRequest createJobRequest = new CreateFieldWorkerJobRequest();
-
-    UUID createCaseId = UUID.randomUUID();
-
-    createJobRequest.setActionType("Create");
-    createJobRequest.setCaseId(createCaseId);
-    createJobRequest.setCaseReference(createCaseId.toString());
-    createJobRequest.setCaseType("CCSPL");
-    createJobRequest.setCoordinatorId(ccsPropertyListing.getCoordinatorId());
-    createJobRequest.setMandatoryResource(ccsPropertyListing.getCcsInterviewer());
-    createJobRequest.setSurveyType("CCS PL");
-    createJobRequest.setEstablishmentType("HH");
-    createJobRequest.setGatewayType(CREATE_ACTION_TYPE);
-    createJobRequest.setCategory("Not applicable");
-
-    address.setPostCode(ccsPropertyListing.getPostCode());
-    address.setLatitude(ccsPropertyListing.getLatitude());
-    address.setLongitude(ccsPropertyListing.getLongitude());
-    address.setOa(ccsPropertyListing.getOa());
-    createJobRequest.setAddress(address);
-
-    return createJobRequest;
-  }
 }

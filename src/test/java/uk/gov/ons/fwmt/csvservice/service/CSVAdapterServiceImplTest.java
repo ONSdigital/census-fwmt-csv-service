@@ -9,7 +9,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import uk.gov.ons.census.fwmt.canonical.v1.CreateFieldWorkerJobRequest;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.csvservice.message.GatewayActionProducer;
-import uk.gov.ons.census.fwmt.csvservice.service.impl.CSVAdapterServiceImpl;
+import uk.gov.ons.census.fwmt.csvservice.service.ce.CSVAdapterServiceImpl;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
 import uk.gov.ons.fwmt.csvservice.helper.FieldWorkerRequestMessageBuilder;
 

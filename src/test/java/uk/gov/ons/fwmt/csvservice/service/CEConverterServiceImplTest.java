@@ -11,8 +11,8 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.WritableResource;
 import org.springframework.test.util.ReflectionTestUtils;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
-import uk.gov.ons.census.fwmt.csvservice.service.impl.CEConverterServiceImpl;
-import uk.gov.ons.census.fwmt.csvservice.service.impl.CSVAdapterServiceImpl;
+import uk.gov.ons.census.fwmt.csvservice.service.ce.CEConverterServiceImpl;
+import uk.gov.ons.census.fwmt.csvservice.service.ce.CSVAdapterServiceImpl;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
 
 import java.io.OutputStream;

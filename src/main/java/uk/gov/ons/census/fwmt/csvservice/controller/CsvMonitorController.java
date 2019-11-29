@@ -13,17 +13,17 @@ import java.util.Map;
 public class CsvMonitorController {
 
   @Autowired
-  private Map<String, CSVConverterService> csvConverterServiceImpl;
+  private Map<String, CSVConverterService> serviceMap;
 
   @GetMapping("/ingestCeCsvFile")
   public ResponseEntity ingestCeCsvFile() throws GatewayException {
-    csvConverterServiceImpl.get("CE").convertCSVToCanonical();
+    serviceMap.get("CE").convertCSVToCanonical();
     return ResponseEntity.ok("CSV adapter service activated");
   }
 
   @GetMapping("/ingestCCSCsvFile")
   public ResponseEntity ingestCSSCsvFile() throws GatewayException {
-    csvConverterServiceImpl.get("CCS").convertCSVToCanonical();
+    serviceMap.get("CCS").convertCSVToCanonical();
     return ResponseEntity.ok("CSV adapter service activated");
   }
 }

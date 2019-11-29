@@ -33,7 +33,7 @@ public final class CsvServiceUtils {
       }
     }
     try {
-      Files.move(csvPath,processedPath);
+      Files.move(csvPath, processedPath);
     } catch (IOException e) {
       throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, e, "Unable to move Ingest CSV");
     }
