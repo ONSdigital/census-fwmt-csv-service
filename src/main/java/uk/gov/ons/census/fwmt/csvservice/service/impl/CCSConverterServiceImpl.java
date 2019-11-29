@@ -24,7 +24,7 @@ import java.nio.file.Path;
 
 import static uk.gov.ons.census.fwmt.csvservice.config.GatewayEventsConfig.CANONICAL_CCS_CREATE_SENT;
 import static uk.gov.ons.census.fwmt.csvservice.config.GatewayEventsConfig.CSV_CCS_REQUEST_EXTRACTED;
-import static uk.gov.ons.census.fwmt.csvservice.utils.CsvServiceUtils.moveCcsFile;
+import static uk.gov.ons.census.fwmt.csvservice.utils.CsvServiceUtils.moveCsvFile;
 
 @Slf4j
 @Service("CE")
@@ -64,6 +64,6 @@ public class CCSConverterServiceImpl implements CSVConverterService {
       gatewayEventManager
           .triggerEvent(String.valueOf(createFieldWorkerJobRequest.getCaseId()), CSV_CCS_REQUEST_EXTRACTED);
     }
-    moveCcsFile(csvGCPFile, csvPath, processedPath);
+    moveCsvFile(csvGCPFile, csvPath, processedPath);
   }
 }

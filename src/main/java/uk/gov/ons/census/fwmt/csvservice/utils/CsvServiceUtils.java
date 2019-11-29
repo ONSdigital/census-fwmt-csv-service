@@ -14,7 +14,7 @@ import java.time.Instant;
 
 public final class CsvServiceUtils {
 
-  public static void moveCcsFile(Resource csvGCPFile, Path csvPath, Path processedPath) throws GatewayException {
+  public static void moveCsvFile(Resource csvGCPFile, Path csvPath, Path processedPath) throws GatewayException {
     Timestamp timestamp = new Timestamp(System.currentTimeMillis());
     Instant instant = timestamp.toInstant();
     String csvFileExtension = csvGCPFile.getFilename();
