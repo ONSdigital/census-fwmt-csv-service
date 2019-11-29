@@ -1,4 +1,4 @@
-package uk.gov.ons.census.fwmt.csvservice.service.ce;
+package uk.gov.ons.census.fwmt.csvservice.implementation.ce;
 
 import uk.gov.ons.census.fwmt.canonical.v1.Address;
 import uk.gov.ons.census.fwmt.canonical.v1.Contact;

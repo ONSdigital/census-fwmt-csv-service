@@ -10,7 +10,7 @@ import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static uk.gov.ons.census.fwmt.csvservice.service.ce.CECanonicalBuilder.createCEJob;
+import static uk.gov.ons.census.fwmt.csvservice.implementation.ce.CECanonicalBuilder.createCEJob;
 
 public class CanonicalJobHelperTest {
 

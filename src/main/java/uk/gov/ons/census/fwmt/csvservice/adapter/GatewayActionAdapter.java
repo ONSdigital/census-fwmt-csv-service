@@ -8,7 +8,6 @@ import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.csvservice.message.GatewayActionProducer;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
 
-@Slf4j
 @Component
 public class GatewayActionAdapter {
 

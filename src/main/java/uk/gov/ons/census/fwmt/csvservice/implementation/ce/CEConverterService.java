@@ -1,4 +1,4 @@
-package uk.gov.ons.census.fwmt.csvservice.service.ce;
+package uk.gov.ons.census.fwmt.csvservice.implementation.ce;
 
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
@@ -20,14 +20,13 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 
-import static uk.gov.ons.census.fwmt.csvservice.service.ce.CECanonicalBuilder.createCEJob;
-import static uk.gov.ons.census.fwmt.csvservice.service.ce.CEGatewayEventsConfig.CANONICAL_CE_CREATE_SENT;
-import static uk.gov.ons.census.fwmt.csvservice.service.ce.CEGatewayEventsConfig.CSV_CE_REQUEST_EXTRACTED;
+import static uk.gov.ons.census.fwmt.csvservice.implementation.ce.CECanonicalBuilder.createCEJob;
+import static uk.gov.ons.census.fwmt.csvservice.implementation.ce.CEGatewayEventsConfig.CANONICAL_CE_CREATE_SENT;
+import static uk.gov.ons.census.fwmt.csvservice.implementation.ce.CEGatewayEventsConfig.CSV_CE_REQUEST_EXTRACTED;
 import static uk.gov.ons.census.fwmt.csvservice.utils.CsvServiceUtils.moveCsvFile;
 
-@Slf4j
 @Service("CE")
-public class CEConverterServiceImpl implements CSVConverterService {
+public class CEConverterService implements CSVConverterService {
 
   @Value("${gcpBucket.celocation}")
   private Resource csvGCPFile;

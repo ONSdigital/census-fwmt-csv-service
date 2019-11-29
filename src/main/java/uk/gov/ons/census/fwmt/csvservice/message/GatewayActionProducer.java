@@ -19,7 +19,6 @@ import uk.gov.ons.census.fwmt.csvservice.config.GatewayActionsQueueConfig;
 import uk.gov.ons.census.fwmt.csvservice.config.GatewayEventsConfig;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
 
-@Slf4j
 @Component
 public class GatewayActionProducer {
 

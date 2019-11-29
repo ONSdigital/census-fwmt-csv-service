@@ -1,4 +1,4 @@
-package uk.gov.ons.census.fwmt.csvservice.service.ccs;
+package uk.gov.ons.census.fwmt.csvservice.implementation.ccs;
 
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
@@ -20,14 +20,13 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 
-import static uk.gov.ons.census.fwmt.csvservice.service.ccs.CCSCanonicalBuilder.createCCSJob;
-import static uk.gov.ons.census.fwmt.csvservice.service.ccs.CCSGatewayEventsConfig.CANONICAL_CCS_CREATE_SENT;
-import static uk.gov.ons.census.fwmt.csvservice.service.ccs.CCSGatewayEventsConfig.CSV_CCS_REQUEST_EXTRACTED;
+import static uk.gov.ons.census.fwmt.csvservice.implementation.ccs.CCSCanonicalBuilder.createCCSJob;
+import static uk.gov.ons.census.fwmt.csvservice.implementation.ccs.CCSGatewayEventsConfig.CANONICAL_CCS_CREATE_SENT;
+import static uk.gov.ons.census.fwmt.csvservice.implementation.ccs.CCSGatewayEventsConfig.CSV_CCS_REQUEST_EXTRACTED;
 import static uk.gov.ons.census.fwmt.csvservice.utils.CsvServiceUtils.moveCsvFile;
 
-@Slf4j
 @Service("CE")
-public class CCSConverterServiceImpl implements CSVConverterService {
+public class CCSConverterService implements CSVConverterService {
   @Value("${gcpBucket.ccslocation}")
   private Resource csvGCPFile;
 

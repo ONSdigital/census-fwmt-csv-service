@@ -11,8 +11,8 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.WritableResource;
 import org.springframework.test.util.ReflectionTestUtils;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
-import uk.gov.ons.census.fwmt.csvservice.service.ce.CCSConverterServiceImpl;
-import uk.gov.ons.census.fwmt.csvservice.service.ce.GatewayActionAdapter;
+import uk.gov.ons.census.fwmt.csvservice.implementation.ce.CCSConverterServiceImpl;
+import uk.gov.ons.census.fwmt.csvservice.implementation.ce.GatewayActionAdapter;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
 
 import java.io.OutputStream;
@@ -26,7 +26,7 @@ import static uk.gov.ons.census.fwmt.csvservice.config.GatewayEventsConfig.CSV_C
 public class CCSConverterServiceImplTest {
 
   @InjectMocks
-  private CCSConverterServiceImpl ccsConverterService;
+  private CCSConverterService ccsConverterService;
 
   @Mock
   private GatewayActionAdapter gatewayActionAdapter;
