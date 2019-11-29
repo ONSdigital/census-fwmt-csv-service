@@ -43,6 +43,6 @@ rabbitmq:
 gcpBucket:
   celocation: "gs://ce-csv-bucket-dev/ceTestCSV.csv"
   ccslocation: "gs://ce-csv-bucket-dev/ccsTestCSV.csv"
-  ceProcessed: "gs://ce-csv-bucket-dev/processed"
+  ceProcessedPath: "gs://ce-csv-bucket-dev/processed"
   ccsProcessedPath: "gs://ce-csv-bucket-dev/processed"
 
