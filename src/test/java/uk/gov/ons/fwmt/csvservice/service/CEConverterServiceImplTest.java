@@ -48,9 +48,9 @@ public class CEConverterServiceImplTest {
     Path testPath = Path.of("/", testPathString);
     Resource testResource = new FileSystemResource(testPathString);
 
-    ReflectionTestUtils.setField(ceConverterService, "cePath", testResource);
-    ReflectionTestUtils.setField(ceConverterService, "cePathFileName", testPath);
-    ReflectionTestUtils.setField(ceConverterService, "ceProcessedPath", testPath);
+    ReflectionTestUtils.setField(ceConverterService, "csvGCPFile", testResource);
+    ReflectionTestUtils.setField(ceConverterService, "csvPath", testPath);
+    ReflectionTestUtils.setField(ceConverterService, "processedPath", testPath);
 
     // When
     ceConverterService.convertCSVToCanonical();

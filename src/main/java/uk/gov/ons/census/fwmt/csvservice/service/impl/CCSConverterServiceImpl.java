@@ -49,7 +49,7 @@ public class CCSConverterServiceImpl implements CSVConverterService {
     CsvToBean<CCSPropertyListing> csvToBean;
     try {
       csvToBean = new CsvToBeanBuilder(new InputStreamReader(csvGCPFile.getInputStream(), StandardCharsets.UTF_8))
-          .withType(CEJobListing.class)
+          .withType(CCSPropertyListing.class)
           .build();
 
     } catch (IOException e) {
