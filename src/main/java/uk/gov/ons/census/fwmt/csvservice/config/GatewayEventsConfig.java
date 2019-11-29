@@ -2,7 +2,6 @@ package uk.gov.ons.census.fwmt.csvservice.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
 import uk.gov.ons.census.fwmt.csvservice.Application;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
 
@@ -22,7 +21,8 @@ public class GatewayEventsConfig {
     GatewayEventManager gatewayEventManager = new GatewayEventManager();
     gatewayEventManager.setSource(Application.APPLICATION_NAME);
     gatewayEventManager.addErrorEventTypes(new String[] {UNABLE_TO_READ_CSV, FAILED_TO_MARSHALL_CANONICAL});
-    gatewayEventManager.addEventTypes(new String[] {CANONICAL_CCS_CREATE_SENT, CANONICAL_CE_CREATE_SENT, CSV_CCS_REQUEST_EXTRACTED, CSV_CE_REQUEST_EXTRACTED});
+    gatewayEventManager.addEventTypes(new String[] {CANONICAL_CCS_CREATE_SENT, CANONICAL_CE_CREATE_SENT,
+        CSV_CCS_REQUEST_EXTRACTED, CSV_CE_REQUEST_EXTRACTED});
     return gatewayEventManager;
   }
 }

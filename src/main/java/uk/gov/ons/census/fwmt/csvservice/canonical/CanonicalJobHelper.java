@@ -3,7 +3,8 @@ package uk.gov.ons.census.fwmt.csvservice.canonical;
 import uk.gov.ons.census.fwmt.canonical.v1.Address;
 import uk.gov.ons.census.fwmt.canonical.v1.Contact;
 import uk.gov.ons.census.fwmt.canonical.v1.CreateFieldWorkerJobRequest;
-import uk.gov.ons.census.fwmt.csvservice.dto.CSVRecordDTO;
+import uk.gov.ons.census.fwmt.csvservice.dto.CCSPropertyListing;
+import uk.gov.ons.census.fwmt.csvservice.dto.CEJobListing;
 
 import java.util.UUID;
 
@@ -11,40 +12,40 @@ public final class CanonicalJobHelper {
 
   private static final String CREATE_ACTION_TYPE = "Create";
 
-  public static CreateFieldWorkerJobRequest createCEJob(CSVRecordDTO csvRecordDTO) {
+  public static CreateFieldWorkerJobRequest createCEJob(CEJobListing CEJobListing) {
     Address address = new Address();
     Contact contact = new Contact();
     CreateFieldWorkerJobRequest createJobRequest = new CreateFieldWorkerJobRequest();
 
     createJobRequest.setActionType("Create");
-    createJobRequest.setCaseId(UUID.fromString(csvRecordDTO.getCaseId()));
-    createJobRequest.setCaseReference(csvRecordDTO.getCaseReference());
+    createJobRequest.setCaseId(UUID.fromString(CEJobListing.getCaseId()));
+    createJobRequest.setCaseReference(CEJobListing.getCaseReference());
     createJobRequest.setCaseType("CE");
     createJobRequest.setSurveyType("CE EST");
-    createJobRequest.setEstablishmentType(csvRecordDTO.getEstablishmentType());
-    createJobRequest.setMandatoryResource(csvRecordDTO.getMandatoryResource());
-    createJobRequest.setCoordinatorId(csvRecordDTO.getCoordinatorId());
+    createJobRequest.setEstablishmentType(CEJobListing.getEstablishmentType());
+    createJobRequest.setMandatoryResource(CEJobListing.getMandatoryResource());
+    createJobRequest.setCoordinatorId(CEJobListing.getCoordinatorId());
     createJobRequest.setCategory("Not applicable");
 
-    contact.setOrganisationName(csvRecordDTO.getOrganisationName());
+    contact.setOrganisationName(CEJobListing.getOrganisationName());
     createJobRequest.setContact(contact);
 
-    address.setArid(csvRecordDTO.getArid());
-    address.setUprn(csvRecordDTO.getUprn());
-    address.setLine1(csvRecordDTO.getLine1());
-    address.setLine2(csvRecordDTO.getLine2());
-    address.setLine3(csvRecordDTO.getLine3());
-    address.setTownName(csvRecordDTO.getTownName());
-    address.setPostCode(csvRecordDTO.getPostCode());
-    address.setOa(csvRecordDTO.getOa());
-    address.setLatitude(csvRecordDTO.getLatitude());
-    address.setLongitude(csvRecordDTO.getLongitude());
+    address.setArid(CEJobListing.getArid());
+    address.setUprn(CEJobListing.getUprn());
+    address.setLine1(CEJobListing.getLine1());
+    address.setLine2(CEJobListing.getLine2());
+    address.setLine3(CEJobListing.getLine3());
+    address.setTownName(CEJobListing.getTownName());
+    address.setPostCode(CEJobListing.getPostCode());
+    address.setOa(CEJobListing.getOa());
+    address.setLatitude(CEJobListing.getLatitude());
+    address.setLongitude(CEJobListing.getLongitude());
     createJobRequest.setAddress(address);
     createJobRequest.setGatewayType(CREATE_ACTION_TYPE);
 
     createJobRequest.setCeDeliveryRequired(true);
     createJobRequest.setCeCE1Complete(false);
-    createJobRequest.setCeExpectedResponses(csvRecordDTO.getCeExpectedCapacity());
+    createJobRequest.setCeExpectedResponses(CEJobListing.getCeExpectedCapacity());
     createJobRequest.setCeActualResponses(0);
     createJobRequest.setUua(false);
     createJobRequest.setBlankFormReturned(false);
@@ -53,7 +54,7 @@ public final class CanonicalJobHelper {
     return createJobRequest;
   }
 
-  public static CreateFieldWorkerJobRequest createCCSJob(CSVRecordDTO csvRecordDTO) {
+  public static CreateFieldWorkerJobRequest createCCSJob(CCSPropertyListing ccsPropertyListing) {
     Address address = new Address();
     CreateFieldWorkerJobRequest createJobRequest = new CreateFieldWorkerJobRequest();
 
@@ -63,17 +64,17 @@ public final class CanonicalJobHelper {
     createJobRequest.setCaseId(createCaseId);
     createJobRequest.setCaseReference(createCaseId.toString());
     createJobRequest.setCaseType("CCSPL");
-    createJobRequest.setCoordinatorId(csvRecordDTO.getCoordinatorId());
-    createJobRequest.setMandatoryResource(csvRecordDTO.getCcsInterviewer());
+    createJobRequest.setCoordinatorId(ccsPropertyListing.getCoordinatorId());
+    createJobRequest.setMandatoryResource(ccsPropertyListing.getCcsInterviewer());
     createJobRequest.setSurveyType("CCS PL");
     createJobRequest.setEstablishmentType("HH");
     createJobRequest.setGatewayType(CREATE_ACTION_TYPE);
     createJobRequest.setCategory("Not applicable");
 
-    address.setPostCode(csvRecordDTO.getPostCode());
-    address.setLatitude(csvRecordDTO.getLatitude());
-    address.setLongitude(csvRecordDTO.getLongitude());
-    address.setOa(csvRecordDTO.getOa());
+    address.setPostCode(ccsPropertyListing.getPostCode());
+    address.setLatitude(ccsPropertyListing.getLatitude());
+    address.setLongitude(ccsPropertyListing.getLongitude());
+    address.setOa(ccsPropertyListing.getOa());
     createJobRequest.setAddress(address);
 
     return createJobRequest;

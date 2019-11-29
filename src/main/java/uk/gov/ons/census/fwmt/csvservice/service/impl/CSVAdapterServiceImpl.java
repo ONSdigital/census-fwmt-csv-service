@@ -9,11 +9,6 @@ import uk.gov.ons.census.fwmt.csvservice.message.GatewayActionProducer;
 import uk.gov.ons.census.fwmt.csvservice.service.CSVAdapterService;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
 
-import java.time.LocalTime;
-
-import static uk.gov.ons.census.fwmt.csvservice.config.GatewayEventsConfig.CANONICAL_CCS_CREATE_SENT;
-import static uk.gov.ons.census.fwmt.csvservice.config.GatewayEventsConfig.CANONICAL_CE_CREATE_SENT;
-
 @Slf4j
 @Service
 public class CSVAdapterServiceImpl implements CSVAdapterService {
@@ -25,13 +20,8 @@ public class CSVAdapterServiceImpl implements CSVAdapterService {
   private GatewayActionProducer jobServiceProducer;
 
   @Override
-  public void sendJobRequest(CreateFieldWorkerJobRequest createdMessage) throws GatewayException {
-    if (createdMessage.getCaseType() == "CE") {
-      jobServiceProducer.sendMessage(createdMessage);
-      gatewayEventManager.triggerEvent(createdMessage.getCaseId().toString(), CANONICAL_CE_CREATE_SENT);
-    } else {
-      jobServiceProducer.sendMessage(createdMessage);
-      gatewayEventManager.triggerEvent(createdMessage.getCaseId().toString(), CANONICAL_CCS_CREATE_SENT);
-    }
+  public void sendJobRequest(CreateFieldWorkerJobRequest createdMessage, String event) throws GatewayException {
+    jobServiceProducer.sendMessage(createdMessage);
+    gatewayEventManager.triggerEvent(createdMessage.getCaseId().toString(), event);
   }
 }

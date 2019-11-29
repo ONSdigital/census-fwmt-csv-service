@@ -7,9 +7,12 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.http.ResponseEntity;
 import uk.gov.ons.census.fwmt.csvservice.controller.CsvMonitorController;
-import uk.gov.ons.census.fwmt.csvservice.service.impl.CSVConverterServiceImpl;
+import uk.gov.ons.census.fwmt.csvservice.service.CSVConverterService;
+
+import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CsvMonitorControllerTest {
@@ -17,7 +20,7 @@ public class CsvMonitorControllerTest {
   private CsvMonitorController csvMonitorController;
 
   @Mock
-  private CSVConverterServiceImpl csvConverterService;
+  private Map<String, CSVConverterService> csvConverterServiceImpl;
 
   @Test
   public void testCECsvMonitorController() throws Exception {
@@ -26,6 +29,7 @@ public class CsvMonitorControllerTest {
 
     assertEquals("CSV adapter service activated", responseEntity.getBody());
     assertEquals(200, responseEntity.getStatusCodeValue());
+    verify(csvConverterServiceImpl).get("CE").convertCSVToCanonical();
   }
 
   @Test
@@ -35,5 +39,6 @@ public class CsvMonitorControllerTest {
 
     assertEquals("CSV adapter service activated", responseEntity.getBody());
     assertEquals(200, responseEntity.getStatusCodeValue());
+    verify(csvConverterServiceImpl).get("CCS").convertCSVToCanonical();
   }
 }

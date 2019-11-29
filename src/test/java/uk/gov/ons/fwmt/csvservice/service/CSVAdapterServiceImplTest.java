@@ -38,7 +38,7 @@ public class CSVAdapterServiceImplTest {
         .buildCreateFieldWorkerJobRequestCCS();
 
     // When
-    csvAdapterServiceImpl.sendJobRequest(createJobRequest);
+    csvAdapterServiceImpl.sendJobRequest(createJobRequest, CANONICAL_CCS_CREATE_SENT);
 
     // Then
     Mockito.verify(gatewayEventManager).triggerEvent(anyString(), eq(CANONICAL_CCS_CREATE_SENT));
@@ -51,7 +51,7 @@ public class CSVAdapterServiceImplTest {
             .buildCreateFieldWorkerJobRequestCE();
 
     // When
-    csvAdapterServiceImpl.sendJobRequest(createJobRequest);
+    csvAdapterServiceImpl.sendJobRequest(createJobRequest,CANONICAL_CE_CREATE_SENT);
 
     // Then
     Mockito.verify(gatewayEventManager).triggerEvent(anyString(), eq(CANONICAL_CE_CREATE_SENT));
