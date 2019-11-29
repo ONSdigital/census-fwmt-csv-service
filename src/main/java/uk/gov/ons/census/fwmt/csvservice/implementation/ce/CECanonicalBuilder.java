@@ -52,5 +52,4 @@ public final class CECanonicalBuilder {
 
     return createJobRequest;
   }
-
 }

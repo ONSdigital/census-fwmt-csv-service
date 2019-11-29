@@ -1,4 +1,4 @@
-package uk.gov.ons.fwmt.csvservice.service;
+package uk.gov.ons.fwmt.csvservice.implementation.ccs;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -11,8 +11,8 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.WritableResource;
 import org.springframework.test.util.ReflectionTestUtils;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
-import uk.gov.ons.census.fwmt.csvservice.implementation.ce.CEConverterService;
-import uk.gov.ons.census.fwmt.csvservice.implementation.ce.CSVAdapterServiceImpl;
+import uk.gov.ons.census.fwmt.csvservice.adapter.GatewayActionAdapter;
+import uk.gov.ons.census.fwmt.csvservice.implementation.ccs.CCSConverterService;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
 
 import java.io.OutputStream;
@@ -20,16 +20,16 @@ import java.nio.file.Path;
 
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
-import static uk.gov.ons.census.fwmt.csvservice.config.GatewayEventsConfig.CSV_CE_REQUEST_EXTRACTED;
+import static uk.gov.ons.census.fwmt.csvservice.implementation.ccs.CCSGatewayEventsConfig.CSV_CCS_REQUEST_EXTRACTED;
 
 @RunWith(MockitoJUnitRunner.class)
-public class CEConverterServiceImplTest {
+public class CCSConverterServiceImplTest {
 
   @InjectMocks
-  private CEConverterService ceConverterService;
+  private CCSConverterService ccsConverterService;
 
   @Mock
-  private CSVAdapterServiceImpl csvAdapterService;
+  private GatewayActionAdapter gatewayActionAdapter;
 
   @Mock
   private GatewayEventManager gatewayEventManager;
@@ -41,21 +41,21 @@ public class CEConverterServiceImplTest {
   private WritableResource writableResource;
 
   @Test
-  public void convertCECSVToCanonicalTest() throws GatewayException {
+  public void convertCCSCSVToCanonicalTest() throws GatewayException {
     // Given
     ClassLoader classLoader = getClass().getClassLoader();
-    String testPathString = classLoader.getResource("testCECSV.csv").getPath();
+    String testPathString = classLoader.getResource("testCCSCSV.csv").getPath();
     Path testPath = Path.of("/", testPathString);
     Resource testResource = new FileSystemResource(testPathString);
 
-    ReflectionTestUtils.setField(ceConverterService, "csvGCPFile", testResource);
-    ReflectionTestUtils.setField(ceConverterService, "csvPath", testPath);
-    ReflectionTestUtils.setField(ceConverterService, "processedPath", testPath);
+    ReflectionTestUtils.setField(ccsConverterService, "csvGCPFile", testResource);
+    ReflectionTestUtils.setField(ccsConverterService, "csvPath", testPath);
+    ReflectionTestUtils.setField(ccsConverterService, "processedPath", testPath);
 
     // When
-    ceConverterService.convertCSVToCanonical();
+    ccsConverterService.convertCSVToCanonical();
 
     // Then
-    Mockito.verify(gatewayEventManager).triggerEvent(anyString(), eq(CSV_CE_REQUEST_EXTRACTED));
+    Mockito.verify(gatewayEventManager).triggerEvent(anyString(), eq(CSV_CCS_REQUEST_EXTRACTED));
   }
 }

@@ -1,6 +1,5 @@
 package uk.gov.ons.census.fwmt.csvservice.adapter;
 
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import uk.gov.ons.census.fwmt.canonical.v1.CreateFieldWorkerJobRequest;
