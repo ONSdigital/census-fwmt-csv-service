@@ -46,8 +46,8 @@ public class CEConverterServiceImplTest {
     ClassLoader classLoader = getClass().getClassLoader();
     String testPathString = classLoader.getResource("testCECSV.csv").getPath();
     Path testPath = Path.of("/", testPathString);
-
     Resource testResource = new FileSystemResource(testPathString);
+
     ReflectionTestUtils.setField(ceConverterService, "cePath", testResource);
     ReflectionTestUtils.setField(ceConverterService, "cePathFileName", testPath);
     ReflectionTestUtils.setField(ceConverterService, "ceProcessedPath", testPath);

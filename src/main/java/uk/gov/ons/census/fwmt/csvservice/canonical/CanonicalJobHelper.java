@@ -12,40 +12,40 @@ public final class CanonicalJobHelper {
 
   private static final String CREATE_ACTION_TYPE = "Create";
 
-  public static CreateFieldWorkerJobRequest createCEJob(CEJobListing CEJobListing) {
+  public static CreateFieldWorkerJobRequest createCEJob(CEJobListing ceJobListing) {
     Address address = new Address();
     Contact contact = new Contact();
     CreateFieldWorkerJobRequest createJobRequest = new CreateFieldWorkerJobRequest();
 
     createJobRequest.setActionType("Create");
-    createJobRequest.setCaseId(UUID.fromString(CEJobListing.getCaseId()));
-    createJobRequest.setCaseReference(CEJobListing.getCaseReference());
+    createJobRequest.setCaseId(UUID.fromString(ceJobListing.getCaseId()));
+    createJobRequest.setCaseReference(ceJobListing.getCaseReference());
     createJobRequest.setCaseType("CE");
     createJobRequest.setSurveyType("CE EST");
-    createJobRequest.setEstablishmentType(CEJobListing.getEstablishmentType());
-    createJobRequest.setMandatoryResource(CEJobListing.getMandatoryResource());
-    createJobRequest.setCoordinatorId(CEJobListing.getCoordinatorId());
+    createJobRequest.setEstablishmentType(ceJobListing.getEstablishmentType());
+    createJobRequest.setMandatoryResource(ceJobListing.getMandatoryResource());
+    createJobRequest.setCoordinatorId(ceJobListing.getCoordinatorId());
     createJobRequest.setCategory("Not applicable");
 
-    contact.setOrganisationName(CEJobListing.getOrganisationName());
+    contact.setOrganisationName(ceJobListing.getOrganisationName());
     createJobRequest.setContact(contact);
 
-    address.setArid(CEJobListing.getArid());
-    address.setUprn(CEJobListing.getUprn());
-    address.setLine1(CEJobListing.getLine1());
-    address.setLine2(CEJobListing.getLine2());
-    address.setLine3(CEJobListing.getLine3());
-    address.setTownName(CEJobListing.getTownName());
-    address.setPostCode(CEJobListing.getPostCode());
-    address.setOa(CEJobListing.getOa());
-    address.setLatitude(CEJobListing.getLatitude());
-    address.setLongitude(CEJobListing.getLongitude());
+    address.setArid(ceJobListing.getArid());
+    address.setUprn(ceJobListing.getUprn());
+    address.setLine1(ceJobListing.getLine1());
+    address.setLine2(ceJobListing.getLine2());
+    address.setLine3(ceJobListing.getLine3());
+    address.setTownName(ceJobListing.getTownName());
+    address.setPostCode(ceJobListing.getPostCode());
+    address.setOa(ceJobListing.getOa());
+    address.setLatitude(ceJobListing.getLatitude());
+    address.setLongitude(ceJobListing.getLongitude());
     createJobRequest.setAddress(address);
     createJobRequest.setGatewayType(CREATE_ACTION_TYPE);
 
     createJobRequest.setCeDeliveryRequired(true);
     createJobRequest.setCeCE1Complete(false);
-    createJobRequest.setCeExpectedResponses(CEJobListing.getCeExpectedCapacity());
+    createJobRequest.setCeExpectedResponses(ceJobListing.getCeExpectedCapacity());
     createJobRequest.setCeActualResponses(0);
     createJobRequest.setUua(false);
     createJobRequest.setBlankFormReturned(false);

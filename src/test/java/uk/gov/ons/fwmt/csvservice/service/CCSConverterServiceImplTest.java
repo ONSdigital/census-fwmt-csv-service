@@ -47,6 +47,7 @@ public class CCSConverterServiceImplTest {
     String testPathString = classLoader.getResource("testCCSCSV.csv").getPath();
     Path testPath = Path.of("/", testPathString);
     Resource testResource = new FileSystemResource(testPathString);
+
     ReflectionTestUtils.setField(ccsConverterService, "ccsPath", testResource);
     ReflectionTestUtils.setField(ccsConverterService, "ccsPathFileName", testPath);
     ReflectionTestUtils.setField(ccsConverterService, "ccsProcessedPath", testPath);
