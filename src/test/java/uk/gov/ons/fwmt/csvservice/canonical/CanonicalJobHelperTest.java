@@ -2,7 +2,6 @@ package uk.gov.ons.fwmt.csvservice.canonical;
 
 import org.junit.Test;
 import uk.gov.ons.census.fwmt.canonical.v1.CreateFieldWorkerJobRequest;
-import uk.gov.ons.census.fwmt.csvservice.canonical.CanonicalJobHelper;
 import uk.gov.ons.census.fwmt.csvservice.dto.CCSPropertyListing;
 import uk.gov.ons.census.fwmt.csvservice.dto.CEJobListing;
 import uk.gov.ons.fwmt.csvservice.helper.CSVRecordDTOBuilder;
@@ -11,6 +10,7 @@ import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static uk.gov.ons.census.fwmt.csvservice.service.ce.CECanonicalBuilder.createCEJob;
 
 public class CanonicalJobHelperTest {
 
@@ -20,7 +20,7 @@ public class CanonicalJobHelperTest {
     CEJobListing csvceRecordDTO = new CSVRecordDTOBuilder().createCECSVRecord();
 
     // When
-    CreateFieldWorkerJobRequest createFieldWorkerJobRequest = CanonicalJobHelper.createCEJob(csvceRecordDTO);
+    CreateFieldWorkerJobRequest createFieldWorkerJobRequest = createCEJob(csvceRecordDTO);
 
     // Then
     assertEquals(UUID.fromString(csvceRecordDTO.getCaseId()), createFieldWorkerJobRequest.getCaseId());

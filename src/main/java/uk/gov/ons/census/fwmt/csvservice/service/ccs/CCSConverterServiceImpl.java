@@ -20,9 +20,9 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 
-import static uk.gov.ons.census.fwmt.csvservice.config.GatewayEventsConfig.CANONICAL_CCS_CREATE_SENT;
-import static uk.gov.ons.census.fwmt.csvservice.config.GatewayEventsConfig.CSV_CCS_REQUEST_EXTRACTED;
 import static uk.gov.ons.census.fwmt.csvservice.service.ccs.CCSCanonicalBuilder.createCCSJob;
+import static uk.gov.ons.census.fwmt.csvservice.service.ccs.CCSGatewayEventsConfig.CANONICAL_CCS_CREATE_SENT;
+import static uk.gov.ons.census.fwmt.csvservice.service.ccs.CCSGatewayEventsConfig.CSV_CCS_REQUEST_EXTRACTED;
 import static uk.gov.ons.census.fwmt.csvservice.utils.CsvServiceUtils.moveCsvFile;
 
 @Slf4j
