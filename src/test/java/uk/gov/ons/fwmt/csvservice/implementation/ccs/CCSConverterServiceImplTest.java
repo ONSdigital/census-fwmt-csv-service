@@ -53,7 +53,7 @@ public class CCSConverterServiceImplTest {
     ReflectionTestUtils.setField(ccsConverterService, "processedPath", testPath);
 
     // When
-    ccsConverterService.convertCSVToCanonical();
+    ccsConverterService.convertToCanonical();
 
     // Then
     Mockito.verify(gatewayEventManager).triggerEvent(anyString(), eq(CSV_CCS_REQUEST_EXTRACTED));

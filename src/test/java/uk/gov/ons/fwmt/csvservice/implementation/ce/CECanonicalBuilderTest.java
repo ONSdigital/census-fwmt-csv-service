@@ -3,7 +3,7 @@ package uk.gov.ons.fwmt.csvservice.implementation.ce;
 import org.junit.Test;
 import uk.gov.ons.census.fwmt.canonical.v1.CreateFieldWorkerJobRequest;
 import uk.gov.ons.census.fwmt.csvservice.dto.CEJobListing;
-import uk.gov.ons.fwmt.csvservice.helper.CSVRecordDTOBuilder;
+import uk.gov.ons.fwmt.csvservice.helper.CSVRecordBuilder;
 
 import java.util.UUID;
 
@@ -14,9 +14,9 @@ import static uk.gov.ons.census.fwmt.csvservice.implementation.ce.CECanonicalBui
 public class CECanonicalBuilderTest {
 
   @Test
-  public void createCE () {
+  public void createCEJobTest() {
     // Given
-    CEJobListing ceJobListing = new CSVRecordDTOBuilder().createCECSVRecord();
+    CEJobListing ceJobListing = new CSVRecordBuilder().createCECSVRecord();
 
     // When
     CreateFieldWorkerJobRequest createFieldWorkerJobRequest = createCEJob(ceJobListing);

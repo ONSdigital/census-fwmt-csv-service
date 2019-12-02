@@ -12,7 +12,6 @@ import org.mockito.junit.MockitoJUnitRunner;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import lombok.extern.slf4j.Slf4j;
 import uk.gov.ons.census.fwmt.canonical.v1.CreateFieldWorkerJobRequest;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.csvservice.message.GatewayActionProducer;
@@ -20,7 +19,6 @@ import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
 import uk.gov.ons.fwmt.csvservice.helper.FieldWorkerRequestMessageBuilder;
 
 @RunWith(MockitoJUnitRunner.class)
-@Slf4j
 public class GatewayActionProducerTest {
 
   @InjectMocks

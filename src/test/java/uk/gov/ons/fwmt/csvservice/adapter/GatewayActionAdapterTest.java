@@ -50,7 +50,7 @@ public class GatewayActionAdapterTest {
         .buildCreateFieldWorkerJobRequestCE();
 
     // When
-    gatewayActionAdapter.sendJobRequest(createJobRequest,CANONICAL_CE_CREATE_SENT);
+    gatewayActionAdapter.sendJobRequest(createJobRequest, CANONICAL_CE_CREATE_SENT);
 
     // Then
     Mockito.verify(gatewayEventManager).triggerEvent(anyString(), eq(CANONICAL_CE_CREATE_SENT));

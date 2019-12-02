@@ -16,7 +16,7 @@ public final class CCSCanonicalBuilder {
 
     UUID createCaseId = UUID.randomUUID();
 
-    createJobRequest.setActionType("Create");
+    createJobRequest.setActionType(CREATE_ACTION_TYPE);
     createJobRequest.setCaseId(createCaseId);
     createJobRequest.setCaseReference(createCaseId.toString());
     createJobRequest.setCaseType("CCSPL");

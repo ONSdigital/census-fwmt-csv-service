@@ -26,6 +26,7 @@ import static uk.gov.ons.census.fwmt.csvservice.utils.CsvServiceUtils.moveCsvFil
 
 @Service("CE")
 public class CCSConverterService implements CSVConverterService {
+
   @Value("${gcpBucket.ccslocation}")
   private Resource csvGCPFile;
 
@@ -42,7 +43,7 @@ public class CCSConverterService implements CSVConverterService {
   private GatewayEventManager gatewayEventManager;
 
   @Override
-  public void convertCSVToCanonical() throws GatewayException {
+  public void convertToCanonical() throws GatewayException {
     CsvToBean<CCSPropertyListing> csvToBean;
     try {
       csvToBean = new CsvToBeanBuilder(new InputStreamReader(csvGCPFile.getInputStream(), StandardCharsets.UTF_8))

@@ -16,7 +16,7 @@ public final class CECanonicalBuilder {
     Contact contact = new Contact();
     CreateFieldWorkerJobRequest createJobRequest = new CreateFieldWorkerJobRequest();
 
-    createJobRequest.setActionType("Create");
+    createJobRequest.setActionType(CREATE_ACTION_TYPE);
     createJobRequest.setCaseId(UUID.fromString(ceJobListing.getCaseId()));
     createJobRequest.setCaseReference(ceJobListing.getCaseReference());
     createJobRequest.setCaseType("CE");

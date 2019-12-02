@@ -43,7 +43,7 @@ public class CEConverterService implements CSVConverterService {
   private GatewayEventManager gatewayEventManager;
 
   @Override
-  public void convertCSVToCanonical() throws GatewayException {
+  public void convertToCanonical() throws GatewayException {
     CsvToBean<CEJobListing> csvToBean;
     try {
       csvToBean = new CsvToBeanBuilder(new InputStreamReader(csvGCPFile.getInputStream(), StandardCharsets.UTF_8))

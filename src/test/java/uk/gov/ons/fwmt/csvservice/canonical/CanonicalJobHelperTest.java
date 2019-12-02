@@ -4,7 +4,7 @@ import org.junit.Test;
 import uk.gov.ons.census.fwmt.canonical.v1.CreateFieldWorkerJobRequest;
 import uk.gov.ons.census.fwmt.csvservice.dto.CCSPropertyListing;
 import uk.gov.ons.census.fwmt.csvservice.dto.CEJobListing;
-import uk.gov.ons.fwmt.csvservice.helper.CSVRecordDTOBuilder;
+import uk.gov.ons.fwmt.csvservice.helper.CSVRecordBuilder;
 
 import java.util.UUID;
 
@@ -18,7 +18,7 @@ public class CanonicalJobHelperTest {
   @Test
   public void createCE() {
     // Given
-    CEJobListing ceJobListing = new CSVRecordDTOBuilder().createCECSVRecord();
+    CEJobListing ceJobListing = new CSVRecordBuilder().createCECSVRecord();
 
     // When
     CreateFieldWorkerJobRequest createFieldWorkerJobRequest = createCEJob(ceJobListing);
@@ -33,7 +33,7 @@ public class CanonicalJobHelperTest {
   @Test
   public void createCCS() {
     // Given
-    CCSPropertyListing ccsPropertyListing = new CSVRecordDTOBuilder().createCCSCSVRecord();
+    CCSPropertyListing ccsPropertyListing = new CSVRecordBuilder().createCCSCSVRecord();
 
     // When
     CreateFieldWorkerJobRequest createFieldWorkerJobRequest = createCCSJob(ccsPropertyListing);
