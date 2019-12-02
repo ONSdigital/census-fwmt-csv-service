@@ -11,7 +11,8 @@ public class CEGatewayEventsConfig {
   public static final String CANONICAL_CE_CREATE_SENT = "CANONICAL_CE_CREATE_SENT";
 
   @Bean
-  public void addCEEvents(GatewayEventManager gatewayEventManager) {
+  public GatewayEventManager addCEEvents(GatewayEventManager gatewayEventManager) {
     gatewayEventManager.addEventTypes(new String[] {CSV_CE_REQUEST_EXTRACTED, CANONICAL_CE_CREATE_SENT});
+    return gatewayEventManager;
   }
 }

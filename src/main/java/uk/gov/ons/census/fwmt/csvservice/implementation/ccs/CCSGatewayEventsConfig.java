@@ -11,7 +11,8 @@ public class CCSGatewayEventsConfig {
   public static final String CANONICAL_CCS_CREATE_SENT = "CANONICAL_CCS_CREATE_SENT";
 
   @Bean
-  public void addCCSEvents(GatewayEventManager gatewayEventManager) {
+  public GatewayEventManager addCCSEvents(GatewayEventManager gatewayEventManager) {
     gatewayEventManager.addEventTypes(new String[] {CSV_CCS_REQUEST_EXTRACTED, CANONICAL_CCS_CREATE_SENT});
+    return gatewayEventManager;
   }
 }
