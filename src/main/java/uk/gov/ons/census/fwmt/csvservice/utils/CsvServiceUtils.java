@@ -27,7 +27,7 @@ public final class CsvServiceUtils {
         throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, e, csvData);
       }
       csvFileExtension = csvFileExtension.replace(".csv", ".processed-" + instant);
-      final String finalPath = processedPath + csvFileExtension;
+      String finalPath = processedPath + csvFileExtension;
 
       try (OutputStream os = ((WritableResource) csvGCPFile.createRelative(finalPath)).getOutputStream()) {
         os.write(csvData.getBytes(StandardCharsets.UTF_8));
