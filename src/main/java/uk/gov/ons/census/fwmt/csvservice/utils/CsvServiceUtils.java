@@ -37,7 +37,7 @@ public final class CsvServiceUtils {
       try {
         Files.delete(csvPath);
       } catch (IOException e) {
-        throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, e, "Unable to delete Ingest CSV");
+        throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, e, "Unable to delete original ingest CSV");
       }
     }
   }
