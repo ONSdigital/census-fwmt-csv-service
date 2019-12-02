@@ -18,24 +18,27 @@ public final class CsvServiceUtils {
     Timestamp timestamp = new Timestamp(System.currentTimeMillis());
     Instant instant = timestamp.toInstant();
     String csvFileExtension = csvGCPFile.getFilename();
+
     if (csvFileExtension != null) {
-      String csvToUpdate = "Unable to read Ingest CSV:";
+      String csvData = "Unable to read CSV data";
       try {
-        csvToUpdate = Files.readString(csvPath, StandardCharsets.UTF_8);
+        csvData = Files.readString(csvPath, StandardCharsets.UTF_8);
       } catch (IOException e) {
-        throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, e, csvToUpdate);
+        throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, e, csvData);
       }
-      csvFileExtension = csvFileExtension.replace(".csv", ".processed_" + instant);
-      try (OutputStream os = ((WritableResource) csvGCPFile.createRelative(csvFileExtension)).getOutputStream()) {
-        os.write(csvToUpdate.getBytes(StandardCharsets.UTF_8));
+      csvFileExtension = csvFileExtension.replace(".csv", ".processed-" + instant);
+      final String finalPath = processedPath + csvFileExtension;
+
+      try (OutputStream os = ((WritableResource) csvGCPFile.createRelative(finalPath)).getOutputStream()) {
+        os.write(csvData.getBytes(StandardCharsets.UTF_8));
       } catch (IOException e) {
         throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, e, "Unable to rename Ingest CSV");
       }
-    }
-    try {
-      Files.move(csvPath, processedPath);
-    } catch (IOException e) {
-      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, e, "Unable to move Ingest CSV");
+      try {
+        Files.delete(csvPath);
+      } catch (IOException e) {
+        throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, e, "Unable to delete Ingest CSV");
+      }
     }
   }
 }
