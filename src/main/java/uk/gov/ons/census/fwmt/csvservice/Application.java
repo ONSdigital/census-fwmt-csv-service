@@ -10,10 +10,10 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.scheduling.annotation.EnableAsync;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
+@EnableAsync
+@EnableSwagger2
 @SpringBootApplication
 @ComponentScan({"uk.gov.ons.census.fwmt.csvservice", "uk.gov.ons.census.fwmt.events"})
-@EnableSwagger2
-@EnableAsync
 public class Application {
 
   public static final String APPLICATION_NAME = "FWMT Gateway - CSV Service";

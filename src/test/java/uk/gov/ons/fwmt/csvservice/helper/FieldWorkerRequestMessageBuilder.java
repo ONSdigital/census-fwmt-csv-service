@@ -14,6 +14,7 @@ public class FieldWorkerRequestMessageBuilder {
 
     return fwmtCreateJobRequest;
   }
+
   public CreateFieldWorkerJobRequest buildCreateFieldWorkerJobRequestCE() {
     CreateFieldWorkerJobRequest fwmtCreateJobRequest = new CreateFieldWorkerJobRequest();
 

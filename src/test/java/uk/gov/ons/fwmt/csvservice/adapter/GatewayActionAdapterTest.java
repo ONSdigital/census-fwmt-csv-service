@@ -1,4 +1,4 @@
-package uk.gov.ons.fwmt.csvservice.service;
+package uk.gov.ons.fwmt.csvservice.adapter;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -8,22 +8,21 @@ import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 import uk.gov.ons.census.fwmt.canonical.v1.CreateFieldWorkerJobRequest;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
+import uk.gov.ons.census.fwmt.csvservice.adapter.GatewayActionAdapter;
 import uk.gov.ons.census.fwmt.csvservice.message.GatewayActionProducer;
-import uk.gov.ons.census.fwmt.csvservice.service.impl.CSVAdapterServiceImpl;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
 import uk.gov.ons.fwmt.csvservice.helper.FieldWorkerRequestMessageBuilder;
 
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
-import static uk.gov.ons.census.fwmt.csvservice.config.GatewayEventsConfig.CANONICAL_CCS_CREATE_SENT;
-import static uk.gov.ons.census.fwmt.csvservice.config.GatewayEventsConfig.CANONICAL_CE_CREATE_SENT;
+import static uk.gov.ons.census.fwmt.csvservice.implementation.ccs.CCSGatewayEventsConfig.CANONICAL_CCS_CREATE_SENT;
+import static uk.gov.ons.census.fwmt.csvservice.implementation.ce.CEGatewayEventsConfig.CANONICAL_CE_CREATE_SENT;
 
 @RunWith(MockitoJUnitRunner.class)
-public class CSVAdapterServiceImplTest {
+public class GatewayActionAdapterTest {
 
   @InjectMocks
-  private CSVAdapterServiceImpl csvAdapterServiceImpl;
+  private GatewayActionAdapter gatewayActionAdapter;
 
   @Mock
   private GatewayEventManager gatewayEventManager;
@@ -38,7 +37,7 @@ public class CSVAdapterServiceImplTest {
         .buildCreateFieldWorkerJobRequestCCS();
 
     // When
-    csvAdapterServiceImpl.sendJobRequest(createJobRequest);
+    gatewayActionAdapter.sendJobRequest(createJobRequest, CANONICAL_CCS_CREATE_SENT);
 
     // Then
     Mockito.verify(gatewayEventManager).triggerEvent(anyString(), eq(CANONICAL_CCS_CREATE_SENT));
@@ -48,13 +47,12 @@ public class CSVAdapterServiceImplTest {
   public void sendCERequestToJobService() throws GatewayException {
     // Given
     CreateFieldWorkerJobRequest createJobRequest = new FieldWorkerRequestMessageBuilder()
-            .buildCreateFieldWorkerJobRequestCE();
+        .buildCreateFieldWorkerJobRequestCE();
 
     // When
-    csvAdapterServiceImpl.sendJobRequest(createJobRequest);
+    gatewayActionAdapter.sendJobRequest(createJobRequest, CANONICAL_CE_CREATE_SENT);
 
     // Then
     Mockito.verify(gatewayEventManager).triggerEvent(anyString(), eq(CANONICAL_CE_CREATE_SENT));
   }
-
 }

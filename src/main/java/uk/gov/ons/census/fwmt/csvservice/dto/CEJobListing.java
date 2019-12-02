@@ -10,7 +10,8 @@ import java.math.BigDecimal;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class CSVRecordDTO {
+public class CEJobListing {
+
   @CsvBindByName(column = "caseId")
   private String caseId;
 
@@ -71,6 +72,4 @@ public class CSVRecordDTO {
   @CsvBindByName(column = "ceExpectedCapacity")
   private int ceExpectedCapacity;
 
-  @CsvBindByName(column = "ccsInterviewer")
-  private String ccsInterviewer;
 }
