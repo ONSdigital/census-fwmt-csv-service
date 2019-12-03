@@ -50,7 +50,7 @@ public class CEConverterServiceImplTest {
 
     ReflectionTestUtils.setField(ceConverterService, "csvGCPFile", testResource);
     ReflectionTestUtils.setField(ceConverterService, "csvPath", testPath);
-    ReflectionTestUtils.setField(ceConverterService, "processedPath/", testPath);
+    ReflectionTestUtils.setField(ceConverterService, "processedPath", testPath);
 
     // When
     ceConverterService.convertToCanonical();
