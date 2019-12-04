@@ -20,7 +20,7 @@ public final class CsvServiceUtils {
       try {
         Files.move(csvPath, processedPath.resolveSibling("processed-" + timeStamp + ".csv"), StandardCopyOption.REPLACE_EXISTING);
       } catch (IOException e) {
-        throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, e, "Unable to move ingest CSV");
+        throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, e, "Unable to move/rename ingest CSV");
       }
     }
   }
