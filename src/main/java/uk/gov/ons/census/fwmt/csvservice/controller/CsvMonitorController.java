@@ -12,10 +12,10 @@ import uk.gov.ons.census.fwmt.csvservice.implementation.ce.CEConverterService;
 public class CsvMonitorController {
 
   @Autowired
-  private CCSConverterService ccsConverterService;
+  private CEConverterService ceConverterService;
 
   @Autowired
-  private CEConverterService ceConverterService;
+  private CCSConverterService ccsConverterService;
 
   @GetMapping("/ingestCeCsvFile")
   public ResponseEntity<String> ingestCeCsvFile() throws GatewayException {
