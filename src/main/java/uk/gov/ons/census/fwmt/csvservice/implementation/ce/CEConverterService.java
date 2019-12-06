@@ -24,7 +24,7 @@ import static uk.gov.ons.census.fwmt.csvservice.implementation.ce.CEGatewayEvent
 import static uk.gov.ons.census.fwmt.csvservice.implementation.ce.CEGatewayEventsConfig.CSV_CE_REQUEST_EXTRACTED;
 import static uk.gov.ons.census.fwmt.csvservice.utils.CsvServiceUtils.moveCsvFile;
 
-@Component("CE")
+@Component
 public class CEConverterService implements CSVConverterService {
 
   @Value("${gcpBucket.celocation}")
