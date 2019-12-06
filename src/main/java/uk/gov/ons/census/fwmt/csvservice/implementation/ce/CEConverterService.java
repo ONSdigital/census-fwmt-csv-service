@@ -5,7 +5,7 @@ import com.opencsv.bean.CsvToBeanBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import uk.gov.ons.census.fwmt.canonical.v1.CreateFieldWorkerJobRequest;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.csvservice.adapter.GatewayActionAdapter;
@@ -24,7 +24,7 @@ import static uk.gov.ons.census.fwmt.csvservice.implementation.ce.CEGatewayEvent
 import static uk.gov.ons.census.fwmt.csvservice.implementation.ce.CEGatewayEventsConfig.CSV_CE_REQUEST_EXTRACTED;
 import static uk.gov.ons.census.fwmt.csvservice.utils.CsvServiceUtils.moveCsvFile;
 
-@Service("CE")
+@Component("CE")
 public class CEConverterService implements CSVConverterService {
 
   @Value("${gcpBucket.celocation}")
