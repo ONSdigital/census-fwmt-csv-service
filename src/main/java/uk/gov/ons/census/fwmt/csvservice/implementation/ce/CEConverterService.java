@@ -18,7 +18,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 
 import static uk.gov.ons.census.fwmt.csvservice.implementation.ce.CECanonicalBuilder.createCEJob;
 import static uk.gov.ons.census.fwmt.csvservice.implementation.ce.CEGatewayEventsConfig.CANONICAL_CE_CREATE_SENT;
@@ -31,11 +30,8 @@ public class CEConverterService implements CSVConverterService {
   @Value("${gcpBucket.celocation}")
   private Resource csvGCPFile;
 
-  @Value("${gcpBucket.celocation}")
-  private String csvPath;
-
   @Value("${gcpBucket.ceProcessedPath}")
-  private String processedPath;
+  private Resource processedPath;
 
   @Autowired
   private GatewayActionAdapter gatewayActionAdapter;
@@ -63,7 +59,11 @@ public class CEConverterService implements CSVConverterService {
       gatewayEventManager
           .triggerEvent(String.valueOf(createFieldWorkerJobRequest.getCaseId()), CSV_CE_REQUEST_EXTRACTED);
     }
-    Path filePath = Path.of(csvPath);
-    moveCsvFile(csvGCPFile, filePath, Path.of(processedPath));
+
+    try {
+      moveCsvFile(csvGCPFile, Path.of(csvGCPFile.getURI()), Path.of(processedPath.getURI()));
+    } catch (IOException e) {
+      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, e, "Failed to read path");
+    }
   }
 }
