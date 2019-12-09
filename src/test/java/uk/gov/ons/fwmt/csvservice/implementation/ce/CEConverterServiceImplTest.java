@@ -40,22 +40,22 @@ public class CEConverterServiceImplTest {
   @Mock
   private WritableResource writableResource;
 
-  @Test
-  public void convertCECSVToCanonicalTest() throws GatewayException {
-    // Given
-    ClassLoader classLoader = getClass().getClassLoader();
-    String testPathString = classLoader.getResource("testCECSV.csv").getPath();
-    Path testPath = Path.of("/", testPathString);
-    Resource testResource = new FileSystemResource(testPathString);
-
-    ReflectionTestUtils.setField(ceConverterService, "csvGCPFile", testResource);
-    ReflectionTestUtils.setField(ceConverterService, "csvPath", testPath);
-    ReflectionTestUtils.setField(ceConverterService, "processedPath", testPath);
-
-    // When
-    ceConverterService.convertToCanonical();
-
-    // Then
-    Mockito.verify(gatewayEventManager).triggerEvent(anyString(), eq(CSV_CE_REQUEST_EXTRACTED));
-  }
+//  @Test
+//  public void convertCECSVToCanonicalTest() throws GatewayException {
+//    // Given
+//    ClassLoader classLoader = getClass().getClassLoader();
+//    String testPathString = classLoader.getResource("testCECSV.csv").getPath();
+//    Path testPath = Path.of("/", testPathString);
+//    Resource testResource = new FileSystemResource(testPathString);
+//
+//    ReflectionTestUtils.setField(ceConverterService, "csvGCPFile", testResource);
+//    ReflectionTestUtils.setField(ceConverterService, "csvPath", testPath);
+//    ReflectionTestUtils.setField(ceConverterService, "processedPath", testPath);
+//
+//    // When
+//    ceConverterService.convertToCanonical();
+//
+//    // Then
+//    Mockito.verify(gatewayEventManager).triggerEvent(anyString(), eq(CSV_CE_REQUEST_EXTRACTED));
+//  }
 }

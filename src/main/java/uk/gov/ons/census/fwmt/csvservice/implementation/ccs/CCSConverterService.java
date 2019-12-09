@@ -31,10 +31,10 @@ public class CCSConverterService implements CSVConverterService {
   private Resource csvGCPFile;
 
   @Value("${gcpBucket.ccslocation}")
-  private Path csvPath;
+  private String csvPath;
 
   @Value("${gcpBucket.ccsProcessedPath}")
-  private Path processedPath;
+  private String processedPath;
 
   @Autowired
   private GatewayActionAdapter gatewayActionAdapter;
@@ -62,6 +62,8 @@ public class CCSConverterService implements CSVConverterService {
       gatewayEventManager
           .triggerEvent(String.valueOf(createFieldWorkerJobRequest.getCaseId()), CSV_CCS_REQUEST_EXTRACTED);
     }
-    moveCsvFile(csvGCPFile, csvPath, processedPath);
+
+    Path filePath = Path.of(csvPath);
+    moveCsvFile(csvGCPFile, filePath, Path.of(processedPath));
   }
 }
