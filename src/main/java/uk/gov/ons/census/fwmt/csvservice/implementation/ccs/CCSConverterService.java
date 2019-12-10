@@ -30,11 +30,8 @@ public class CCSConverterService implements CSVConverterService {
   @Value("${gcpBucket.ccslocation}")
   private Resource csvGCPFile;
 
-  @Value("${gcpBucket.ccslocation}")
-  private Path csvPath;
-
   @Value("${gcpBucket.ccsProcessedPath}")
-  private Path processedPath;
+  private Resource processedPath;
 
   @Autowired
   private GatewayActionAdapter gatewayActionAdapter;
@@ -62,6 +59,11 @@ public class CCSConverterService implements CSVConverterService {
       gatewayEventManager
           .triggerEvent(String.valueOf(createFieldWorkerJobRequest.getCaseId()), CSV_CCS_REQUEST_EXTRACTED);
     }
-    moveCsvFile(csvGCPFile, csvPath, processedPath);
+
+    try {
+      moveCsvFile(csvGCPFile, Path.of(csvGCPFile.getURI()), Path.of(processedPath.getURI()));
+    } catch (IOException e) {
+      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, e, "Failed to read path");
+    }
   }
 }
