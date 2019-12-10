@@ -24,7 +24,7 @@ import static uk.gov.ons.census.fwmt.csvservice.implementation.ccs.CCSGatewayEve
 import static uk.gov.ons.census.fwmt.csvservice.implementation.ccs.CCSGatewayEventsConfig.CSV_CCS_REQUEST_EXTRACTED;
 import static uk.gov.ons.census.fwmt.csvservice.utils.CsvServiceUtils.moveCsvFile;
 
-@Component
+@Component("CCS")
 public class CCSConverterService implements CSVConverterService {
 
   @Value("${gcpBucket.ccslocation}")
