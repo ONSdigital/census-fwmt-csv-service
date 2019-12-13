@@ -12,6 +12,7 @@ import uk.gov.ons.census.fwmt.csvservice.adapter.GatewayActionAdapter;
 import uk.gov.ons.census.fwmt.csvservice.config.GatewayEventsConfig;
 import uk.gov.ons.census.fwmt.csvservice.dto.CEJobListing;
 import uk.gov.ons.census.fwmt.csvservice.service.CSVConverterService;
+import uk.gov.ons.census.fwmt.csvservice.utils.CsvServiceUtils;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
 
 import java.io.IOException;
@@ -22,7 +23,6 @@ import java.nio.file.Paths;
 import static uk.gov.ons.census.fwmt.csvservice.implementation.ce.CECanonicalBuilder.createCEJob;
 import static uk.gov.ons.census.fwmt.csvservice.implementation.ce.CEGatewayEventsConfig.CANONICAL_CE_CREATE_SENT;
 import static uk.gov.ons.census.fwmt.csvservice.implementation.ce.CEGatewayEventsConfig.CSV_CE_REQUEST_EXTRACTED;
-import static uk.gov.ons.census.fwmt.csvservice.utils.CsvServiceUtils.moveCsvFile;
 
 @Component("CE")
 public class CEConverterService implements CSVConverterService {
@@ -38,6 +38,9 @@ public class CEConverterService implements CSVConverterService {
 
   @Autowired
   private GatewayEventManager gatewayEventManager;
+
+  @Autowired
+  private CsvServiceUtils csvServiceUtils;
 
   @Override
   public void convertToCanonical() throws GatewayException {
@@ -61,7 +64,7 @@ public class CEConverterService implements CSVConverterService {
     }
 
     try {
-      moveCsvFile(csvGCPFile, Paths.get(csvGCPFile.getURI()), Paths.get(processedPath.getURI()));
+      csvServiceUtils.moveCsvFile(csvGCPFile, Paths.get(csvGCPFile.getURI()), processedPath);
     } catch (IOException e) {
       throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, e, "Failed to read path");
     }
