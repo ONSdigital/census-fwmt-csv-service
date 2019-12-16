@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class AddressCheck {
+public class AddressCheckListing {
 
   @CsvBindByName(column = "caseReference")
   private String caseReference;

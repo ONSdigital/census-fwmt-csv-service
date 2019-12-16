@@ -10,7 +10,7 @@ import uk.gov.ons.census.fwmt.canonical.v1.CreateFieldWorkerJobRequest;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.csvservice.adapter.GatewayActionAdapter;
 import uk.gov.ons.census.fwmt.csvservice.config.GatewayEventsConfig;
-import uk.gov.ons.census.fwmt.csvservice.dto.AddressCheck;
+import uk.gov.ons.census.fwmt.csvservice.dto.AddressCheckListing;
 import uk.gov.ons.census.fwmt.csvservice.dto.CEJobListing;
 import uk.gov.ons.census.fwmt.csvservice.service.CSVConverterService;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
@@ -42,7 +42,7 @@ public class AddressCheckConverterService implements CSVConverterService {
 
   @Override
   public void convertToCanonical() throws GatewayException {
-    CsvToBean<AddressCheck> csvToBean;
+    CsvToBean<AddressCheckListing> csvToBean;
     try {
       csvToBean = new CsvToBeanBuilder(new InputStreamReader(csvGCPFile.getInputStream(), StandardCharsets.UTF_8))
           .withType(CEJobListing.class)
@@ -54,8 +54,8 @@ public class AddressCheckConverterService implements CSVConverterService {
       throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, e, msg);
     }
 
-    for (AddressCheck addressCheck : csvToBean) {
-      CreateFieldWorkerJobRequest createFieldWorkerJobRequest = createAddressCheckJob(addressCheck);
+    for (AddressCheckListing addressCheckListing : csvToBean) {
+      CreateFieldWorkerJobRequest createFieldWorkerJobRequest = createAddressCheckJob(addressCheckListing);
       gatewayActionAdapter.sendJobRequest(createFieldWorkerJobRequest, CANONICAL_ADDRESS_CHECK_CREATE_SENT);
       gatewayEventManager
           .triggerEvent(String.valueOf(createFieldWorkerJobRequest.getCaseId()), CSV_ADDRESS_CHECK_REQUEST_EXTRACTED);
