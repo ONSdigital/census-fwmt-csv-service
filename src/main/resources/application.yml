@@ -41,6 +41,8 @@ rabbitmq:
   maxInterval: 45000
 
 gcpBucket:
+  ceBucketName: "gs://ce-csv-bucket-dev/"
+  ccsBucketName: "gs://ce-csv-bucket-dev/"
   celocation: "gs://ce-csv-bucket-dev/ceTestCSV.csv"
   ccslocation: "gs://csv-bucket-test/ccsTestCSV.csv"
   ceProcessedPath: "gs://ce-csv-bucket-dev/processed/ceTestCSV.csv"
