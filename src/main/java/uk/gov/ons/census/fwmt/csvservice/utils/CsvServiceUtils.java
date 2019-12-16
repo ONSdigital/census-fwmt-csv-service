@@ -1,26 +1,53 @@
 package uk.gov.ons.census.fwmt.csvservice.utils;
 
-import org.springframework.core.io.Resource;
-import uk.gov.ons.census.fwmt.common.error.GatewayException;
-
 import java.io.IOException;
+import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
 import java.sql.Timestamp;
 
-public final class CsvServiceUtils {
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.DefaultResourceLoader;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.WritableResource;
+import org.springframework.stereotype.Component;
+import org.springframework.util.StreamUtils;
 
-  public static void moveCsvFile(Resource csvGCPFile, Path csvPath, Path processedPath) throws GatewayException {
+import lombok.extern.slf4j.Slf4j;
+import uk.gov.ons.census.fwmt.common.error.GatewayException;
+
+@Slf4j
+@Component
+public class CsvServiceUtils {
+
+  @Autowired
+  private DefaultResourceLoader defaultResourceLoader;
+
+  public void moveCsvFile(Resource csvGCPFile, Path csvPath, Resource processedPath) throws GatewayException {
     Timestamp timestamp = new Timestamp(System.currentTimeMillis());
     String timeStamp = String.valueOf(timestamp.toInstant());
     String originalFileName = csvGCPFile.getFilename();
 
+    String outputPath = "Failed to read path{} ingest CSV";
+    try {
+      outputPath = processedPath.getURI().toString() + originalFileName + "processed-" + timeStamp + ".csv";
+    } catch (IOException e) {
+      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, e, outputPath, processedPath);
+    }
+
+    Resource outResource = defaultResourceLoader.getResource(outputPath);
+
     if (originalFileName != null) {
-      try {
-        Files.move(csvPath, processedPath.resolveSibling("processed-" + timeStamp + ".csv"), StandardCopyOption.REPLACE_EXISTING);
+      try (OutputStream os = ((WritableResource) outResource).getOutputStream()) {
+        StreamUtils.copy(csvGCPFile.getInputStream(), os);
       } catch (IOException e) {
-        throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, e, "Unable to move/rename ingest CSV");
+        throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, e, "Failed to copy ingest CSV");
+      }
+
+      try {
+        Files.deleteIfExists(csvPath);
+      } catch (IOException e) {
+        throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, e, "Failed to delete processed ingest CSV");
       }
     }
   }
