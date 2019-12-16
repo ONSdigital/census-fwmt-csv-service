@@ -90,7 +90,7 @@ dependencies {
 	compile('io.springfox:springfox-swagger-ui:2.9.2')
 	annotationProcessor("org.projectlombok:lombok")
 
-	implementation 'com.google.cloud:google-cloud-nio:0.30.0-alpha'
+	implementation('com.google.cloud:google-cloud-nio:0.120.0-alpha')
 
 	compile 'com.opencsv:opencsv:4.5'
 
