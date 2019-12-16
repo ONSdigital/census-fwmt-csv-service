@@ -25,7 +25,6 @@ public class AddressCheckConverterServiceImplTest {
   @InjectMocks
   private AddressCheckConverterService addressCheckConverterService;
 
-
   @Mock
   private GatewayActionAdapter gatewayActionAdapter;
 
@@ -43,7 +42,7 @@ public class AddressCheckConverterServiceImplTest {
     ReflectionTestUtils.setField(addressCheckConverterService, "processedPath", testResource);
 
     // When
-
+    addressCheckConverterService.convertToCanonical();
 
     // Then
     Mockito.verify(gatewayEventManager).triggerEvent(anyString(), eq(CSV_ADDRESS_CHECK_REQUEST_EXTRACTED));

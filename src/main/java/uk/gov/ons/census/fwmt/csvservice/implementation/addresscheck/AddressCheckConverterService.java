@@ -11,7 +11,6 @@ import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.csvservice.adapter.GatewayActionAdapter;
 import uk.gov.ons.census.fwmt.csvservice.config.GatewayEventsConfig;
 import uk.gov.ons.census.fwmt.csvservice.dto.AddressCheckListing;
-import uk.gov.ons.census.fwmt.csvservice.dto.CEJobListing;
 import uk.gov.ons.census.fwmt.csvservice.service.CSVConverterService;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
 
@@ -45,7 +44,7 @@ public class AddressCheckConverterService implements CSVConverterService {
     CsvToBean<AddressCheckListing> csvToBean;
     try {
       csvToBean = new CsvToBeanBuilder(new InputStreamReader(csvGCPFile.getInputStream(), StandardCharsets.UTF_8))
-          .withType(CEJobListing.class)
+          .withType(AddressCheckListing.class)
           .build();
 
     } catch (IOException e) {
