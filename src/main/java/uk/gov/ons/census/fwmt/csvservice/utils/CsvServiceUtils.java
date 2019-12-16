@@ -23,7 +23,7 @@ public class CsvServiceUtils {
   @Autowired
   private DefaultResourceLoader defaultResourceLoader;
 
-  public void moveCsvFile(Resource csvGCPFile, Path csvPath, Resource processedPath) throws GatewayException {
+  public void moveCsvFile(Resource csvGCPFile, Resource processedPath) throws GatewayException {
     Timestamp timestamp = new Timestamp(System.currentTimeMillis());
     String timeStamp = String.valueOf(timestamp.toInstant());
     String originalFileName = csvGCPFile.getFilename();
@@ -45,7 +45,7 @@ public class CsvServiceUtils {
       }
 
       try {
-        Files.deleteIfExists(csvPath);
+        Files.delete((Path) csvGCPFile);
       } catch (IOException e) {
         throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, e, "Failed to delete processed ingest CSV");
       }

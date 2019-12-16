@@ -63,11 +63,6 @@ public class CCSConverterService implements CSVConverterService {
       gatewayEventManager
           .triggerEvent(String.valueOf(createFieldWorkerJobRequest.getCaseId()), CSV_CCS_REQUEST_EXTRACTED);
     }
-
-    try {
-      csvServiceUtils.moveCsvFile(csvGCPFile, Paths.get(csvGCPFile.getURI()), processedPath);
-    } catch (IOException e) {
-      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, e, "Failed to get path");
-    }
+    csvServiceUtils.moveCsvFile(csvGCPFile, processedPath);
   }
 }
