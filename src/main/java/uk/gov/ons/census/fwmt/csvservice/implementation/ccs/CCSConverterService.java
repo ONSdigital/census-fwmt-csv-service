@@ -19,7 +19,6 @@ import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Paths;
 
 import static uk.gov.ons.census.fwmt.csvservice.implementation.ccs.CCSCanonicalBuilder.createCCSJob;
 import static uk.gov.ons.census.fwmt.csvservice.implementation.ccs.CCSGatewayEventsConfig.CANONICAL_CCS_CREATE_SENT;
@@ -63,11 +62,6 @@ public class CCSConverterService implements CSVConverterService {
       gatewayEventManager
           .triggerEvent(String.valueOf(createFieldWorkerJobRequest.getCaseId()), CSV_CCS_REQUEST_EXTRACTED);
     }
-
-    try {
-      csvServiceUtils.moveCsvFile(csvGCPFile, Paths.get(csvGCPFile.getURI()), processedPath);
-    } catch (IOException e) {
-      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, e, "Failed to get path");
-    }
+    csvServiceUtils.moveCsvFile(csvGCPFile, processedPath);
   }
 }
