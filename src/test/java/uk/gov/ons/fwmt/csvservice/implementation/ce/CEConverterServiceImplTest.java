@@ -9,9 +9,9 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.test.util.ReflectionTestUtils;
-import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.csvservice.adapter.GatewayActionAdapter;
 import uk.gov.ons.census.fwmt.csvservice.implementation.ce.CEConverterService;
+import uk.gov.ons.census.fwmt.csvservice.utils.CsvServiceUtils;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
 
 import static org.mockito.ArgumentMatchers.anyString;
@@ -30,8 +30,11 @@ public class CEConverterServiceImplTest {
   @Mock
   private GatewayEventManager gatewayEventManager;
 
+  @Mock
+  private CsvServiceUtils csvServiceUtils;
+
   @Test
-  public void convertCECSVToCanonicalTest() throws GatewayException {
+  public void convertCECSVToCanonicalTest() {
     // Given
     ClassLoader classLoader = getClass().getClassLoader();
     String testPathString = classLoader.getResource("testCECSV.csv").getPath();
