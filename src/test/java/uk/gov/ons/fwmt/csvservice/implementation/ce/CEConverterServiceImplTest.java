@@ -34,7 +34,7 @@ public class CEConverterServiceImplTest {
   private CsvServiceUtils csvServiceUtils;
 
   @Test
-  public void convertCECSVToCanonicalTest() {
+  public void convertCECSVToCanonicalTest() throws GatewayException {
     // Given
     ClassLoader classLoader = getClass().getClassLoader();
     String testPathString = classLoader.getResource("testCECSV.csv").getPath();
