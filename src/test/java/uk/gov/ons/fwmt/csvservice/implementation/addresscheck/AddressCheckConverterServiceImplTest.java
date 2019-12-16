@@ -13,6 +13,7 @@ import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.csvservice.adapter.GatewayActionAdapter;
 
 import uk.gov.ons.census.fwmt.csvservice.implementation.addresscheck.AddressCheckConverterService;
+import uk.gov.ons.census.fwmt.csvservice.utils.CsvServiceUtils;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
 
 import static org.mockito.ArgumentMatchers.anyString;
@@ -30,6 +31,9 @@ public class AddressCheckConverterServiceImplTest {
 
   @Mock
   private GatewayEventManager gatewayEventManager;
+
+  @Mock
+  private CsvServiceUtils csvServiceUtils;
 
   @Test
   public void convertAddressCheckToCanonicalTest() throws GatewayException {
