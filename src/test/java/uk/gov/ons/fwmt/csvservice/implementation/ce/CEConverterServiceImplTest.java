@@ -12,6 +12,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 import uk.gov.ons.census.fwmt.csvservice.adapter.GatewayActionAdapter;
 import uk.gov.ons.census.fwmt.csvservice.implementation.ce.CEConverterService;
 import uk.gov.ons.census.fwmt.csvservice.utils.CsvServiceUtils;
+import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
 
 import static org.mockito.ArgumentMatchers.anyString;
