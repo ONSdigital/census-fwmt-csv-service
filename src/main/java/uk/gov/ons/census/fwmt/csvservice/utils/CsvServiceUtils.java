@@ -45,7 +45,7 @@ public class CsvServiceUtils {
       }
 
       try {
-        Files.delete((Path) csvGCPFile);
+        Files.delete(Path.of(csvGCPFile.getURI()));
       } catch (IOException e) {
         throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, e, "Failed to delete processed ingest CSV");
       }
