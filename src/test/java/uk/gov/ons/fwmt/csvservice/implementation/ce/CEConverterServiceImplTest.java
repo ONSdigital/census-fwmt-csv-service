@@ -46,8 +46,8 @@ public class CEConverterServiceImplTest {
     Resource testResource = new FileSystemResource(testPathString);
 
     ReflectionTestUtils.setField(ceConverterService, "csvGCPFile", testResource);
-    ReflectionTestUtils.setField(ceConverterService, "ceBucket", "bucket");
-    ReflectionTestUtils.setField(ceConverterService, "ceBlob", "blob");
+    ReflectionTestUtils.setField(ceConverterService, "bucketName", "bucket");
+    ReflectionTestUtils.setField(ceConverterService, "blobName", "blob");
 
     // When
     ceConverterService.convertToCanonical();
