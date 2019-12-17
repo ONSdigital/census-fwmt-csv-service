@@ -76,7 +76,7 @@ public class AddressCheckConverterService implements CSVConverterService {
     csvServiceUtils.moveCsvFile(bucketName, "AC");
   }
 
-  private Resource[] loadResources() {
+  private Resource[] loadResources() throws GatewayException {
     try {
       return ResourcePatternUtils.getResourcePatternResolver(resourceLoader).getResources(
           String.valueOf(csvGCPFile.getURI()));
