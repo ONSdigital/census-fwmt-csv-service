@@ -1,5 +1,6 @@
 package uk.gov.ons.fwmt.csvservice.implementation.addresscheck;
 
+import com.google.cloud.storage.Storage;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -35,6 +36,9 @@ public class AddressCheckConverterServiceImplTest {
   @Mock
   private CsvServiceUtils csvServiceUtils;
 
+  @Mock
+  private Storage googleCloudStorage;
+
   @Test
   public void convertAddressCheckToCanonicalTest() throws GatewayException {
     // Given
@@ -43,7 +47,8 @@ public class AddressCheckConverterServiceImplTest {
     Resource testResource = new FileSystemResource(testPathString);
 
     ReflectionTestUtils.setField(addressCheckConverterService, "csvGCPFile", testResource);
-    ReflectionTestUtils.setField(addressCheckConverterService, "processedPath", testResource);
+    ReflectionTestUtils.setField(addressCheckConverterService, "bucketName", "bucket");
+    ReflectionTestUtils.setField(addressCheckConverterService, "blobName", "blob");
 
     // When
     addressCheckConverterService.convertToCanonical();

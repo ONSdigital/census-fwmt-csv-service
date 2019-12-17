@@ -12,6 +12,7 @@ import uk.gov.ons.census.fwmt.csvservice.adapter.GatewayActionAdapter;
 import uk.gov.ons.census.fwmt.csvservice.config.GatewayEventsConfig;
 import uk.gov.ons.census.fwmt.csvservice.dto.AddressCheckListing;
 import uk.gov.ons.census.fwmt.csvservice.service.CSVConverterService;
+import uk.gov.ons.census.fwmt.csvservice.utils.CsvServiceUtils;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
 
 import java.io.IOException;
@@ -25,11 +26,14 @@ import static uk.gov.ons.census.fwmt.csvservice.implementation.addresscheck.Addr
 @Component("AC")
 public class AddressCheckConverterService implements CSVConverterService {
 
-  @Value("${gcpBucket.addressChecklocation}")
+  @Value("${gcpBucket.addresschecklocation}")
   private Resource csvGCPFile;
 
-  @Value("${gcpBucket.addressCheckProcessedPath}")
-  private Resource processedPath;
+  @Value("${gcpBucket.addressCheckBucket}")
+  private String bucketName;
+
+  @Value("${gcpBucket.addressCheckBlob}")
+  private String blobName;
 
   @Autowired
   private GatewayActionAdapter gatewayActionAdapter;
@@ -60,11 +64,6 @@ public class AddressCheckConverterService implements CSVConverterService {
       gatewayEventManager
           .triggerEvent(String.valueOf(createFieldWorkerJobRequest.getCaseId()), CSV_ADDRESS_CHECK_REQUEST_EXTRACTED);
     }
-
-    try {
-      csvServiceUtils.moveCsvFile(csvGCPFile, processedPath);
-    } catch (IOException e) {
-      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, e, "Failed to read path");
-    }
+    csvServiceUtils.moveCsvFile(bucketName, blobName);
   }
 }
