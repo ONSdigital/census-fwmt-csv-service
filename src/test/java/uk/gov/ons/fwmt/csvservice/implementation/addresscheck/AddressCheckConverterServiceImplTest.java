@@ -53,7 +53,6 @@ public class AddressCheckConverterServiceImplTest {
 
     ReflectionTestUtils.setField(addressCheckConverterService, "csvGCPFile", testResource);
     ReflectionTestUtils.setField(addressCheckConverterService, "bucketName", "bucket");
-    ReflectionTestUtils.setField(addressCheckConverterService, "blobName", "blob");
 
     // When
     addressCheckConverterService.convertToCanonical();

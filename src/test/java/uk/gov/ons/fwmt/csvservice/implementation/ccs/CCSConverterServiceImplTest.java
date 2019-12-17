@@ -48,7 +48,6 @@ public class CCSConverterServiceImplTest {
 
     ReflectionTestUtils.setField(ccsConverterService, "csvGCPFile", testResource);
     ReflectionTestUtils.setField(ccsConverterService, "bucketName", "bucket");
-    ReflectionTestUtils.setField(ccsConverterService, "blobName", "blob");
 
     // When
     ccsConverterService.convertToCanonical();
