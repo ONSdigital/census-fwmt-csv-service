@@ -5,6 +5,8 @@ import com.opencsv.bean.CsvToBeanBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
+import org.springframework.core.io.support.ResourcePatternUtils;
 import org.springframework.stereotype.Component;
 import uk.gov.ons.census.fwmt.canonical.v1.CreateFieldWorkerJobRequest;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
@@ -26,14 +28,14 @@ import static uk.gov.ons.census.fwmt.csvservice.implementation.addresscheck.Addr
 @Component("AC")
 public class AddressCheckConverterService implements CSVConverterService {
 
+  @Autowired
+  private ResourceLoader resourceLoader;
+
   @Value("${gcpBucket.addresschecklocation}")
   private Resource csvGCPFile;
 
   @Value("${gcpBucket.addressCheckBucket}")
   private String bucketName;
-
-  @Value("${gcpBucket.addressCheckBlob}")
-  private String blobName;
 
   @Autowired
   private GatewayActionAdapter gatewayActionAdapter;
@@ -46,9 +48,16 @@ public class AddressCheckConverterService implements CSVConverterService {
 
   @Override
   public void convertToCanonical() throws GatewayException {
+    Resource [] resources = loadResources();
+    if (resources.length < 1) {
+      String msg = "Too many files found";
+      gatewayEventManager.triggerErrorEvent(this.getClass(), msg, "N/A", GatewayEventsConfig.UNABLE_TO_READ_CSV);
+      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, msg);
+    }
+    Resource addressCheckFile = resources[0];
     CsvToBean<AddressCheckListing> csvToBean;
     try {
-      csvToBean = new CsvToBeanBuilder(new InputStreamReader(csvGCPFile.getInputStream(), StandardCharsets.UTF_8))
+      csvToBean = new CsvToBeanBuilder(new InputStreamReader(addressCheckFile.getInputStream(), StandardCharsets.UTF_8))
           .withType(AddressCheckListing.class)
           .build();
 
@@ -64,6 +73,15 @@ public class AddressCheckConverterService implements CSVConverterService {
       gatewayEventManager
           .triggerEvent(String.valueOf(createFieldWorkerJobRequest.getCaseId()), CSV_ADDRESS_CHECK_REQUEST_EXTRACTED);
     }
-    csvServiceUtils.moveCsvFile(bucketName, blobName);
+    csvServiceUtils.moveCsvFile(bucketName, "AC");
+  }
+
+  private Resource[] loadResources() {
+    try {
+      return ResourcePatternUtils.getResourcePatternResolver(resourceLoader).getResources(
+          String.valueOf(csvGCPFile.getURI()));
+    } catch (IOException e) {
+      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, e, "failed to get resource");
+    }
   }
 }

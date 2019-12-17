@@ -33,9 +33,6 @@ public class CCSConverterService implements CSVConverterService {
   @Value("${gcpBucket.ccsBucket}")
   private String bucketName;
 
-  @Value("${gcpBucket.ccsBlob}")
-  private String blobName;
-
   @Autowired
   private GatewayActionAdapter gatewayActionAdapter;
 
@@ -65,6 +62,6 @@ public class CCSConverterService implements CSVConverterService {
       gatewayEventManager
           .triggerEvent(String.valueOf(createFieldWorkerJobRequest.getCaseId()), CSV_CCS_REQUEST_EXTRACTED);
     }
-    csvServiceUtils.moveCsvFile(bucketName, blobName);
+    csvServiceUtils.moveCsvFile(bucketName, "CCS");
   }
 }

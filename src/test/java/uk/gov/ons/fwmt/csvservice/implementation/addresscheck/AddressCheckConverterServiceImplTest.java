@@ -7,8 +7,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.test.util.ReflectionTestUtils;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.csvservice.adapter.GatewayActionAdapter;
@@ -38,6 +40,9 @@ public class AddressCheckConverterServiceImplTest {
 
   @Mock
   private Storage googleCloudStorage;
+
+  @Mock
+  private ResourceLoader resourceLoader;
 
   @Test
   public void convertAddressCheckToCanonicalTest() throws GatewayException {
