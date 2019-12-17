@@ -1,5 +1,6 @@
 package uk.gov.ons.fwmt.csvservice.implementation.ce;
 
+import com.google.cloud.storage.Storage;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -10,8 +11,8 @@ import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.test.util.ReflectionTestUtils;
 import uk.gov.ons.census.fwmt.csvservice.adapter.GatewayActionAdapter;
-import uk.gov.ons.census.fwmt.csvservice.implementation.ce.CEConverterService;
 import uk.gov.ons.census.fwmt.csvservice.utils.CsvServiceUtils;
+import uk.gov.ons.census.fwmt.csvservice.implementation.ce.CEConverterService;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
 
@@ -34,6 +35,9 @@ public class CEConverterServiceImplTest {
   @Mock
   private CsvServiceUtils csvServiceUtils;
 
+  @Mock
+  private Storage googleCloudStorage;
+
   @Test
   public void convertCECSVToCanonicalTest() throws GatewayException {
     // Given
@@ -42,7 +46,8 @@ public class CEConverterServiceImplTest {
     Resource testResource = new FileSystemResource(testPathString);
 
     ReflectionTestUtils.setField(ceConverterService, "csvGCPFile", testResource);
-    ReflectionTestUtils.setField(ceConverterService, "processedPath", testResource);
+    ReflectionTestUtils.setField(ceConverterService, "bucketName", "bucket");
+    ReflectionTestUtils.setField(ceConverterService, "blobName", "blob");
 
     // When
     ceConverterService.convertToCanonical();
