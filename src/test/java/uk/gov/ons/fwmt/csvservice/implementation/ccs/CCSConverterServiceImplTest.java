@@ -1,11 +1,13 @@
 package uk.gov.ons.fwmt.csvservice.implementation.ccs;
 
+import com.google.cloud.storage.Storage;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.test.util.ReflectionTestUtils;
@@ -33,6 +35,9 @@ public class CCSConverterServiceImplTest {
 
   @Mock
   private CsvServiceUtils csvServiceUtils;
+
+  @Mock
+  private Storage googleCloudStorage;
 
   @Test
   public void convertCCSCSVToCanonicalTest() throws GatewayException {

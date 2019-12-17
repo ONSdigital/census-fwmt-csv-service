@@ -1,5 +1,6 @@
 package uk.gov.ons.fwmt.csvservice.implementation.ce;
 
+import com.google.cloud.storage.Storage;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -33,6 +34,9 @@ public class CEConverterServiceImplTest {
 
   @Mock
   private CsvServiceUtils csvServiceUtils;
+
+  @Mock
+  private Storage googleCloudStorage;
 
   @Test
   public void convertCECSVToCanonicalTest() throws GatewayException {
