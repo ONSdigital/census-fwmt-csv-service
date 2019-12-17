@@ -17,6 +17,7 @@ public final class AddressCheckCanonicalBuilder {
     UUID caseId = UUID.randomUUID();
 
     createJobRequest.setActionType(CREATE_ACTION_TYPE);
+    createJobRequest.setGatewayType(CREATE_ACTION_TYPE);
     createJobRequest.setCaseId(caseId);
     createJobRequest.setCaseReference(addressCheckListing.getCaseReference());
     createJobRequest.setEstablishmentType("Residential");
@@ -35,6 +36,7 @@ public final class AddressCheckCanonicalBuilder {
     address.setLatitude(addressCheckListing.getLatitude());
     address.setLongitude(addressCheckListing.getLongitude());
     address.setOa("look up on postcode");
+    address.setPostCode(addressCheckListing.getPostcode());
 
     createJobRequest.setAddress(address);
 

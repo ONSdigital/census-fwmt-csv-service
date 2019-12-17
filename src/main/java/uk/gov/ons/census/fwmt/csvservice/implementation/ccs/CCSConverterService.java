@@ -62,6 +62,6 @@ public class CCSConverterService implements CSVConverterService {
       gatewayEventManager
           .triggerEvent(String.valueOf(createFieldWorkerJobRequest.getCaseId()), CSV_CCS_REQUEST_EXTRACTED);
     }
-    csvServiceUtils.moveCsvFile(bucketName, "CCS");
+    csvServiceUtils.moveCsvFile(bucketName, "ccs");
   }
 }

@@ -30,6 +30,9 @@ public class AddressCheckListing {
   @CsvBindByName(column = "townName")
   private String townName;
 
+  @CsvBindByName(column = "postCode")
+  private String postcode;
+
   @CsvBindByName(column = "latitude")
   private BigDecimal latitude;
 

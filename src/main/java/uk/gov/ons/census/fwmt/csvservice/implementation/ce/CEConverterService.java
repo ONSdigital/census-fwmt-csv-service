@@ -61,6 +61,6 @@ public class CEConverterService implements CSVConverterService {
       gatewayEventManager
           .triggerEvent(String.valueOf(createFieldWorkerJobRequest.getCaseId()), CSV_CE_REQUEST_EXTRACTED);
     }
-    csvServiceUtils.moveCsvFile(bucketName, "CE");
+    csvServiceUtils.moveCsvFile(bucketName, "ce");
   }
 }

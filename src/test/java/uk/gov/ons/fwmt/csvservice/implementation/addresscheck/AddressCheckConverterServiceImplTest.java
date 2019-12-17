@@ -7,7 +7,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
@@ -48,7 +47,7 @@ public class AddressCheckConverterServiceImplTest {
   public void convertAddressCheckToCanonicalTest() throws GatewayException {
     // Given
     ClassLoader classLoader = getClass().getClassLoader();
-    String testPathString = classLoader.getResource("testAddressCheckCSV.csv").getPath();
+    String testPathString = classLoader.getResource("AC.csv").getPath();
     Resource testResource = new FileSystemResource(testPathString);
 
     ReflectionTestUtils.setField(addressCheckConverterService, "csvGCPFile", testResource);

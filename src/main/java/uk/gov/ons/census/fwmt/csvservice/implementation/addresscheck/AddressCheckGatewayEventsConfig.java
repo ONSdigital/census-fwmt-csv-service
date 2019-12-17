@@ -11,7 +11,7 @@ public class AddressCheckGatewayEventsConfig {
   public static final String CANONICAL_ADDRESS_CHECK_CREATE_SENT = "CANONICAL_ADDRESS_CHECK_CREATE_SENT";
 
   @Bean
-  public GatewayEventManager addCCSEvents(GatewayEventManager gatewayEventManager) {
+  public GatewayEventManager addAddressCheckEvents(GatewayEventManager gatewayEventManager) {
     gatewayEventManager.addEventTypes(new String[] {CSV_ADDRESS_CHECK_REQUEST_EXTRACTED, CANONICAL_ADDRESS_CHECK_CREATE_SENT});
     return gatewayEventManager;
   }
