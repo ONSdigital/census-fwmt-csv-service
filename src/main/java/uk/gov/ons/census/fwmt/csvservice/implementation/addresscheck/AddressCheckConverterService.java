@@ -31,9 +31,6 @@ import static uk.gov.ons.census.fwmt.csvservice.implementation.addresscheck.Addr
 @Component("AC")
 public class AddressCheckConverterService implements CSVConverterService {
 
-  @Value("${gcpBucket.addresschecklocation}")
-  private Resource csvGCPFile;
-
   @Value("${gcpBucket.addressCheckBucket}")
   private String bucketName;
 
@@ -88,5 +85,4 @@ public class AddressCheckConverterService implements CSVConverterService {
           .triggerEvent(String.valueOf(createFieldWorkerJobRequest.getCaseId()), CSV_ADDRESS_CHECK_REQUEST_EXTRACTED);
     }
   }
-
 }
