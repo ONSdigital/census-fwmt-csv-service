@@ -29,7 +29,6 @@ import static uk.gov.ons.census.fwmt.csvservice.implementation.addresscheck.Addr
 @Component("AC")
 public class AddressCheckConverterService implements CSVConverterService {
 
-  private final String AC = "AC";
   @Value("${gcpBucket.addressCheckBucket}")
   private String bucketName;
   @Autowired
@@ -44,6 +43,7 @@ public class AddressCheckConverterService implements CSVConverterService {
   @Override
   public void convertToCanonical() throws GatewayException {
     Bucket bucket = googleCloudStorage.get(bucketName);
+    String AC = "AC";
     Page<Blob> blobPage = bucket.list(Storage.BlobListOption.prefix(AC));
 
     CsvToBean<AddressCheckListing> csvToBean;
