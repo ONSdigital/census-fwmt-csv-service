@@ -21,6 +21,7 @@ import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.channels.Channels;
+import java.nio.charset.StandardCharsets;
 
 import static uk.gov.ons.census.fwmt.csvservice.implementation.addresscheck.AddressCheckCanonicalBuilder.createAddressCheckJob;
 import static uk.gov.ons.census.fwmt.csvservice.implementation.addresscheck.AddressCheckGatewayEventsConfig.CANONICAL_ADDRESS_CHECK_CREATE_SENT;
@@ -59,7 +60,7 @@ public class AddressCheckConverterService implements CSVConverterService {
     InputStream inputStream = Channels.newInputStream(reader);
 
     CsvToBean<AddressCheckListing> csvToBean;
-    csvToBean = new CsvToBeanBuilder(new InputStreamReader(inputStream))
+    csvToBean = new CsvToBeanBuilder(new InputStreamReader(inputStream, StandardCharsets.UTF_8))
         .withType(AddressCheckListing.class)
         .build();
 
