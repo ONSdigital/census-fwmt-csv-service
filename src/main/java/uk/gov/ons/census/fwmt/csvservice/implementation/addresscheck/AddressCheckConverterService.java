@@ -29,32 +29,29 @@ import static uk.gov.ons.census.fwmt.csvservice.implementation.addresscheck.Addr
 @Component("AC")
 public class AddressCheckConverterService implements CSVConverterService {
 
+  private final String AC = "AC";
   @Value("${gcpBucket.addressCheckBucket}")
   private String bucketName;
-
   @Autowired
   private GatewayActionAdapter gatewayActionAdapter;
-
   @Autowired
   private GatewayEventManager gatewayEventManager;
-
   @Autowired
   private CsvServiceUtils csvServiceUtils;
-
   @Autowired
   private Storage googleCloudStorage;
 
   @Override
   public void convertToCanonical() throws GatewayException {
     Bucket bucket = googleCloudStorage.get(bucketName);
-    Page<Blob> blobPage = bucket.list(Storage.BlobListOption.prefix("AC"));
+    Page<Blob> blobPage = bucket.list(Storage.BlobListOption.prefix(AC));
 
     CsvToBean<AddressCheckListing> csvToBean;
     for (Blob blob : blobPage.iterateAll()) {
       csvToBean = createCsvBean(blob);
       processObject(csvToBean);
     }
-    csvServiceUtils.moveCsvFile(bucketName, "AC");
+    csvServiceUtils.moveCsvFile(bucketName, AC);
   }
 
   private CsvToBean<AddressCheckListing> createCsvBean(Blob blob) {
