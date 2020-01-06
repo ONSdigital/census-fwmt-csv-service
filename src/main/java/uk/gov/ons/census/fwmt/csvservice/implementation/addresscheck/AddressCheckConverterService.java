@@ -13,6 +13,8 @@ import org.springframework.stereotype.Component;
 import uk.gov.ons.census.fwmt.canonical.v1.CreateFieldWorkerJobRequest;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.csvservice.adapter.GatewayActionAdapter;
+import uk.gov.ons.census.fwmt.csvservice.config.GatewayEventsConfig;
+import uk.gov.ons.census.fwmt.csvservice.data.PostcodeLookup;
 import uk.gov.ons.census.fwmt.csvservice.dto.AddressCheckListing;
 import uk.gov.ons.census.fwmt.csvservice.service.CSVConverterService;
 import uk.gov.ons.census.fwmt.csvservice.utils.CsvServiceUtils;
@@ -26,6 +28,7 @@ import java.nio.charset.StandardCharsets;
 import static uk.gov.ons.census.fwmt.csvservice.implementation.addresscheck.AddressCheckCanonicalBuilder.createAddressCheckJob;
 import static uk.gov.ons.census.fwmt.csvservice.implementation.addresscheck.AddressCheckGatewayEventsConfig.CANONICAL_ADDRESS_CHECK_CREATE_SENT;
 import static uk.gov.ons.census.fwmt.csvservice.implementation.addresscheck.AddressCheckGatewayEventsConfig.CSV_ADDRESS_CHECK_REQUEST_EXTRACTED;
+import static uk.gov.ons.census.fwmt.csvservice.service.LookupFileLoaderServiceImpl.postcodeLookupMap;
 
 @Component("AC")
 public class AddressCheckConverterService implements CSVConverterService {
@@ -69,10 +72,19 @@ public class AddressCheckConverterService implements CSVConverterService {
 
   private void processObject(CsvToBean<AddressCheckListing> csvToBean) throws GatewayException {
     for (AddressCheckListing addressCheckListing : csvToBean) {
-      CreateFieldWorkerJobRequest createFieldWorkerJobRequest = createAddressCheckJob(addressCheckListing);
-      gatewayActionAdapter.sendJobRequest(createFieldWorkerJobRequest, CANONICAL_ADDRESS_CHECK_CREATE_SENT);
-      gatewayEventManager
-          .triggerEvent(String.valueOf(createFieldWorkerJobRequest.getCaseId()), CSV_ADDRESS_CHECK_REQUEST_EXTRACTED);
+      if (postcodeLookupMap.containsKey(addressCheckListing.getPostcode())) {
+        CreateFieldWorkerJobRequest createFieldWorkerJobRequest = createAddressCheckJob(addressCheckListing);
+        gatewayActionAdapter.sendJobRequest(createFieldWorkerJobRequest, CANONICAL_ADDRESS_CHECK_CREATE_SENT);
+        gatewayEventManager
+            .triggerEvent(String.valueOf(createFieldWorkerJobRequest.getCaseId()), CSV_ADDRESS_CHECK_REQUEST_EXTRACTED);
+      } else if (postcodeLookupMap.isEmpty()) {
+        gatewayEventManager.triggerErrorEvent(this.getClass(), "Lookup map empty: " + postcodeLookupMap.size(), "N/A",
+            GatewayEventsConfig.POSTCODE_MAP_EMPTY);
+      } else {
+        gatewayEventManager
+            .triggerErrorEvent(this.getClass(), "Could not match postcode: " + addressCheckListing.getPostcode(), "N/A",
+                GatewayEventsConfig.FAILED_MATCH_POSTCODE);
+      }
     }
   }
 }

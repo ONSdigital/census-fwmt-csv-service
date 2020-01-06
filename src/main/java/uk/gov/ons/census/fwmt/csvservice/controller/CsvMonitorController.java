@@ -6,6 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.csvservice.service.CSVConverterService;
+import uk.gov.ons.census.fwmt.csvservice.service.LookupFileLoaderService;
 
 import java.util.Map;
 
@@ -14,6 +15,9 @@ public class CsvMonitorController {
 
   @Autowired
   private Map<String, CSVConverterService> csvServiceMap;
+
+  @Autowired
+  private LookupFileLoaderService lookupFileLoaderService;
 
   @GetMapping("/ingestCeCsvFile")
   public ResponseEntity<String> ingestCeCsvFile() throws GatewayException {
@@ -34,5 +38,11 @@ public class CsvMonitorController {
     final CSVConverterService ccsConverterService = csvServiceMap.get("AC");
     ccsConverterService.convertToCanonical();
     return ResponseEntity.ok("AC adapter service activated");
+  }
+
+  @GetMapping("/ingestAddressLookupCsvFile")
+  public ResponseEntity<String> loadAddressLookupFile() throws GatewayException {
+    lookupFileLoaderService.loadPostcodeLookupFile();
+    return ResponseEntity.ok("Address Lookup file loaded");
   }
 }
