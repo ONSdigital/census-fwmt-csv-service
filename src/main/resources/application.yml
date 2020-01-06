@@ -43,8 +43,7 @@ rabbitmq:
 gcpBucket:
   ceBucket: "csv-bucket-test"
   ccsBucket: "csv-bucket-test"
-  ceBlob: "ceTestCSV.csv"
-  ccsBlob: "ccsTestCSV.csv"
+  addressCheckBucket: "csv-bucket-test"
   celocation: "gs://csv-bucket-test/ceTestCSV.csv"
   ccslocation: "gs://csv-bucket-test/ccsTestCSV.csv"
-
+  addresschecklocation: "gs://csv-bucket-test/AC.csv"
