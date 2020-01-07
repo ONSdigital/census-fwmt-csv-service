@@ -8,7 +8,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.csvservice.config.GatewayEventsConfig;
-import uk.gov.ons.census.fwmt.csvservice.data.PostcodeLookup;
+import uk.gov.ons.census.fwmt.csvservice.dto.PostcodeLookup;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
 
 import java.io.IOException;

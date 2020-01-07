@@ -1,7 +1,7 @@
 package uk.gov.ons.census.fwmt.csvservice.service;
 
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
-import uk.gov.ons.census.fwmt.csvservice.data.PostcodeLookup;
+import uk.gov.ons.census.fwmt.csvservice.dto.PostcodeLookup;
 
 import java.util.Map;
 

@@ -1,4 +1,4 @@
-package uk.gov.ons.census.fwmt.csvservice.data;
+package uk.gov.ons.census.fwmt.csvservice.dto;
 
 import com.opencsv.bean.CsvBindByName;
 import lombok.AllArgsConstructor;
