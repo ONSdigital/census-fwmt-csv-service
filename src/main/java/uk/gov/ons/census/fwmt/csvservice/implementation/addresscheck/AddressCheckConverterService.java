@@ -44,12 +44,13 @@ public class AddressCheckConverterService implements CSVConverterService {
   private CsvServiceUtils csvServiceUtils;
   @Autowired
   private LookupFileLoaderService lookupFileLoaderService;
-  private final Map<String, PostcodeLookup> postcodeLookupMap = lookupFileLoaderService.getLookupMap();
+  private Map<String, PostcodeLookup> postcodeLookupMap;
   @Autowired
   private Storage googleCloudStorage;
 
   @Override
   public void convertToCanonical() throws GatewayException {
+    postcodeLookupMap = lookupFileLoaderService.getLookupMap();
     Bucket bucket = googleCloudStorage.get(bucketName);
     String AC = "AC";
     Page<Blob> blobPage = bucket.list(Storage.BlobListOption.prefix(AC));
@@ -85,7 +86,7 @@ public class AddressCheckConverterService implements CSVConverterService {
             CSV_ADDRESS_CHECK_REQUEST_EXTRACTED);
       } else {
         gatewayEventManager
-            .triggerErrorEvent(this.getClass(), "Could not match postcode: " + addressCheckListing.getPostcode(),
+            .triggerErrorEvent(this.getClass(), addressCheckListing.getPostcode(),
                 "N/A", GatewayEventsConfig.FAILED_MATCH_POSTCODE);
       }
     }
