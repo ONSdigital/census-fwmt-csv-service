@@ -1,4 +1,4 @@
-package uk.gov.ons.census.fwmt.csvservice.service;
+package uk.gov.ons.census.fwmt.csvservice.implementation.postcodeloader;
 
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.csvservice.config.GatewayEventsConfig;
 import uk.gov.ons.census.fwmt.csvservice.dto.PostcodeLookup;
+import uk.gov.ons.census.fwmt.csvservice.service.LookupFileLoaderService;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
 
 import java.io.IOException;
