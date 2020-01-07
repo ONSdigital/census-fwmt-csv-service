@@ -17,6 +17,7 @@ import uk.gov.ons.census.fwmt.csvservice.config.GatewayEventsConfig;
 import uk.gov.ons.census.fwmt.csvservice.data.PostcodeLookup;
 import uk.gov.ons.census.fwmt.csvservice.dto.AddressCheckListing;
 import uk.gov.ons.census.fwmt.csvservice.service.CSVConverterService;
+import uk.gov.ons.census.fwmt.csvservice.service.LookupFileLoaderService;
 import uk.gov.ons.census.fwmt.csvservice.utils.CsvServiceUtils;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
 
@@ -24,11 +25,11 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.channels.Channels;
 import java.nio.charset.StandardCharsets;
+import java.util.Map;
 
 import static uk.gov.ons.census.fwmt.csvservice.implementation.addresscheck.AddressCheckCanonicalBuilder.createAddressCheckJob;
 import static uk.gov.ons.census.fwmt.csvservice.implementation.addresscheck.AddressCheckGatewayEventsConfig.CANONICAL_ADDRESS_CHECK_CREATE_SENT;
 import static uk.gov.ons.census.fwmt.csvservice.implementation.addresscheck.AddressCheckGatewayEventsConfig.CSV_ADDRESS_CHECK_REQUEST_EXTRACTED;
-import static uk.gov.ons.census.fwmt.csvservice.service.LookupFileLoaderServiceImpl.postcodeLookupMap;
 
 @Component("AC")
 public class AddressCheckConverterService implements CSVConverterService {
@@ -41,6 +42,9 @@ public class AddressCheckConverterService implements CSVConverterService {
   private GatewayEventManager gatewayEventManager;
   @Autowired
   private CsvServiceUtils csvServiceUtils;
+  @Autowired
+  private LookupFileLoaderService lookupFileLoaderService;
+  private final Map<String, PostcodeLookup> postcodeLookupMap = lookupFileLoaderService.getLookupMap();
   @Autowired
   private Storage googleCloudStorage;
 
@@ -71,19 +75,18 @@ public class AddressCheckConverterService implements CSVConverterService {
   }
 
   private void processObject(CsvToBean<AddressCheckListing> csvToBean) throws GatewayException {
+    // Gonna assume no one is gonna be stupid and run this without loading lookup
     for (AddressCheckListing addressCheckListing : csvToBean) {
       if (postcodeLookupMap.containsKey(addressCheckListing.getPostcode())) {
-        CreateFieldWorkerJobRequest createFieldWorkerJobRequest = createAddressCheckJob(addressCheckListing);
+        CreateFieldWorkerJobRequest createFieldWorkerJobRequest = createAddressCheckJob(addressCheckListing,
+            postcodeLookupMap.get(addressCheckListing.getPostcode()));
         gatewayActionAdapter.sendJobRequest(createFieldWorkerJobRequest, CANONICAL_ADDRESS_CHECK_CREATE_SENT);
-        gatewayEventManager
-            .triggerEvent(String.valueOf(createFieldWorkerJobRequest.getCaseId()), CSV_ADDRESS_CHECK_REQUEST_EXTRACTED);
-      } else if (postcodeLookupMap.isEmpty()) {
-        gatewayEventManager.triggerErrorEvent(this.getClass(), "Lookup map empty: " + postcodeLookupMap.size(), "N/A",
-            GatewayEventsConfig.POSTCODE_MAP_EMPTY);
+        gatewayEventManager.triggerEvent(String.valueOf(createFieldWorkerJobRequest.getCaseId()),
+            CSV_ADDRESS_CHECK_REQUEST_EXTRACTED);
       } else {
         gatewayEventManager
-            .triggerErrorEvent(this.getClass(), "Could not match postcode: " + addressCheckListing.getPostcode(), "N/A",
-                GatewayEventsConfig.FAILED_MATCH_POSTCODE);
+            .triggerErrorEvent(this.getClass(), "Could not match postcode: " + addressCheckListing.getPostcode(),
+                "N/A", GatewayEventsConfig.FAILED_MATCH_POSTCODE);
       }
     }
   }

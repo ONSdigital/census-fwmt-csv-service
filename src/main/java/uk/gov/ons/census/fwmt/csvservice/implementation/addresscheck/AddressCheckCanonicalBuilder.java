@@ -7,18 +7,16 @@ import uk.gov.ons.census.fwmt.csvservice.dto.AddressCheckListing;
 
 import java.util.UUID;
 
-import static uk.gov.ons.census.fwmt.csvservice.service.LookupFileLoaderServiceImpl.postcodeLookupMap;
-
 public final class AddressCheckCanonicalBuilder {
 
   private static final String CREATE_ACTION_TYPE = "Create";
 
-  public static CreateFieldWorkerJobRequest createAddressCheckJob(AddressCheckListing addressCheckListing) {
+  public static CreateFieldWorkerJobRequest createAddressCheckJob(AddressCheckListing addressCheckListing,
+      PostcodeLookup postcodeLookup) {
     Address address = new Address();
     CreateFieldWorkerJobRequest createJobRequest = new CreateFieldWorkerJobRequest();
 
     UUID caseId = UUID.randomUUID();
-    PostcodeLookup postcodeLookup = postcodeLookupMap.get(addressCheckListing.getPostcode());
 
     createJobRequest.setActionType(CREATE_ACTION_TYPE);
     createJobRequest.setGatewayType(CREATE_ACTION_TYPE);

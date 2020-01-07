@@ -26,7 +26,7 @@ public class LookupFileLoaderServiceImpl implements LookupFileLoaderService {
   @Autowired
   private GatewayEventManager gatewayEventManager;
 
-  public static Map<String, PostcodeLookup> postcodeLookupMap = new HashMap<>();
+  static final Map<String, PostcodeLookup> postcodeLookupMap = new HashMap<>();
 
   @Override
   public void loadPostcodeLookupFile() throws GatewayException {
@@ -45,5 +45,9 @@ public class LookupFileLoaderServiceImpl implements LookupFileLoaderService {
     for (PostcodeLookup postcodeLookup : csvToBean) {
       postcodeLookupMap.put(postcodeLookup.getPostcode(), postcodeLookup);
     }
+  }
+
+  public Map<String, PostcodeLookup> getLookupMap() {
+    return postcodeLookupMap;
   }
 }
