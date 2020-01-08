@@ -37,14 +37,13 @@ public class LookupFileLoaderServiceImpl implements LookupFileLoaderService {
       csvToBean = new CsvToBeanBuilder(new InputStreamReader(csvGCPFile.getInputStream(), StandardCharsets.UTF_8))
           .withType(PostcodeLookup.class)
           .build();
+      for (PostcodeLookup postcodeLookup : csvToBean) {
+        postcodeLookupMap.put(postcodeLookup.getPostcode(), postcodeLookup);
+      }
     } catch (IOException e) {
       String msg = "Failed to convert CSV to Bean.";
       gatewayEventManager.triggerErrorEvent(this.getClass(), msg, "N/A", GatewayEventsConfig.UNABLE_TO_READ_CSV);
       throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, e, msg);
-    }
-
-    for (PostcodeLookup postcodeLookup : csvToBean) {
-      postcodeLookupMap.put(postcodeLookup.getPostcode(), postcodeLookup);
     }
   }
 
