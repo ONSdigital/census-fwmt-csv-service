@@ -13,8 +13,11 @@ import org.springframework.stereotype.Component;
 import uk.gov.ons.census.fwmt.canonical.v1.CreateFieldWorkerJobRequest;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.csvservice.adapter.GatewayActionAdapter;
+import uk.gov.ons.census.fwmt.csvservice.config.GatewayEventsConfig;
+import uk.gov.ons.census.fwmt.csvservice.dto.PostcodeLookup;
 import uk.gov.ons.census.fwmt.csvservice.dto.AddressCheckListing;
 import uk.gov.ons.census.fwmt.csvservice.service.CSVConverterService;
+import uk.gov.ons.census.fwmt.csvservice.service.LookupFileLoaderService;
 import uk.gov.ons.census.fwmt.csvservice.utils.CsvServiceUtils;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
 
@@ -22,6 +25,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.channels.Channels;
 import java.nio.charset.StandardCharsets;
+import java.util.Map;
 
 import static uk.gov.ons.census.fwmt.csvservice.implementation.addresscheck.AddressCheckCanonicalBuilder.createAddressCheckJob;
 import static uk.gov.ons.census.fwmt.csvservice.implementation.addresscheck.AddressCheckGatewayEventsConfig.CANONICAL_ADDRESS_CHECK_CREATE_SENT;
@@ -39,10 +43,14 @@ public class AddressCheckConverterService implements CSVConverterService {
   @Autowired
   private CsvServiceUtils csvServiceUtils;
   @Autowired
+  private LookupFileLoaderService lookupFileLoaderService;
+  private Map<String, PostcodeLookup> postcodeLookupMap;
+  @Autowired
   private Storage googleCloudStorage;
 
   @Override
   public void convertToCanonical() throws GatewayException {
+    postcodeLookupMap = lookupFileLoaderService.getLookupMap();
     Bucket bucket = googleCloudStorage.get(bucketName);
     String AC = "AC";
     Page<Blob> blobPage = bucket.list(Storage.BlobListOption.prefix(AC));
@@ -68,11 +76,19 @@ public class AddressCheckConverterService implements CSVConverterService {
   }
 
   private void processObject(CsvToBean<AddressCheckListing> csvToBean) throws GatewayException {
+    // Gonna assume no one is gonna be stupid and run this without loading lookup
     for (AddressCheckListing addressCheckListing : csvToBean) {
-      CreateFieldWorkerJobRequest createFieldWorkerJobRequest = createAddressCheckJob(addressCheckListing);
-      gatewayActionAdapter.sendJobRequest(createFieldWorkerJobRequest, CANONICAL_ADDRESS_CHECK_CREATE_SENT);
-      gatewayEventManager
-          .triggerEvent(String.valueOf(createFieldWorkerJobRequest.getCaseId()), CSV_ADDRESS_CHECK_REQUEST_EXTRACTED);
+      if (postcodeLookupMap.containsKey(addressCheckListing.getPostcode())) {
+        CreateFieldWorkerJobRequest createFieldWorkerJobRequest = createAddressCheckJob(addressCheckListing,
+            postcodeLookupMap.get(addressCheckListing.getPostcode()));
+        gatewayActionAdapter.sendJobRequest(createFieldWorkerJobRequest, CANONICAL_ADDRESS_CHECK_CREATE_SENT);
+        gatewayEventManager.triggerEvent(String.valueOf(createFieldWorkerJobRequest.getCaseId()),
+            CSV_ADDRESS_CHECK_REQUEST_EXTRACTED);
+      } else {
+        gatewayEventManager
+            .triggerErrorEvent(this.getClass(), addressCheckListing.getPostcode(),
+                "N/A", GatewayEventsConfig.FAILED_MATCH_POSTCODE);
+      }
     }
   }
 }

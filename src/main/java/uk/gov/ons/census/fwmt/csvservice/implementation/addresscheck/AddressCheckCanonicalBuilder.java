@@ -2,6 +2,7 @@ package uk.gov.ons.census.fwmt.csvservice.implementation.addresscheck;
 
 import uk.gov.ons.census.fwmt.canonical.v1.Address;
 import uk.gov.ons.census.fwmt.canonical.v1.CreateFieldWorkerJobRequest;
+import uk.gov.ons.census.fwmt.csvservice.dto.PostcodeLookup;
 import uk.gov.ons.census.fwmt.csvservice.dto.AddressCheckListing;
 
 import java.util.UUID;
@@ -10,7 +11,8 @@ public final class AddressCheckCanonicalBuilder {
 
   private static final String CREATE_ACTION_TYPE = "Create";
 
-  public static CreateFieldWorkerJobRequest createAddressCheckJob(AddressCheckListing addressCheckListing) {
+  public static CreateFieldWorkerJobRequest createAddressCheckJob(AddressCheckListing addressCheckListing,
+      PostcodeLookup postcodeLookup) {
     Address address = new Address();
     CreateFieldWorkerJobRequest createJobRequest = new CreateFieldWorkerJobRequest();
 
@@ -25,7 +27,7 @@ public final class AddressCheckCanonicalBuilder {
     createJobRequest.setCaseType("AC");
     createJobRequest.setDescription(addressCheckListing.getGuidancePrompt());
     createJobRequest.setSpecialInstructions(addressCheckListing.getAdditionalInformation());
-    createJobRequest.setCoordinatorId("look up on postcode");
+    createJobRequest.setCoordinatorId(postcodeLookup.getAreaRoleId());
     createJobRequest.setUua(false);
     createJobRequest.setSai(false);
 
@@ -35,7 +37,7 @@ public final class AddressCheckCanonicalBuilder {
     address.setTownName(addressCheckListing.getTownName());
     address.setLatitude(addressCheckListing.getLatitude());
     address.setLongitude(addressCheckListing.getLongitude());
-    address.setOa("look up on postcode");
+    address.setOa(postcodeLookup.getLa());
     address.setPostCode(addressCheckListing.getPostcode());
 
     createJobRequest.setAddress(address);

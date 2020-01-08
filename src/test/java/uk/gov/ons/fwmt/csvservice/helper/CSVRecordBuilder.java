@@ -48,6 +48,7 @@ public class CSVRecordBuilder {
     addressCheckListing.setLine2("Station Town");
     addressCheckListing.setLine3("Greater Station");
     addressCheckListing.setTownName("Fareham");
+    addressCheckListing.setPostcode("PO15 6LW");
     addressCheckListing.setGuidancePrompt("12");
     addressCheckListing.setLatitude(BigDecimal.valueOf(51));
     addressCheckListing.setLongitude(BigDecimal.valueOf(0.11));

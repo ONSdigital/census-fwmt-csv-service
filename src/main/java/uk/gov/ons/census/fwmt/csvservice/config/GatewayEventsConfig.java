@@ -10,12 +10,15 @@ public class GatewayEventsConfig {
 
   public static final String UNABLE_TO_READ_CSV = "UNABLE_TO_READ_CSV";
   public static final String FAILED_TO_MARSHALL_CANONICAL = "FAILED_TO_MARSHALL_CANONICAL";
+  public static final String FAILED_MATCH_POSTCODE = "FAILED_MATCH_POSTCODE";
+  public static final String POSTCODE_MAP_EMPTY = "POSTCODE_MAP_EMPTY";
 
   @Bean
   public GatewayEventManager gatewayEventManager() {
     GatewayEventManager gatewayEventManager = new GatewayEventManager();
     gatewayEventManager.setSource(Application.APPLICATION_NAME);
-    gatewayEventManager.addErrorEventTypes(new String[] {UNABLE_TO_READ_CSV, FAILED_TO_MARSHALL_CANONICAL});
+    gatewayEventManager.addErrorEventTypes(new String[] {UNABLE_TO_READ_CSV, FAILED_TO_MARSHALL_CANONICAL,
+        FAILED_MATCH_POSTCODE, POSTCODE_MAP_EMPTY});
     return gatewayEventManager;
   }
 }
