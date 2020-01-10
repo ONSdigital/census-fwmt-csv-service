@@ -10,7 +10,7 @@ public class LookupFileLoaderEventsConfig {
   public static final String POSTCODE_LOOKUP_LOADED = "POSTCODE_LOOKUP_LOADED";
 
   @Bean
-  public GatewayEventManager addAddressCheckEvents(GatewayEventManager gatewayEventManager) {
+  public GatewayEventManager addLookupFileEvents(GatewayEventManager gatewayEventManager) {
     gatewayEventManager.addEventTypes(new String[] {POSTCODE_LOOKUP_LOADED});
     return gatewayEventManager;
   }
