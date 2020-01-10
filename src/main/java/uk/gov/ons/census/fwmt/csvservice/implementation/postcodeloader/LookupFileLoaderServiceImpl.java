@@ -18,7 +18,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
-import static uk.gov.ons.census.fwmt.csvservice.config.GatewayEventsConfig.POSTCODE_LOOKUP_LOADED;
+import static uk.gov.ons.census.fwmt.csvservice.implementation.postcodeloader.LookupFileLoaderEventsConfig.POSTCODE_LOOKUP_LOADED;
 
 @Component
 public class LookupFileLoaderServiceImpl implements LookupFileLoaderService {
