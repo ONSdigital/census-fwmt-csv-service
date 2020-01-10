@@ -18,6 +18,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
+import static uk.gov.ons.census.fwmt.csvservice.implementation.postcodeloader.LookupFileLoaderEventsConfig.POSTCODE_LOOKUP_LOADED;
+
 @Component
 public class LookupFileLoaderServiceImpl implements LookupFileLoaderService {
 
@@ -40,6 +42,7 @@ public class LookupFileLoaderServiceImpl implements LookupFileLoaderService {
       for (PostcodeLookup postcodeLookup : csvToBean) {
         postcodeLookupMap.put(postcodeLookup.getPostcode(), postcodeLookup);
       }
+      gatewayEventManager.triggerEvent("N/A", POSTCODE_LOOKUP_LOADED);
     } catch (IOException e) {
       String msg = "Failed to convert CSV to Bean.";
       gatewayEventManager.triggerErrorEvent(this.getClass(), msg, "N/A", GatewayEventsConfig.UNABLE_TO_READ_CSV);
