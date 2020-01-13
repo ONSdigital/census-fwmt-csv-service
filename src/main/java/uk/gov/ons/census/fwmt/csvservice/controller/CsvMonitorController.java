@@ -4,7 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
+import uk.gov.ons.census.fwmt.csvservice.dto.PostcodeLookup;
 import uk.gov.ons.census.fwmt.csvservice.service.CSVConverterService;
 import uk.gov.ons.census.fwmt.csvservice.service.LookupFileLoaderService;
 
@@ -40,9 +42,20 @@ public class CsvMonitorController {
     return ResponseEntity.ok("AC adapter service activated");
   }
 
-  @GetMapping("/ingestAddressLookupCsvFile")
+  @GetMapping("/lookup/ingestAddressLookupCsvFile")
   public ResponseEntity<String> loadAddressLookupFile() throws GatewayException {
     lookupFileLoaderService.loadPostcodeLookupFile();
     return ResponseEntity.ok("Address Lookup file loaded");
   }
+
+  @GetMapping("/lookup/getPostcodeLookupMap")
+  public ResponseEntity<Map<String, PostcodeLookup>> getPostcodeLookupMap() {
+    return ResponseEntity.ok(lookupFileLoaderService.getLookupMap());
+  }
+
+  @GetMapping("/lookup/getPostcodeLookup")
+  public ResponseEntity<PostcodeLookup> getPostcodeLookup(@RequestParam String key) {
+    return ResponseEntity.ok(lookupFileLoaderService.getPostcodeLookup(key));
+  }
+
 }

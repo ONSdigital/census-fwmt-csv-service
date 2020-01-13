@@ -69,6 +69,7 @@ public class AddressCheckConverterService implements CSVConverterService {
 
     CsvToBean<AddressCheckListing> csvToBean;
     csvToBean = new CsvToBeanBuilder(new InputStreamReader(inputStream, StandardCharsets.UTF_8))
+        .withSeparator('|')
         .withType(AddressCheckListing.class)
         .build();
 
