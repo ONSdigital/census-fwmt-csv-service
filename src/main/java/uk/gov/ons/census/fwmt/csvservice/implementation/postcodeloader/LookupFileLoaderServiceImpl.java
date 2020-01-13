@@ -37,7 +37,6 @@ public class LookupFileLoaderServiceImpl implements LookupFileLoaderService {
     CsvToBean<PostcodeLookup> csvToBean;
     try {
       csvToBean = new CsvToBeanBuilder(new InputStreamReader(csvGCPFile.getInputStream(), StandardCharsets.UTF_8))
-          .withSeparator('|')
           .withType(PostcodeLookup.class)
           .build();
       for (PostcodeLookup postcodeLookup : csvToBean) {
@@ -53,5 +52,9 @@ public class LookupFileLoaderServiceImpl implements LookupFileLoaderService {
 
   public Map<String, PostcodeLookup> getLookupMap() {
     return postcodeLookupMap;
+  }
+
+  public PostcodeLookup getPostcodeLookup(String key) {
+    return postcodeLookupMap.get(key);
   }
 }

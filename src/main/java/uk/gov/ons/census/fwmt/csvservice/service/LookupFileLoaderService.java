@@ -11,4 +11,6 @@ public interface LookupFileLoaderService {
 
   Map<String, PostcodeLookup> getLookupMap();
 
+  PostcodeLookup getPostcodeLookup(String key);
+
 }
