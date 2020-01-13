@@ -42,18 +42,18 @@ public class CsvMonitorController {
     return ResponseEntity.ok("AC adapter service activated");
   }
 
-  @GetMapping("/lookup/ingestAddressLookupCsvFile")
+  @GetMapping("/ingestAddressLookupCsvFile")
   public ResponseEntity<String> loadAddressLookupFile() throws GatewayException {
     lookupFileLoaderService.loadPostcodeLookupFile();
     return ResponseEntity.ok("Address Lookup file loaded");
   }
 
-  @GetMapping("/lookup/getPostcodeLookupMap")
+  @GetMapping("/getPostcodeLookupMap")
   public ResponseEntity<Map<String, PostcodeLookup>> getPostcodeLookupMap() {
     return ResponseEntity.ok(lookupFileLoaderService.getLookupMap());
   }
 
-  @GetMapping("/lookup/getPostcodeLookup")
+  @GetMapping("/getPostcodeLookup")
   public ResponseEntity<PostcodeLookup> getPostcodeLookup(@RequestParam String key) {
     return ResponseEntity.ok(lookupFileLoaderService.getPostcodeLookup(key));
   }
