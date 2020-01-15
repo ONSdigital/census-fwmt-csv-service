@@ -40,7 +40,7 @@ public class LookupFileLoaderServiceImpl implements LookupFileLoaderService {
           .withType(PostcodeLookup.class)
           .build();
       for (PostcodeLookup postcodeLookup : csvToBean) {
-        postcodeLookupMap.put(postcodeLookup.getPostcode(), postcodeLookup);
+        postcodeLookupMap.put(postcodeLookup.getPostcode().replaceAll("\\s+","").toUpperCase(), postcodeLookup);
       }
       gatewayEventManager.triggerEvent("N/A", POSTCODE_LOOKUP_LOADED);
     } catch (IOException e) {

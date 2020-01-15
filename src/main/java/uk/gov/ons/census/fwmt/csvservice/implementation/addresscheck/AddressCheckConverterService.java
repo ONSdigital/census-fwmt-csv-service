@@ -79,15 +79,15 @@ public class AddressCheckConverterService implements CSVConverterService {
   private void processObject(CsvToBean<AddressCheckListing> csvToBean) throws GatewayException {
     // Gonna assume no one is gonna be stupid and run this without loading lookup
     for (AddressCheckListing addressCheckListing : csvToBean) {
-      if (postcodeLookupMap.containsKey(addressCheckListing.getPostcode())) {
+      if (postcodeLookupMap.containsKey(addressCheckListing.getPostcode().replaceAll("\\s+","").toUpperCase())) {
         CreateFieldWorkerJobRequest createFieldWorkerJobRequest = createAddressCheckJob(addressCheckListing,
-            postcodeLookupMap.get(addressCheckListing.getPostcode()));
+            postcodeLookupMap.get(addressCheckListing.getPostcode().replaceAll("\\s+","").toUpperCase()));
         gatewayActionAdapter.sendJobRequest(createFieldWorkerJobRequest, CANONICAL_ADDRESS_CHECK_CREATE_SENT);
         gatewayEventManager.triggerEvent(String.valueOf(createFieldWorkerJobRequest.getCaseId()),
             CSV_ADDRESS_CHECK_REQUEST_EXTRACTED);
       } else {
         gatewayEventManager
-            .triggerErrorEvent(this.getClass(), addressCheckListing.getPostcode(),
+            .triggerErrorEvent(this.getClass(),"Postcode: " + addressCheckListing.getPostcode(),
                 "N/A", GatewayEventsConfig.FAILED_MATCH_POSTCODE);
       }
     }
