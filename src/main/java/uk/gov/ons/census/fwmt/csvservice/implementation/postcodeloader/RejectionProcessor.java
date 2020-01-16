@@ -43,7 +43,7 @@ public class RejectionProcessor {
       List<RejectionReport> rejectedReportList) throws GatewayException {
     String timeStamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH-mm-ss"));
     createRejectionCsv(rejectionsList, timeStamp);
-    createRejectionReport(rejectedReportList,timeStamp);
+    createRejectionReport(rejectedReportList, timeStamp);
   }
 
   private void createRejectionReport(
@@ -56,9 +56,9 @@ public class RejectionProcessor {
     }
 
     try (Writer writer = new FileWriter(file.getAbsolutePath(), StandardCharsets.UTF_8);
-    InputStream inputStream = new FileInputStream(file)){
+        InputStream inputStream = new FileInputStream(file)) {
 
-      for (RejectionReport rejectionReport: rejectedReportList) {
+      for (RejectionReport rejectionReport : rejectedReportList) {
         try {
           writer.write("Case Reference: " + rejectionReport.getCaseRef() + " | " + rejectionReport.getReason());
           writer.write("\n");
@@ -86,8 +86,9 @@ public class RejectionProcessor {
     }
 
     try (Writer writer = new FileWriter(file.getAbsolutePath(), StandardCharsets.UTF_8);
-    InputStream inputStream = new FileInputStream(file)) {
-      writer.write("caseReference|GuidancePrompt|line1|line2|line3|townName|postCode|latitude|longitude|additionalInformation\n");
+        InputStream inputStream = new FileInputStream(file)) {
+      writer.write(
+          "caseReference|GuidancePrompt|line1|line2|line3|townName|postCode|latitude|longitude|additionalInformation\n");
 
       ColumnPositionMappingStrategy<AddressCheckListing> mappingStrategy = new ColumnPositionMappingStrategy<>();
       mappingStrategy.setType(AddressCheckListing.class);
