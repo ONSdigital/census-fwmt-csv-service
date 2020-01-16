@@ -21,6 +21,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Writer;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -48,80 +49,67 @@ public class RejectionProcessor {
   private void createRejectionReport(
       List<RejectionReport> rejectedReportList, String timeStamp) throws GatewayException {
     File file;
-    Writer writer;
     try {
       file = File.createTempFile("rejectionTemp", ".report");
-      writer = new FileWriter(file.getAbsolutePath());
     } catch (IOException e) {
       throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, e, "Failed creating temp file to write to.");
     }
 
-    for (RejectionReport rejectionReport: rejectedReportList) {
-      try {
-        writer.write("Case Reference: " + rejectionReport.getCaseRef() + " | " + rejectionReport.getReason());
-        writer.write("\n");
-      } catch (IOException e) {
-        throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, e, "Failed creating temp file to write to.");
+    try (Writer writer = new FileWriter(file.getAbsolutePath(), StandardCharsets.UTF_8);
+    InputStream inputStream = new FileInputStream(file)){
+
+      for (RejectionReport rejectionReport: rejectedReportList) {
+        try {
+          writer.write("Case Reference: " + rejectionReport.getCaseRef() + " | " + rejectionReport.getReason());
+          writer.write("\n");
+        } catch (IOException e) {
+          throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, e, "Failed creating temp file to write to.");
+        }
       }
-    }
 
-    InputStream targetStream;
-    try {
-      writer.close();
-      targetStream = new FileInputStream(file);
-    } catch (IOException e) {
-      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, e, "Failed writing file to InputStream");
-    }
+      String filename = "reject_" + timeStamp + ".txt";
 
-    String filename = "reject_" + timeStamp + ".txt";
-    try {
-      csvServiceUtils.uploadFile(targetStream, filename, location);
+      csvServiceUtils.uploadFile(inputStream, filename, location);
       gatewayEventManager.triggerEvent(filename, CREATED_REJECTION_FILE);
     } catch (IOException e) {
-      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, e, "Unable to create rejection file.");
+      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, e, "Failed creating temp file to write to.");
     }
     file.deleteOnExit();
   }
 
   private void createRejectionCsv(List<AddressCheckListing> rejectionsList, String timeStamp) throws GatewayException {
     File file;
-    Writer writer;
     try {
       file = File.createTempFile("rejectionTemp", ".csv");
-      writer = new FileWriter(file.getAbsolutePath());
-      writer.write("caseReference|GuidancePrompt|line1|line2|line3|townName|postCode|latitude|longitude|additionalInformation\n");
     } catch (IOException e) {
       throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, e, "Failed creating temp file to write to.");
     }
 
-    ColumnPositionMappingStrategy<AddressCheckListing> mappingStrategy = new ColumnPositionMappingStrategy<>();
-    mappingStrategy.setType(AddressCheckListing.class);
-    String[] columns = new String[] {"caseReference", "GuidancePrompt", "line1", "line2", "line3", "townName",
-        "postCode", "latitude", "longitude", "additionalInformation"};
-    mappingStrategy.setColumnMapping(columns);
+    try (Writer writer = new FileWriter(file.getAbsolutePath(), StandardCharsets.UTF_8);
+    InputStream inputStream = new FileInputStream(file)) {
+      writer.write("caseReference|GuidancePrompt|line1|line2|line3|townName|postCode|latitude|longitude|additionalInformation\n");
 
-    StatefulBeanToCsv sbc = new StatefulBeanToCsvBuilder(writer)
-        .withSeparator('|')
-        .withMappingStrategy(mappingStrategy)
-        .withApplyQuotesToAll(false)
-        .build();
+      ColumnPositionMappingStrategy<AddressCheckListing> mappingStrategy = new ColumnPositionMappingStrategy<>();
+      mappingStrategy.setType(AddressCheckListing.class);
+      String[] columns = new String[] {"caseReference", "GuidancePrompt", "line1", "line2", "line3", "townName",
+          "postCode", "latitude", "longitude", "additionalInformation"};
+      mappingStrategy.setColumnMapping(columns);
 
-    InputStream targetStream;
-    try {
+      StatefulBeanToCsv sbc = new StatefulBeanToCsvBuilder(writer)
+          .withSeparator('|')
+          .withMappingStrategy(mappingStrategy)
+          .withApplyQuotesToAll(false)
+          .build();
+
       sbc.write(rejectionsList);
-      writer.close();
-      targetStream = new FileInputStream(file);
 
-    } catch (CsvRequiredFieldEmptyException | CsvDataTypeMismatchException | IOException e) {
-      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, e, "Failed writing csv to temp file");
-    }
+      String filename = "reject_" + timeStamp + ".csv";
 
-    String filename = "reject_" + timeStamp + ".csv";
-    try {
-      csvServiceUtils.uploadFile(targetStream, filename, location);
+      csvServiceUtils.uploadFile(inputStream, filename, location);
       gatewayEventManager.triggerEvent(filename, CREATED_REJECTION_FILE);
-    } catch (IOException e) {
-      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, e, "Unable to create rejection file.");
+
+    } catch (IOException | CsvDataTypeMismatchException | CsvRequiredFieldEmptyException e) {
+      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, e, "Failed writing CSV to GCP");
     }
     file.deleteOnExit();
   }
