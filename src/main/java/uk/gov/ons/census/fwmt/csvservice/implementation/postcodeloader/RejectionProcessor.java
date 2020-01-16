@@ -63,7 +63,7 @@ public class RejectionProcessor {
           writer.write("Case Reference: " + rejectionReport.getCaseRef() + " | " + rejectionReport.getReason());
           writer.write("\n");
         } catch (IOException e) {
-          throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, e, "Failed creating temp file to write to.");
+          throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, e, "Failed creating report in GCP");
         }
       }
 
