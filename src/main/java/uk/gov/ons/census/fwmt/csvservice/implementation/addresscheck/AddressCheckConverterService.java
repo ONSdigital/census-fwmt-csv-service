@@ -15,7 +15,7 @@ import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.csvservice.adapter.GatewayActionAdapter;
 import uk.gov.ons.census.fwmt.csvservice.dto.AddressCheckListing;
 import uk.gov.ons.census.fwmt.csvservice.dto.PostcodeLookup;
-import uk.gov.ons.census.fwmt.csvservice.dto.RejectionReport;
+import uk.gov.ons.census.fwmt.csvservice.dto.RejectionReportEntry;
 import uk.gov.ons.census.fwmt.csvservice.implementation.postcodeloader.RejectionProcessor;
 import uk.gov.ons.census.fwmt.csvservice.service.CSVConverterService;
 import uk.gov.ons.census.fwmt.csvservice.service.LookupFileLoaderService;
@@ -41,21 +41,30 @@ public class AddressCheckConverterService implements CSVConverterService {
 
   @Value("${gcpBucket.addressCheckBucket}")
   private String bucketName;
+
   @Autowired
   private GatewayActionAdapter gatewayActionAdapter;
+
   @Autowired
   private GatewayEventManager gatewayEventManager;
+
   @Autowired
   private CsvServiceUtils csvServiceUtils;
+
   @Autowired
   private LookupFileLoaderService lookupFileLoaderService;
+
   @Autowired
   private RejectionProcessor rejectionProcessor;
+
   private Map<String, PostcodeLookup> postcodeLookupMap;
+
   @Autowired
   private Storage googleCloudStorage;
+
   private List<AddressCheckListing> rejectedAddressCheckListing = new ArrayList<>();
-  private List<RejectionReport> rejectedReportAddressCheckListing = new ArrayList<>();
+
+  private List<RejectionReportEntry> rejectedReportAddressCheckListing = new ArrayList<>();
 
   @Override
   public void convertToCanonical() throws GatewayException {
@@ -92,30 +101,31 @@ public class AddressCheckConverterService implements CSVConverterService {
     for (AddressCheckListing addressCheckListing : csvToBean) {
       if (postcodeLookupMap.containsKey(getPostcode(addressCheckListing))) {
         if (addressCheckListingIsValid(postcodeLookupMap.get(getPostcode(addressCheckListing)))) {
-          CreateFieldWorkerJobRequest createFieldWorkerJobRequest = createAddressCheckJob(addressCheckListing,
-              postcodeLookupMap.get(getPostcode(addressCheckListing)));
-          gatewayActionAdapter.sendJobRequest(createFieldWorkerJobRequest, CANONICAL_ADDRESS_CHECK_CREATE_SENT);
-          gatewayEventManager.triggerEvent(String.valueOf(createFieldWorkerJobRequest.getCaseId()),
-              CSV_ADDRESS_CHECK_REQUEST_EXTRACTED);
+          createAndSendJob(addressCheckListing);
         } else {
-          RejectionReport rejectionReport = getRejectionReport(addressCheckListing.getCaseReference(),
-              "Lookup file missing data");
-          rejectedReportAddressCheckListing.add(rejectionReport);
-          rejectedAddressCheckListing.add(addressCheckListing);
-          gatewayEventManager
-              .triggerErrorEvent(this.getClass(), "Postcode: " + addressCheckListing.getPostcode(),
-                  "N/A", LOOKUP_FILE_MISSING_DATA);
+          appendToRejectionReport(addressCheckListing, "Lookup file missing data", LOOKUP_FILE_MISSING_DATA);
         }
       } else if (!postcodeLookupMap.containsKey(getPostcode(addressCheckListing))) {
-        RejectionReport rejectionReport = getRejectionReport(addressCheckListing.getCaseReference(),
-            "Failed to match postcode: " + addressCheckListing.getPostcode());
-        rejectedReportAddressCheckListing.add(rejectionReport);
-        rejectedAddressCheckListing.add(addressCheckListing);
-        gatewayEventManager
-            .triggerErrorEvent(this.getClass(), "Postcode: " + addressCheckListing.getPostcode(),
-                "N/A", FAILED_MATCH_POSTCODE);
+        appendToRejectionReport(addressCheckListing, "Failed to match postcode: " + addressCheckListing.getPostcode(),
+            FAILED_MATCH_POSTCODE);
       }
     }
+  }
+
+  private void appendToRejectionReport(AddressCheckListing addressCheckListing, String reason, String errorEvent) {
+    RejectionReportEntry rejectionReportEntry = getRejectionReportEntry(addressCheckListing.getCaseReference(),
+        reason);
+    rejectedReportAddressCheckListing.add(rejectionReportEntry);
+    rejectedAddressCheckListing.add(addressCheckListing);
+    gatewayEventManager.triggerErrorEvent(this.getClass(), reason, "N/A", errorEvent);
+  }
+
+  private void createAndSendJob(AddressCheckListing addressCheckListing) throws GatewayException {
+    CreateFieldWorkerJobRequest createFieldWorkerJobRequest = createAddressCheckJob(addressCheckListing,
+        postcodeLookupMap.get(getPostcode(addressCheckListing)));
+    gatewayActionAdapter.sendJobRequest(createFieldWorkerJobRequest, CANONICAL_ADDRESS_CHECK_CREATE_SENT);
+    gatewayEventManager.triggerEvent(String.valueOf(createFieldWorkerJobRequest.getCaseId()),
+        CSV_ADDRESS_CHECK_REQUEST_EXTRACTED);
   }
 
   private String getPostcode(AddressCheckListing addressCheckListing) {
@@ -127,10 +137,10 @@ public class AddressCheckConverterService implements CSVConverterService {
         .isBlank();
   }
 
-  private RejectionReport getRejectionReport(String caseRef, String reason) {
-    RejectionReport rejectionReport = new RejectionReport();
-    rejectionReport.setCaseRef(caseRef);
-    rejectionReport.setReason(reason);
-    return rejectionReport;
+  private RejectionReportEntry getRejectionReportEntry(String caseRef, String reason) {
+    RejectionReportEntry rejectionReportEntry = new RejectionReportEntry();
+    rejectionReportEntry.setCaseRef(caseRef);
+    rejectionReportEntry.setReason(reason);
+    return rejectionReportEntry;
   }
 }
