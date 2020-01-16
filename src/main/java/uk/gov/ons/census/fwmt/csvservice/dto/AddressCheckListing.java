@@ -1,6 +1,7 @@
 package uk.gov.ons.census.fwmt.csvservice.dto;
 
 import com.opencsv.bean.CsvBindByName;
+import com.opencsv.bean.CsvToBean;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -41,6 +42,5 @@ public class AddressCheckListing {
 
   @CsvBindByName(column = "additionalInformation")
   private String additionalInformation;
-
 }
 

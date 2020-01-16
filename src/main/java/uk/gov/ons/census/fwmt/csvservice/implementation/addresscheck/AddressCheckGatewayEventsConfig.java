@@ -12,7 +12,8 @@ public class AddressCheckGatewayEventsConfig {
 
   @Bean
   public GatewayEventManager addAddressCheckEvents(GatewayEventManager gatewayEventManager) {
-    gatewayEventManager.addEventTypes(new String[] {CSV_ADDRESS_CHECK_REQUEST_EXTRACTED, CANONICAL_ADDRESS_CHECK_CREATE_SENT});
+    gatewayEventManager
+        .addEventTypes(new String[] {CSV_ADDRESS_CHECK_REQUEST_EXTRACTED, CANONICAL_ADDRESS_CHECK_CREATE_SENT});
     return gatewayEventManager;
   }
 }

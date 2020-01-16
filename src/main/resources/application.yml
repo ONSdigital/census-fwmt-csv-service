@@ -49,3 +49,4 @@ gcpBucket:
   addresschecklocation: "gs://csv-bucket-test/AC.csv"
 #  addresschecklocation: "file://${home}/accptance/data/AC.csv"
   postcodelookuplocation: "gs://csv-bucket-test/addressLookup.csv"
+  rejectLocation: "gs://csv-bucket-test/"
