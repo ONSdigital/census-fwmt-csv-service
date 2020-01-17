@@ -113,7 +113,7 @@ public class AddressCheckConverterService implements CSVConverterService {
   }
 
   private void appendToRejectionReport(AddressCheckListing addressCheckListing, String reason, String errorEvent) {
-    RejectionReportEntry rejectionReportEntry = getRejectionReportEntry(addressCheckListing.getCaseReference(),
+    RejectionReportEntry rejectionReportEntry = createRejectionReportEntry(addressCheckListing.getCaseReference(),
         reason);
     rejectedReportAddressCheckListing.add(rejectionReportEntry);
     rejectedAddressCheckListing.add(addressCheckListing);
@@ -137,7 +137,7 @@ public class AddressCheckConverterService implements CSVConverterService {
         .isBlank();
   }
 
-  private RejectionReportEntry getRejectionReportEntry(String caseRef, String reason) {
+  private RejectionReportEntry createRejectionReportEntry(String caseRef, String reason) {
     RejectionReportEntry rejectionReportEntry = new RejectionReportEntry();
     rejectionReportEntry.setCaseRef(caseRef);
     rejectionReportEntry.setReason(reason);
