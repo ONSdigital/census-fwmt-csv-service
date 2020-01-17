@@ -1,15 +1,22 @@
 package uk.gov.ons.census.fwmt.csvservice.utils;
 
 import com.google.api.gax.paging.Page;
+import com.google.cloud.storage.Acl;
 import com.google.cloud.storage.Blob;
 import com.google.cloud.storage.BlobId;
+import com.google.cloud.storage.BlobInfo;
 import com.google.cloud.storage.Bucket;
 import com.google.cloud.storage.Storage;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Collections;
 
 @Slf4j
 @Component
@@ -26,6 +33,24 @@ public class CsvServiceUtils {
     for (Blob blob : blobPage.iterateAll()) {
       copyAndRename(startBucket, blob, timestamp, prefix);
     }
+  }
+
+  public void uploadFile(InputStream is, String filename, String location) throws IOException {
+    ByteArrayOutputStream os = new ByteArrayOutputStream();
+    byte[] readBuf = new byte[4096];
+    while (is.available() > 0) {
+      int bytesRead = is.read(readBuf);
+      os.write(readBuf, 0, bytesRead);
+    }
+
+    String bucket = location.substring(location.indexOf(":") + 1);
+    bucket = bucket.trim().replaceAll("/", "");
+    googleCloudStorage.create(
+        BlobInfo
+            .newBuilder(bucket, filename)
+            .setAcl(new ArrayList<>(Collections.singletonList(Acl.of(Acl.User.ofAllUsers(), Acl.Role.READER))))
+            .build(),
+        os.toByteArray());
   }
 
   private void copyAndRename(Bucket startBucket, Blob blob, Timestamp timeStamp, String prefix) {

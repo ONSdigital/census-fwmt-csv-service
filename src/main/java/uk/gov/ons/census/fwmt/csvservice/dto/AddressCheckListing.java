@@ -41,6 +41,5 @@ public class AddressCheckListing {
 
   @CsvBindByName(column = "additionalInformation")
   private String additionalInformation;
-
 }
 
