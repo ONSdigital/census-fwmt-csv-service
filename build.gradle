@@ -71,9 +71,7 @@ dependencies {
 	compile("uk.gov.ons.census.fwmt:census-fwmt-events:1.0.18-RELEASE")
 	compile("uk.gov.ons.census.ffa:census-ffa-storage-utils:0.0.1-SNAPSHOT")
 
-
 	compile("com.google.guava:guava:27.0.1-jre")
-
 
 	implementation('org.springframework.boot:spring-boot-starter-amqp')
 	implementation('org.springframework.boot:spring-boot-starter-integration')
