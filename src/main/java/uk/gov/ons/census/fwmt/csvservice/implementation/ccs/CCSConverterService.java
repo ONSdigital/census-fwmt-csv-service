@@ -7,18 +7,22 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 
+import uk.gov.census.ffa.storage.utils.StorageUtils;
 import uk.gov.ons.census.fwmt.canonical.v1.CreateFieldWorkerJobRequest;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.csvservice.adapter.GatewayActionAdapter;
 import uk.gov.ons.census.fwmt.csvservice.config.GatewayEventsConfig;
 import uk.gov.ons.census.fwmt.csvservice.dto.CCSPropertyListing;
 import uk.gov.ons.census.fwmt.csvservice.service.CSVConverterService;
-import uk.gov.ons.census.fwmt.csvservice.utils.CsvServiceUtils;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.URI;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import static uk.gov.ons.census.fwmt.csvservice.implementation.ccs.CCSCanonicalBuilder.createCCSJob;
 import static uk.gov.ons.census.fwmt.csvservice.implementation.ccs.CCSGatewayEventsConfig.CANONICAL_CCS_CREATE_SENT;
@@ -28,10 +32,10 @@ import static uk.gov.ons.census.fwmt.csvservice.implementation.ccs.CCSGatewayEve
 public class CCSConverterService implements CSVConverterService {
 
   @Value("${gcpBucket.ccslocation}")
-  private Resource csvGCPFile;
+  private Resource file;
 
-  @Value("${gcpBucket.ccsBucket}")
-  private String bucketName;
+  @Value("${gcpBucket.directory}")
+  private String directory;
 
   @Autowired
   private GatewayActionAdapter gatewayActionAdapter;
@@ -40,13 +44,15 @@ public class CCSConverterService implements CSVConverterService {
   private GatewayEventManager gatewayEventManager;
 
   @Autowired
-  private CsvServiceUtils csvServiceUtils;
+  private StorageUtils storageUtils;
 
   @Override
   public void convertToCanonical() throws GatewayException {
+    String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH-mm-ss"));
     CsvToBean<CCSPropertyListing> csvToBean;
     try {
-      csvToBean = new CsvToBeanBuilder(new InputStreamReader(csvGCPFile.getInputStream(), StandardCharsets.UTF_8))
+      InputStream inputStream = storageUtils.getFileInputStream(file.getURI());
+      csvToBean = new CsvToBeanBuilder(new InputStreamReader(inputStream, StandardCharsets.UTF_8))
           .withType(CCSPropertyListing.class)
           .build();
 
@@ -62,6 +68,10 @@ public class CCSConverterService implements CSVConverterService {
       gatewayEventManager
           .triggerEvent(String.valueOf(createFieldWorkerJobRequest.getCaseId()), CSV_CCS_REQUEST_EXTRACTED);
     }
-    csvServiceUtils.moveCsvFile(bucketName, "ccs");
+    try {
+      storageUtils.move(file.getURI(), URI.create(directory + "/processed/" + "CE-processed-" + timestamp));
+    } catch (IOException e) {
+      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, e, "Failed to move file");
+    }
   }
 }

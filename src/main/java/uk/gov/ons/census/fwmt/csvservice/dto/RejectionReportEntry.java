@@ -12,4 +12,5 @@ public class RejectionReportEntry {
   private String caseRef;
 
   private String reason;
+
 }

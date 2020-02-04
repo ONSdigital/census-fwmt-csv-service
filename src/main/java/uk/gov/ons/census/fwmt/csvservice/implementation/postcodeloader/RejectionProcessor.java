@@ -9,18 +9,17 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import uk.gov.census.ffa.storage.utils.StorageUtils;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.csvservice.dto.AddressCheckListing;
 import uk.gov.ons.census.fwmt.csvservice.dto.RejectionReportEntry;
-import uk.gov.ons.census.fwmt.csvservice.utils.CsvServiceUtils;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.Writer;
+import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -32,27 +31,27 @@ import static uk.gov.ons.census.fwmt.csvservice.implementation.postcodeloader.Lo
 @Component
 public class RejectionProcessor {
 
-  @Value("${gcpBucket.rejectLocation}")
-  private String location;
-
-  @Autowired
-  private CsvServiceUtils csvServiceUtils;
+  @Value("${gcpBucket.directory}")
+  private String directory;
 
   @Autowired
   private GatewayEventManager gatewayEventManager;
 
+  @Autowired
+  private StorageUtils storageUtils;
+
   public void createErrorReports(List<AddressCheckListing> rejectionsList,
       List<RejectionReportEntry> rejectedReportList) throws GatewayException {
-    String timeStamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH-mm-ss"));
-    createRejectionCsv(rejectionsList, timeStamp);
-    createRejectionReport(rejectedReportList, timeStamp);
+    String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH-mm-ss"));
+    createRejectionCsv(rejectionsList, timestamp);
+    createRejectionReport(rejectedReportList, timestamp);
   }
 
   private void createRejectionReport(
       List<RejectionReportEntry> rejectedReportList, String timeStamp) throws GatewayException {
     File file;
     try {
-      file = File.createTempFile("rejectionTemp", ".report");
+      file = File.createTempFile("rejectionTemp", ".txt");
     } catch (IOException e) {
       throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, e, "Failed creating temp file to write to.");
     }
@@ -70,15 +69,9 @@ public class RejectionProcessor {
     } catch (IOException e) {
       throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, e, "Failed creating temp file to write to.");
     }
-
-    try (InputStream inputStream = new FileInputStream(file)) {
-      String filename = "reject_" + timeStamp + ".txt";
-      csvServiceUtils.uploadFile(inputStream, filename, location);
-      gatewayEventManager.triggerEvent(filename, CREATED_REJECTION_FILE);
-    } catch (IOException e) {
-      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, e, "Failed creating report in GCP");
-    }
-
+    String filename = "reject_" + timeStamp + ".txt";
+    storageUtils.move(file.toURI(), URI.create(directory + filename));
+    gatewayEventManager.triggerEvent(filename, CREATED_REJECTION_FILE);
     file.deleteOnExit();
   }
 
@@ -110,14 +103,9 @@ public class RejectionProcessor {
     } catch (IOException | CsvDataTypeMismatchException | CsvRequiredFieldEmptyException e) {
       throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, e, "Failed writing temp file");
     }
-
-    try (InputStream inputStream = new FileInputStream(file)) {
-      String filename = "reject_" + timeStamp + ".csv";
-      csvServiceUtils.uploadFile(inputStream, filename, location);
-      gatewayEventManager.triggerEvent(filename, CREATED_REJECTION_FILE);
-    } catch (IOException e) {
-      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, e, "Failed writing CSV to GCP");
-    }
+    String filename = "reject_" + timeStamp + ".csv";
+    storageUtils.move(file.toURI(), URI.create(directory + filename));
+    gatewayEventManager.triggerEvent(filename, CREATED_REJECTION_FILE);
     file.deleteOnExit();
   }
 }

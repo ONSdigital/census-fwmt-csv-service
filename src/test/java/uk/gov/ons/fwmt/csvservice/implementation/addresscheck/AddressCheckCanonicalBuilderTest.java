@@ -6,9 +6,6 @@ import uk.gov.ons.census.fwmt.csvservice.dto.AddressCheckListing;
 import uk.gov.ons.census.fwmt.csvservice.dto.PostcodeLookup;
 import uk.gov.ons.fwmt.csvservice.helper.CSVRecordBuilder;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static uk.gov.ons.census.fwmt.csvservice.implementation.addresscheck.AddressCheckCanonicalBuilder.createAddressCheckJob;
@@ -31,5 +28,4 @@ public class AddressCheckCanonicalBuilderTest {
     assertEquals(addressCheckListing.getLatitude(), createFieldWorkerJobRequest.getAddress().getLatitude());
     assertEquals(addressCheckListing.getLongitude(), createFieldWorkerJobRequest.getAddress().getLongitude());
   }
-
 }

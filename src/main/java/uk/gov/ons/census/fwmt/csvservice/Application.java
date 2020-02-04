@@ -13,7 +13,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableAsync
 @EnableSwagger2
 @SpringBootApplication
-@ComponentScan({"uk.gov.ons.census.fwmt.csvservice", "uk.gov.ons.census.fwmt.events"})
+@ComponentScan({"uk.gov.ons.census.fwmt.csvservice", "uk.gov.ons.census.fwmt.events", "uk.gov.census.ffa.storage.utils"})
 public class Application {
 
   public static final String APPLICATION_NAME = "FWMT Gateway - CSV Service";
