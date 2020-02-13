@@ -50,10 +50,13 @@ public class CCSConverterServiceImplTest {
     ReflectionTestUtils.setField(ccsConverterService, "file", testResource);
     ReflectionTestUtils.setField(ccsConverterService, "directory", "resources/");
 
-    when(storageUtils.getFileInputStream(any())).thenReturn(new FileInputStream(testResource.getFile()));
+    FileInputStream fileInputStream = new FileInputStream(testResource.getFile());
+    try (fileInputStream) {
+      when(storageUtils.getFileInputStream(any())).thenReturn(fileInputStream);
 
-    // When
-    ccsConverterService.convertToCanonical();
+      // When
+      ccsConverterService.convertToCanonical();
+    }
 
     Mockito.verify(gatewayEventManager).triggerEvent(anyString(), eq(CSV_CCS_REQUEST_EXTRACTED));
   }

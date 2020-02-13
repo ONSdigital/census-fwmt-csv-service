@@ -49,7 +49,13 @@ public class CEConverterServiceImplTest {
     ReflectionTestUtils.setField(ceConverterService, "file", testResource);
     ReflectionTestUtils.setField(ceConverterService, "directory", "resources/");
 
-    when(storageUtils.getFileInputStream(any())).thenReturn(new FileInputStream(testResource.getFile()));
+    FileInputStream fileInputStream = new FileInputStream(testResource.getFile());
+    try (fileInputStream) {
+      when(storageUtils.getFileInputStream(any())).thenReturn(fileInputStream);
+
+      // When
+      ceConverterService.convertToCanonical();
+    }
 
     // When
     ceConverterService.convertToCanonical();
