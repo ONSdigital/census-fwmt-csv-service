@@ -1,15 +1,11 @@
 package uk.gov.ons.census.fwmt.csvservice.implementation.addresscheck;
 
-import com.google.api.gax.paging.Page;
-import com.google.cloud.ReadChannel;
-import com.google.cloud.storage.Blob;
-import com.google.cloud.storage.Bucket;
-import com.google.cloud.storage.Storage;
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import uk.gov.census.ffa.storage.utils.StorageUtils;
 import uk.gov.ons.census.fwmt.canonical.v1.CreateFieldWorkerJobRequest;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.csvservice.adapter.GatewayActionAdapter;
@@ -19,13 +15,13 @@ import uk.gov.ons.census.fwmt.csvservice.dto.RejectionReportEntry;
 import uk.gov.ons.census.fwmt.csvservice.implementation.postcodeloader.RejectionProcessor;
 import uk.gov.ons.census.fwmt.csvservice.service.CSVConverterService;
 import uk.gov.ons.census.fwmt.csvservice.service.LookupFileLoaderService;
-import uk.gov.ons.census.fwmt.csvservice.utils.CsvServiceUtils;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.nio.channels.Channels;
+import java.net.URI;
 import java.nio.charset.StandardCharsets;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -39,8 +35,8 @@ import static uk.gov.ons.census.fwmt.csvservice.implementation.addresscheck.Addr
 @Component("AC")
 public class AddressCheckConverterService implements CSVConverterService {
 
-  @Value("${gcpBucket.addressCheckBucket}")
-  private String bucketName;
+  @Value("${gcpBucket.directory}")
+  private String directory;
 
   @Autowired
   private GatewayActionAdapter gatewayActionAdapter;
@@ -49,7 +45,7 @@ public class AddressCheckConverterService implements CSVConverterService {
   private GatewayEventManager gatewayEventManager;
 
   @Autowired
-  private CsvServiceUtils csvServiceUtils;
+  private StorageUtils storageUtils;
 
   @Autowired
   private LookupFileLoaderService lookupFileLoaderService;
@@ -59,35 +55,29 @@ public class AddressCheckConverterService implements CSVConverterService {
 
   private Map<String, PostcodeLookup> postcodeLookupMap;
 
-  @Autowired
-  private Storage googleCloudStorage;
-
   private List<AddressCheckListing> rejectedAddressCheckListing = new ArrayList<>();
 
   private List<RejectionReportEntry> rejectedReportAddressCheckListing = new ArrayList<>();
 
   @Override
   public void convertToCanonical() throws GatewayException {
+    Timestamp timestamp = new Timestamp(System.currentTimeMillis());
     postcodeLookupMap = lookupFileLoaderService.getLookupMap();
-    Bucket bucket = googleCloudStorage.get(bucketName);
-    String AC = "AC";
-    Page<Blob> blobPage = bucket.list(Storage.BlobListOption.prefix(AC));
+    List<URI> addressCheckFiles = storageUtils.getFilenamesInFolder(URI.create(directory), "AC");
 
     CsvToBean<AddressCheckListing> csvToBean;
-    for (Blob blob : blobPage.iterateAll()) {
-      csvToBean = createCsvBean(blob);
+    for (URI uri : addressCheckFiles) {
+      InputStream inputStream = storageUtils.getFileInputStream(uri);
+      csvToBean = createCsvBean(inputStream);
       processObject(csvToBean);
+      storageUtils.move(uri, URI.create(directory + "/processed/" + "AC-processed-" + timestamp));
     }
-    csvServiceUtils.moveCsvFile(bucketName, AC);
     if (!rejectedAddressCheckListing.isEmpty()) {
       rejectionProcessor.createErrorReports(rejectedAddressCheckListing, rejectedReportAddressCheckListing);
     }
   }
 
-  private CsvToBean<AddressCheckListing> createCsvBean(Blob blob) {
-    ReadChannel reader = blob.reader();
-    InputStream inputStream = Channels.newInputStream(reader);
-
+  private CsvToBean<AddressCheckListing> createCsvBean(InputStream inputStream) {
     CsvToBean<AddressCheckListing> csvToBean;
     csvToBean = new CsvToBeanBuilder(new InputStreamReader(inputStream, StandardCharsets.UTF_8))
         .withSeparator('|')

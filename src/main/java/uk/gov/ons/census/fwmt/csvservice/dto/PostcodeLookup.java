@@ -21,4 +21,5 @@ public class PostcodeLookup {
 
   @CsvBindByName(column = "Postcode")
   private String postcode;
+
 }

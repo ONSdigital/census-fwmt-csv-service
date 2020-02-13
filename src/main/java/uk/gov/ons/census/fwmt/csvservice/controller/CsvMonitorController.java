@@ -57,5 +57,4 @@ public class CsvMonitorController {
   public ResponseEntity<PostcodeLookup> getPostcodeLookup(@RequestParam String key) {
     return ResponseEntity.ok(lookupFileLoaderService.getPostcodeLookup(key));
   }
-
 }

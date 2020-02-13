@@ -1,6 +1,5 @@
 package uk.gov.ons.fwmt.csvservice.implementation.ce;
 
-import com.google.cloud.storage.Storage;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -10,14 +9,19 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.test.util.ReflectionTestUtils;
+import uk.gov.census.ffa.storage.utils.StorageUtils;
 import uk.gov.ons.census.fwmt.csvservice.adapter.GatewayActionAdapter;
-import uk.gov.ons.census.fwmt.csvservice.utils.CsvServiceUtils;
 import uk.gov.ons.census.fwmt.csvservice.implementation.ce.CEConverterService;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.when;
 import static uk.gov.ons.census.fwmt.csvservice.implementation.ce.CEGatewayEventsConfig.CSV_CE_REQUEST_EXTRACTED;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -33,25 +37,25 @@ public class CEConverterServiceImplTest {
   private GatewayEventManager gatewayEventManager;
 
   @Mock
-  private CsvServiceUtils csvServiceUtils;
-
-  @Mock
-  private Storage googleCloudStorage;
+  private StorageUtils storageUtils;
 
   @Test
-  public void convertCECSVToCanonicalTest() throws GatewayException {
+  public void convertCECSVToCanonicalTest() throws GatewayException, IOException {
     // Given
     ClassLoader classLoader = getClass().getClassLoader();
-    String testPathString = classLoader.getResource("testCECSV.csv").getPath();
+    String testPathString = classLoader.getResource("ceTestCSV.csv").getPath();
     Resource testResource = new FileSystemResource(testPathString);
 
-    ReflectionTestUtils.setField(ceConverterService, "csvGCPFile", testResource);
-    ReflectionTestUtils.setField(ceConverterService, "bucketName", "bucket");
+    ReflectionTestUtils.setField(ceConverterService, "file", testResource);
+    ReflectionTestUtils.setField(ceConverterService, "directory", "resources/");
 
-    // When
-    ceConverterService.convertToCanonical();
+    FileInputStream fileInputStream = new FileInputStream(testResource.getFile());
+    try (fileInputStream) {
+      when(storageUtils.getFileInputStream(any())).thenReturn(fileInputStream);
 
-    // Then
+      // When
+      ceConverterService.convertToCanonical();
+    }
     Mockito.verify(gatewayEventManager).triggerEvent(anyString(), eq(CSV_CE_REQUEST_EXTRACTED));
   }
 }

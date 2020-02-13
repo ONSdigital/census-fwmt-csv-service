@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
+import uk.gov.census.ffa.storage.utils.StorageUtils;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.csvservice.config.GatewayEventsConfig;
 import uk.gov.ons.census.fwmt.csvservice.dto.PostcodeLookup;
@@ -13,6 +14,7 @@ import uk.gov.ons.census.fwmt.csvservice.service.LookupFileLoaderService;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
@@ -24,23 +26,26 @@ import static uk.gov.ons.census.fwmt.csvservice.implementation.postcodeloader.Lo
 public class LookupFileLoaderServiceImpl implements LookupFileLoaderService {
 
   @Value("${gcpBucket.postcodelookuplocation}")
-  private Resource csvGCPFile;
+  private Resource file;
 
   @Autowired
   private GatewayEventManager gatewayEventManager;
+
+  @Autowired
+  private StorageUtils storageUtils;
 
   static final Map<String, PostcodeLookup> postcodeLookupMap = new HashMap<>();
 
   @Override
   public void loadPostcodeLookupFile() throws GatewayException {
-
-    CsvToBean<PostcodeLookup> csvToBean;
     try {
-      csvToBean = new CsvToBeanBuilder(new InputStreamReader(csvGCPFile.getInputStream(), StandardCharsets.UTF_8))
+      InputStream inputStream = storageUtils.getFileInputStream(file.getURI());
+      CsvToBean<PostcodeLookup> csvToBean;
+      csvToBean = new CsvToBeanBuilder(new InputStreamReader(inputStream, StandardCharsets.UTF_8))
           .withType(PostcodeLookup.class)
           .build();
       for (PostcodeLookup postcodeLookup : csvToBean) {
-        postcodeLookupMap.put(postcodeLookup.getPostcode().replaceAll("\\s+","").toUpperCase(), postcodeLookup);
+        postcodeLookupMap.put(postcodeLookup.getPostcode().replaceAll("\\s+", "").toUpperCase(), postcodeLookup);
       }
       gatewayEventManager.triggerEvent("N/A", POSTCODE_LOOKUP_LOADED);
     } catch (IOException e) {
