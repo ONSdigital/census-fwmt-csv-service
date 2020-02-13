@@ -56,10 +56,6 @@ public class CEConverterServiceImplTest {
       // When
       ceConverterService.convertToCanonical();
     }
-
-    // When
-    ceConverterService.convertToCanonical();
-
     Mockito.verify(gatewayEventManager).triggerEvent(anyString(), eq(CSV_CE_REQUEST_EXTRACTED));
   }
 }
