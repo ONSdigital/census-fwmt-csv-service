@@ -17,7 +17,6 @@ import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
 
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -57,7 +56,6 @@ public class CCSConverterServiceImplTest {
       // When
       ccsConverterService.convertToCanonical();
     }
-
     Mockito.verify(gatewayEventManager).triggerEvent(anyString(), eq(CSV_CCS_REQUEST_EXTRACTED));
   }
 }
