@@ -47,7 +47,7 @@ gcpBucket:
 #  postcodelookuplocation: "gs://csv-bucket-test/addressLookup.csv"
 #  directory: "gs://csv-bucket-test/"
 
-  celocation: "File://${home}/acceptance/data/ceTestCSV.csv"
+  celocation: "file://${home}/acceptance/data/ceTestCSV.csv"
   ccslocation: "file://${home}/acceptance/data/ccsTestCSV.csv"
   addresschecklocation: "file://${home}/acceptance/data/AC.csv"
   postcodelookuplocation: "file://${home}/acceptance/data/addressLookup.csv"
