@@ -63,7 +63,7 @@ public class AddressCheckConverterService implements CSVConverterService {
 
   @Override
   public void convertToCanonical() throws GatewayException {
-    DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyMMddHmmss");
+    DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
     LocalDateTime now = LocalDateTime.now();
     String timestamp = dateTimeFormatter.format(now);
     postcodeLookupMap = lookupFileLoaderService.getLookupMap();
