@@ -47,7 +47,9 @@ public class CEConverterService implements CSVConverterService {
 
   @Override
   public void convertToCanonical() throws GatewayException {
-    String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH-mm-ss"));
+    DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
+    LocalDateTime now = LocalDateTime.now();
+    String timestamp = dateTimeFormatter.format(now);
     CsvToBean<CEJobListing> csvToBean;
     try {
       InputStream inputStream = storageUtils.getFileInputStream(file.getURI());
