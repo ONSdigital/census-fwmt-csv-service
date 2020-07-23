@@ -34,7 +34,7 @@ group = 'uk.gov.ons.census.fwmt'
 
 mainClassName = 'uk.gov.ons.census.fwmt.csvservice.Application'
 
-version = '0.0.41-SNAPSHOT'
+version = '0.0.42-SNAPSHOT'
 
 sourceCompatibility = '11'
 
