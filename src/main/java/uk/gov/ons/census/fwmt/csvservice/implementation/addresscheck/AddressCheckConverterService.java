@@ -111,6 +111,7 @@ public class AddressCheckConverterService implements CSVConverterService {
         reason);
     rejectedReportAddressCheckListing.add(rejectionReportEntry);
     rejectedAddressCheckListing.add(addressCheckListing);
+
     gatewayEventManager.triggerErrorEvent(this.getClass(), reason, "N/A", errorEvent);
   }
 
