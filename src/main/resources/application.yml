@@ -49,6 +49,7 @@ gcpBucket:
 
   celocation: "file://${home}/acceptance/data/ceTestCSV.csv"
   ccslocation: "file://${home}/acceptance/data/ccsTestCSV.csv"
+  casereflocation: "file://${home}/acceptance/data/caseRefCount.txt"
   addresschecklocation: "file://${home}/acceptance/data/AC.csv"
   postcodelookuplocation: "file://${home}/acceptance/data/addressLookup.csv"
   directory: "file://${home}/acceptance/data/"

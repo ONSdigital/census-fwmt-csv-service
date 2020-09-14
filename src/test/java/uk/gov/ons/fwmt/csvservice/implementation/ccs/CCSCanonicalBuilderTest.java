@@ -23,6 +23,6 @@ public class CCSCanonicalBuilderTest {
     assertNotNull(createFieldWorkerJobRequest.getCaseId());
     assertEquals(ccsPropertyListing.getPostCode(), createFieldWorkerJobRequest.getAddress().getPostCode());
     assertEquals(ccsPropertyListing.getLatitude(), createFieldWorkerJobRequest.getAddress().getLatitude());
-    assertEquals(ccsPropertyListing.getCoordinatorId(), createFieldWorkerJobRequest.getCoordinatorId());
+    assertEquals(ccsPropertyListing.getFieldCoordinatorId(), createFieldWorkerJobRequest.getCoordinatorId());
   }
 }
