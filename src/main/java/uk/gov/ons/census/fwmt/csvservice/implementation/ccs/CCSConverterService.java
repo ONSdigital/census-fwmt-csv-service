@@ -88,7 +88,7 @@ public class CCSConverterService implements CSVConverterService {
     }
 
     try {
-      storageUtils.move(propertyListingFile.getURI(), URI.create(directory + "/processed/" + "CE-processed-" + timestamp));
+      storageUtils.move(propertyListingFile.getURI(), URI.create(directory + "/processed/" + "CCS-processed-" + timestamp));
     } catch (IOException e) {
       throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, e, "Failed to move file");
     }
