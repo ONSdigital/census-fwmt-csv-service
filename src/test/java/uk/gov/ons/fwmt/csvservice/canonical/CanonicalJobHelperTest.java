@@ -29,19 +29,4 @@ public class CanonicalJobHelperTest {
     assertEquals(ceJobListing.getLatitude(), createFieldWorkerJobRequest.getAddress().getLatitude());
     assertEquals(ceJobListing.getCoordinatorId(), createFieldWorkerJobRequest.getCoordinatorId());
   }
-
-  @Test
-  public void createCCS() {
-    // Given
-    CCSPropertyListing ccsPropertyListing = new CSVRecordBuilder().createCCSCSVRecord();
-
-    // When
-    CreateFieldWorkerJobRequest createFieldWorkerJobRequest = createCCSJob(ccsPropertyListing);
-
-    // Then
-    assertNotNull(createFieldWorkerJobRequest.getCaseId());
-    assertEquals(ccsPropertyListing.getPostCode(), createFieldWorkerJobRequest.getAddress().getPostCode());
-    assertEquals(ccsPropertyListing.getLatitude(), createFieldWorkerJobRequest.getAddress().getLatitude());
-    assertEquals(ccsPropertyListing.getFieldCoordinatorId(), createFieldWorkerJobRequest.getCoordinatorId());
-  }
 }

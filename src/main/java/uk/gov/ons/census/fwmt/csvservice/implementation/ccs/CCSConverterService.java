@@ -75,7 +75,8 @@ public class CCSConverterService implements CSVConverterService {
       InputStream caseRefCountInputStream = storageUtils.getFileInputStream(caseRefCountFile.getURI());
       caseRefCount = Integer.parseInt(caseRefCountInputStream.toString());
     } catch (IOException e) {
-      e.printStackTrace();
+      String msg = "Failed to convert inputStream.";
+      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, e, msg);
     }
 
     for (CCSPropertyListing ccsPropertyListing : csvToBean) {
