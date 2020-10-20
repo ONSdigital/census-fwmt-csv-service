@@ -2,6 +2,7 @@ package uk.gov.ons.census.fwmt.csvservice.implementation.ccs;
 
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
@@ -26,6 +27,7 @@ import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Scanner;
 
 import static uk.gov.ons.census.fwmt.csvservice.implementation.ccs.CCSCanonicalBuilder.createCCSJob;
 
@@ -58,7 +60,9 @@ public class CCSConverterService implements CSVConverterService {
     LocalDateTime now = LocalDateTime.now();
     String timestamp = dateTimeFormatter.format(now);
     CsvToBean<CCSPropertyListing> csvToBean;
-    int caseRefCount = 0;
+    String caseRefFileContents;
+    int caseRefCount;
+
     try {
       InputStream inputStream = storageUtils.getFileInputStream(propertyListingFile.getURI());
       csvToBean = new CsvToBeanBuilder(new InputStreamReader(inputStream, StandardCharsets.UTF_8))
@@ -72,12 +76,16 @@ public class CCSConverterService implements CSVConverterService {
     }
 
     try {
-      InputStream caseRefCountInputStream = storageUtils.getFileInputStream(caseRefCountFile.getURI());
-      caseRefCount = Integer.parseInt(caseRefCountInputStream.toString());
+      InputStream inputStream = storageUtils.getFileInputStream(caseRefCountFile.getURI());
+      try (Scanner scanner = new Scanner(inputStream, StandardCharsets.UTF_8.name())) {
+        caseRefFileContents = scanner.useDelimiter("\\A").next();
+      }
     } catch (IOException e) {
       String msg = "Failed to convert inputStream.";
       throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, e, msg);
     }
+
+    caseRefCount = Integer.parseInt(caseRefFileContents.trim());
 
     for (CCSPropertyListing ccsPropertyListing : csvToBean) {
       FwmtActionInstruction fwmtActionInstruction = createCCSJob(ccsPropertyListing, caseRefCount);
