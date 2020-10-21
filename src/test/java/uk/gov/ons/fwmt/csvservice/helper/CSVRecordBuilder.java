@@ -14,8 +14,8 @@ public class CSVRecordBuilder {
     ccsPropertyListing.setPostCode("PO15 6LW");
     ccsPropertyListing.setFieldOfficerId("Joe Bloggs");
     ccsPropertyListing.setFieldCoordinatorId("AW1");
-    ccsPropertyListing.setLatitude(BigDecimal.valueOf(51));
-    ccsPropertyListing.setLongitude(BigDecimal.valueOf(0.11));
+    ccsPropertyListing.setLatitude(51d);
+    ccsPropertyListing.setLongitude(0.11);
 
     return ccsPropertyListing;
   }
