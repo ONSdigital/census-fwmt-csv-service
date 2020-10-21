@@ -2,7 +2,6 @@ package uk.gov.ons.census.fwmt.csvservice.implementation.ccs;
 
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
-import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
@@ -110,7 +109,7 @@ public class CCSConverterService implements CSVConverterService {
 
     try (Writer writer = new FileWriter(file.getAbsolutePath(), StandardCharsets.UTF_8)) {
         try {
-          writer.write(caseRefCount);
+          writer.write(String.valueOf(caseRefCount));
         } catch (IOException e) {
           throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, e, "Failed write temp file");
         }

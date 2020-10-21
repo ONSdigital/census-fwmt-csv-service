@@ -19,10 +19,10 @@ public class CCSPropertyListing {
   private String oa;
 
   @CsvBindByName(column = "Longitude")
-  private BigDecimal longitude;
+  private Double longitude;
 
   @CsvBindByName(column = "Latitude")
-  private BigDecimal latitude;
+  private Double latitude;
 
   @CsvBindByName(column = "Field_Coordinator_ID")
   private String fieldCoordinatorId;

@@ -15,11 +15,13 @@ public final class CCSCanonicalBuilder {
         .actionInstruction(ActionInstructionType.CREATE)
         .caseId(String.valueOf(UUID.randomUUID()))
         .caseRef("PL" + caseRefCountInt)
-        .surveyName("CCS-PL")
+        .surveyName("CCS_PL")
         .surveyType(SurveyType.CCS_PL)
         .fieldOfficerId(ccsPropertyListing.getFieldOfficerId())
         .fieldCoordinatorId(ccsPropertyListing.getFieldCoordinatorId())
         .postcode(ccsPropertyListing.getPostCode())
+        .longitude(ccsPropertyListing.getLongitude())
+        .latitude(ccsPropertyListing.getLatitude())
         .oa(ccsPropertyListing.getOa())
         .build();
   }
