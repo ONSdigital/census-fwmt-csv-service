@@ -12,10 +12,10 @@ public class CSVRecordBuilder {
     CCSPropertyListing ccsPropertyListing = new CCSPropertyListing();
 
     ccsPropertyListing.setPostCode("PO15 6LW");
-    ccsPropertyListing.setCcsInterviewer("Joe Bloggs");
-    ccsPropertyListing.setCoordinatorId("AW1");
-    ccsPropertyListing.setLatitude(BigDecimal.valueOf(51));
-    ccsPropertyListing.setLongitude(BigDecimal.valueOf(0.11));
+    ccsPropertyListing.setFieldOfficerId("Joe Bloggs");
+    ccsPropertyListing.setFieldCoordinatorId("AW1");
+    ccsPropertyListing.setLatitude(51d);
+    ccsPropertyListing.setLongitude(0.11);
 
     return ccsPropertyListing;
   }

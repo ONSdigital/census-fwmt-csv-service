@@ -12,22 +12,22 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 public class CCSPropertyListing {
 
-  @CsvBindByName(column = "postCode")
+  @CsvBindByName(column = "Postcode")
   private String postCode;
 
-  @CsvBindByName(column = "oa")
+  @CsvBindByName(column = "OA_Code")
   private String oa;
 
-  @CsvBindByName(column = "latitude")
-  private BigDecimal latitude;
+  @CsvBindByName(column = "Longitude")
+  private Double longitude;
 
-  @CsvBindByName(column = "longitude")
-  private BigDecimal longitude;
+  @CsvBindByName(column = "Latitude")
+  private Double latitude;
 
-  @CsvBindByName(column = "coordinatorId")
-  private String coordinatorId;
+  @CsvBindByName(column = "Field_Coordinator_ID")
+  private String fieldCoordinatorId;
 
-  @CsvBindByName(column = "ccsInterviewer")
-  private String ccsInterviewer;
+  @CsvBindByName(column = "Field_Officer_ID")
+  private String fieldOfficerId;
 
 }

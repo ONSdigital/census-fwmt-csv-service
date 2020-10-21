@@ -1,14 +1,27 @@
 package uk.gov.ons.census.fwmt.csvservice.implementation.addresscheck;
 
-import com.opencsv.bean.CsvToBean;
-import com.opencsv.bean.CsvToBeanBuilder;
+import static uk.gov.ons.census.fwmt.csvservice.config.GatewayEventsConfig.FAILED_MATCH_POSTCODE;
+import static uk.gov.ons.census.fwmt.csvservice.config.GatewayEventsConfig.LOOKUP_FILE_MISSING_DATA;
+
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.URI;
+import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+
+import com.opencsv.bean.CsvToBean;
+import com.opencsv.bean.CsvToBeanBuilder;
+
 import uk.gov.census.ffa.storage.utils.StorageUtils;
-import uk.gov.ons.census.fwmt.canonical.v1.CreateFieldWorkerJobRequest;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
-import uk.gov.ons.census.fwmt.csvservice.adapter.GatewayActionAdapter;
 import uk.gov.ons.census.fwmt.csvservice.dto.AddressCheckListing;
 import uk.gov.ons.census.fwmt.csvservice.dto.PostcodeLookup;
 import uk.gov.ons.census.fwmt.csvservice.dto.RejectionReportEntry;
@@ -17,31 +30,14 @@ import uk.gov.ons.census.fwmt.csvservice.service.CSVConverterService;
 import uk.gov.ons.census.fwmt.csvservice.service.LookupFileLoaderService;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
 
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.URI;
-import java.nio.charset.StandardCharsets;
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
-import static uk.gov.ons.census.fwmt.csvservice.config.GatewayEventsConfig.FAILED_MATCH_POSTCODE;
-import static uk.gov.ons.census.fwmt.csvservice.config.GatewayEventsConfig.LOOKUP_FILE_MISSING_DATA;
-import static uk.gov.ons.census.fwmt.csvservice.implementation.addresscheck.AddressCheckCanonicalBuilder.createAddressCheckJob;
-import static uk.gov.ons.census.fwmt.csvservice.implementation.addresscheck.AddressCheckGatewayEventsConfig.CANONICAL_ADDRESS_CHECK_CREATE_SENT;
-import static uk.gov.ons.census.fwmt.csvservice.implementation.addresscheck.AddressCheckGatewayEventsConfig.CSV_ADDRESS_CHECK_REQUEST_EXTRACTED;
-
 @Component("AC")
 public class AddressCheckConverterService implements CSVConverterService {
 
   @Value("${gcpBucket.directory}")
   private String directory;
 
-  @Autowired
-  private GatewayActionAdapter gatewayActionAdapter;
+  //@Autowired
+  //private GatewayActionAdapter gatewayActionAdapter;
 
   @Autowired
   private GatewayEventManager gatewayEventManager;
@@ -115,11 +111,11 @@ public class AddressCheckConverterService implements CSVConverterService {
   }
 
   private void createAndSendJob(AddressCheckListing addressCheckListing) throws GatewayException {
-    CreateFieldWorkerJobRequest createFieldWorkerJobRequest = createAddressCheckJob(addressCheckListing,
-        postcodeLookupMap.get(getPostcode(addressCheckListing)));
-    gatewayActionAdapter.sendJobRequest(createFieldWorkerJobRequest, CANONICAL_ADDRESS_CHECK_CREATE_SENT);
-    gatewayEventManager.triggerEvent(String.valueOf(createFieldWorkerJobRequest.getCaseId()),
-        CSV_ADDRESS_CHECK_REQUEST_EXTRACTED);
+//    CreateFieldWorkerJobRequest createFieldWorkerJobRequest = createAddressCheckJob(addressCheckListing,
+//        postcodeLookupMap.get(getPostcode(addressCheckListing)));
+//    gatewayActionAdapter.sendJobRequest(createFieldWorkerJobRequest, CANONICAL_ADDRESS_CHECK_CREATE_SENT);
+//    gatewayEventManager.triggerEvent(String.valueOf(createFieldWorkerJobRequest.getCaseId()),
+//        CSV_ADDRESS_CHECK_REQUEST_EXTRACTED);
   }
 
   private String getPostcode(AddressCheckListing addressCheckListing) {
