@@ -10,7 +10,6 @@ import org.springframework.stereotype.Component;
 import uk.gov.census.ffa.storage.utils.StorageUtils;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.common.rm.dto.FwmtActionInstruction;
-import uk.gov.ons.census.fwmt.csvservice.config.GatewayEventsConfig;
 import uk.gov.ons.census.fwmt.csvservice.dto.CCSPropertyListing;
 import uk.gov.ons.census.fwmt.csvservice.message.RmFieldRepublishProducer;
 import uk.gov.ons.census.fwmt.csvservice.service.CSVConverterService;
@@ -26,17 +25,13 @@ import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Scanner;
 
 import static uk.gov.ons.census.fwmt.csvservice.implementation.ccs.CCSCanonicalBuilder.createCCSJob;
 
 @Component("CCS")
 public class CCSConverterService implements CSVConverterService {
-
-  public static final String CSV_CCS_REQUEST_EXTRACTED = "CSV_CCS_REQUEST_EXTRACTED";
-
-  @Value("${gcpBucket.ccslocation}")
-  private Resource propertyListingFile;
 
   @Value("${gcpBucket.casereflocation}")
   private Resource caseRefCountFile;
@@ -53,26 +48,17 @@ public class CCSConverterService implements CSVConverterService {
   @Autowired
   private StorageUtils storageUtils;
 
+  public static final String CSV_CCS_REQUEST_EXTRACTED = "CSV_CCS_REQUEST_EXTRACTED";
+
+  public static final String CANONICAL_CCS_CREATE_SENT = "CANONICAL_CCS_CREATE_SENT";
+
   @Override
   public void convertToCanonical() throws GatewayException {
+    String caseRefFileContents;
     DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
     LocalDateTime now = LocalDateTime.now();
     String timestamp = dateTimeFormatter.format(now);
-    CsvToBean<CCSPropertyListing> csvToBean;
-    String caseRefFileContents;
-    int caseRefCount;
-
-    try {
-      InputStream inputStream = storageUtils.getFileInputStream(propertyListingFile.getURI());
-      csvToBean = new CsvToBeanBuilder(new InputStreamReader(inputStream, StandardCharsets.UTF_8))
-          .withType(CCSPropertyListing.class)
-          .build();
-
-    } catch (IOException e) {
-      String msg = "Failed to convert CSV to Bean.";
-      gatewayEventManager.triggerErrorEvent(this.getClass(), msg, "N/A", GatewayEventsConfig.UNABLE_TO_READ_CSV);
-      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, e, msg);
-    }
+    List<URI> ccsPropertyListingFiles = storageUtils.getFilenamesInFolder(URI.create(directory), "ccs");
 
     try {
       InputStream inputStream = storageUtils.getFileInputStream(caseRefCountFile.getURI());
@@ -84,22 +70,47 @@ public class CCSConverterService implements CSVConverterService {
       throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, e, msg);
     }
 
-    caseRefCount = Integer.parseInt(caseRefFileContents.trim());
+    int caseRefCount = Integer.parseInt(caseRefFileContents.trim());
 
+    CsvToBean<CCSPropertyListing> csvToBean;
+    for (URI uri : ccsPropertyListingFiles) {
+      InputStream inputStream = storageUtils.getFileInputStream(uri);
+      csvToBean = createCsvBean(inputStream);
+
+      caseRefCount = processObject(csvToBean, caseRefCount);
+      storageUtils.move(uri, URI.create(directory + "/processed/" + "CCSPL-processed-" + timestamp));
+    }
+    updateCaseRefCout(caseRefCount);
+  }
+
+  private CsvToBean<CCSPropertyListing> createCsvBean(InputStream inputStream) {
+    CsvToBean<CCSPropertyListing> csvToBean;
+    csvToBean = new CsvToBeanBuilder(new InputStreamReader(inputStream, StandardCharsets.UTF_8))
+        .withSeparator('|')
+        .withType(CCSPropertyListing.class)
+        .build();
+
+    return csvToBean;
+  }
+
+  private int processObject(CsvToBean<CCSPropertyListing> csvToBean, int caseRefCount) {
     for (CCSPropertyListing ccsPropertyListing : csvToBean) {
-      FwmtActionInstruction fwmtActionInstruction = createCCSJob(ccsPropertyListing, caseRefCount);
-      rmFieldRepublishProducer.republish(fwmtActionInstruction);
-      gatewayEventManager
-          .triggerEvent(String.valueOf(fwmtActionInstruction.getCaseId()), CSV_CCS_REQUEST_EXTRACTED);
+      createAndSendJob(ccsPropertyListing, caseRefCount);
       caseRefCount++;
     }
+    return caseRefCount;
+  }
 
-    try {
-      storageUtils.move(propertyListingFile.getURI(), URI.create(directory + "/processed/" + "CCS-processed-" + timestamp));
-    } catch (IOException e) {
-      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, e, "Failed to move file");
-    }
+  private void createAndSendJob(CCSPropertyListing ccsPropertyListing, int caseRefCount) {
+    FwmtActionInstruction fwmtActionInstruction = createCCSJob(ccsPropertyListing, caseRefCount);
+    gatewayEventManager.triggerEvent(String.valueOf(fwmtActionInstruction.getCaseId()),
+        CSV_CCS_REQUEST_EXTRACTED);
+    rmFieldRepublishProducer.republish(fwmtActionInstruction);
+    gatewayEventManager.triggerEvent(String.valueOf(fwmtActionInstruction.getCaseId()),
+        CANONICAL_CCS_CREATE_SENT);
+  }
 
+  private void updateCaseRefCout(int caseRefCount) throws GatewayException {
     File file;
     try {
       file = File.createTempFile("caseRefCount", ".txt");
@@ -108,15 +119,19 @@ public class CCSConverterService implements CSVConverterService {
     }
 
     try (Writer writer = new FileWriter(file.getAbsolutePath(), StandardCharsets.UTF_8)) {
-        try {
-          writer.write(String.valueOf(caseRefCount));
-        } catch (IOException e) {
-          throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, e, "Failed write temp file");
-        }
+      writeFile(caseRefCount, writer);
     } catch (IOException e) {
       throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, e, "Failed creating temp file to write to.");
     }
     String filename = "caseRefCount.txt";
     storageUtils.move(file.toURI(), URI.create(directory + filename));
+  }
+
+  private void writeFile(int caseRefCount, Writer writer) throws GatewayException {
+    try {
+      writer.write(String.valueOf(caseRefCount));
+    } catch (IOException e) {
+      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, e, "Failed write temp file");
+    }
   }
 }

@@ -34,7 +34,7 @@ group = 'uk.gov.ons.census.fwmt'
 
 mainClassName = 'uk.gov.ons.census.fwmt.csvservice.Application'
 
-version = '0.0.46-SNAPSHOT'
+version = rootProject.file('version.txt').text.trim()
 
 sourceCompatibility = '11'
 
@@ -79,7 +79,7 @@ dependencies {
 
 	compile 'uk.gov.ons.census.fwmt:census-fwmt-canonical:1.0.17-RELEASE'
 	compile('uk.gov.ons.census.fwmt:census-fwmt-events:1.0.33-RELEASE')
-	compile('uk.gov.ons.census.fwmt:census-fwmt-common:1.2.6-RELEASE')
+	compile('uk.gov.ons.census.fwmt:census-fwmt-common:1.2.22-RELEASE')
 	compile("uk.gov.ons.census.ffa:census-ffa-storage-utils:0.0.1-RELEASE")
 
 	compile("com.google.guava:guava:27.0.1-jre")
