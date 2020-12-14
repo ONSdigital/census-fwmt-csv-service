@@ -22,11 +22,11 @@ public class QueueConfig {
   private String virtualHost;
 
   public QueueConfig(
-      @Value("${rabbitmq.username}") String username,
-      @Value("${rabbitmq.password}") String password,
-      @Value("${rabbitmq.hostname}") String hostname,
-      @Value("${rabbitmq.port}") Integer port,
-      @Value("${rabbitmq.virtualHost}") String virtualHost) {
+      @Value("${app.rabbitmq.rm.username}") String username,
+      @Value("${app.rabbitmq.rm.password}") String password,
+      @Value("${app.rabbitmq.rm.host}") String hostname,
+      @Value("${app.rabbitmq.rm.port}") int port,
+      @Value("${app.rabbitmq.rm.virtualHost}") String virtualHost) {
     this.username = username;
     this.password = password;
     this.hostname = hostname;
@@ -61,8 +61,7 @@ public class QueueConfig {
   }
 
   // Connection Factory
-  @Bean
-  @Primary
+  @Bean("rmConnectionFactory")
   public ConnectionFactory connectionFactory() {
     return createConnectionFactory(port, hostname, virtualHost, password, username);
   }

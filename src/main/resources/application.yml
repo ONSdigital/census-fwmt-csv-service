@@ -30,16 +30,6 @@ logging:
     org.apache.commons.dbcp2: INFO
     org.springframework: INFO
 
-rabbitmq:
-  username: "guest"
-  password: "guest"
-  hostname: "localhost"
-  port: 5672
-  virtualHost: "/"
-  initialinterval: 5000
-  multiplier: 3.0
-  maxInterval: 45000
-
 gcpBucket:
 #  celocation: "gs://csv-bucket-test/ceTestCSV.csv"
 #  ccslocation: "gs://csv-bucket-test/ccsTestCSV.csv"
@@ -53,3 +43,39 @@ gcpBucket:
   addresschecklocation: "file://${home}/acceptance/data/AC.csv"
   postcodelookuplocation: "file://${home}/acceptance/data/addressLookup.csv"
   directory: "file://${home}/acceptance/data/"
+
+
+app:
+  testing: false
+  rabbitmq:
+    gw:
+      username: "guest"
+      password: "guest"
+      host: "localhost"
+      port: 5673
+      virtualHost: "/"
+      initialInterval: 5000
+      multiplier: 3.0
+      maxInterval: 45000
+      maxRetries: 1
+      prefetchCount: 500
+      concurrentConsumers: 10
+      exchanges:
+        error: "GW.Error.Exchange"
+      queues:
+        error: "GW.ErrorQ"
+    rm:
+      username: "guest"
+      password: "guest"
+      host: "localhost"
+      port: 5672
+      virtualHost: "/"
+      initialInterval: 5000
+      multiplier: 3.0
+      maxInterval: 45000
+      maxRetries: 1
+      prefetchCount: 500
+      concurrentConsumers: 10
+      queues:
+        rm:
+          input: "RM.Field"
