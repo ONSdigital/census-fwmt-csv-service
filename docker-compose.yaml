@@ -1,0 +1,29 @@
+version: '3.7'
+services:
+  postgres:
+    image: postgres
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USERNAME: postgres
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data
+    ports:
+      - '5432:5432'
+  rabbitRM:
+    image: rabbitmq:3-management-alpine
+    container_name: rabbitRM
+    ports:
+      - 5672:5672
+      - 15672:15672
+  rabbitGW:
+    image: rabbitmq:3-management-alpine
+    container_name: rabbitGW
+    environment:
+    ports:
+      - 5673:5672
+      - 15673:15672
+  sonarqube:
+    image: sonarqube
+    container_name: sonarqube
+    ports:
+      - 9000:9000
