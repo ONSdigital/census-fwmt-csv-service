@@ -12,7 +12,8 @@ public class LookupFileLoaderEventsConfig {
 
   @Bean
   public GatewayEventManager addLookupFileEvents(GatewayEventManager gatewayEventManager) {
-    gatewayEventManager.addEventTypes(new String[] {POSTCODE_LOOKUP_LOADED, CREATED_REJECTION_FILE});
+  //  gatewayEventManager.addEventTypes(new String[] {POSTCODE_LOOKUP_LOADED, CREATED_REJECTION_FILE});
+
     return gatewayEventManager;
   }
 }

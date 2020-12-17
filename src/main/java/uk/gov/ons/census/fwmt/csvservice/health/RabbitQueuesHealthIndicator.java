@@ -25,7 +25,7 @@ public class RabbitQueuesHealthIndicator extends AbstractHealthIndicator {
 //  );
 
   @Autowired
-  @Qualifier("connectionFactory")
+  @Qualifier("rmConnectionFactory")
   private ConnectionFactory connectionFactory;
   private RabbitAdmin rabbitAdmin;
 
