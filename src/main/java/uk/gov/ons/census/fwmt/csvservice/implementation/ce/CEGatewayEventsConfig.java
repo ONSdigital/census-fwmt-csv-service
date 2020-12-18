@@ -12,7 +12,7 @@ public class CEGatewayEventsConfig {
 
   @Bean
   public GatewayEventManager addCEEvents(GatewayEventManager gatewayEventManager) {
-    gatewayEventManager.addEventTypes(new String[] {CSV_CE_REQUEST_EXTRACTED, CANONICAL_CE_CREATE_SENT});
+//    gatewayEventManager.addEventTypes(new String[] {CSV_CE_REQUEST_EXTRACTED, CANONICAL_CE_CREATE_SENT});
     return gatewayEventManager;
   }
 }
