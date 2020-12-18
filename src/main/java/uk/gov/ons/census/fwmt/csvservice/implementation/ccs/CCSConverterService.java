@@ -86,7 +86,7 @@ public class CCSConverterService implements CSVConverterService {
   private CsvToBean<CCSPropertyListing> createCsvBean(InputStream inputStream) {
     CsvToBean<CCSPropertyListing> csvToBean;
     csvToBean = new CsvToBeanBuilder(new InputStreamReader(inputStream, StandardCharsets.UTF_8))
-        .withSeparator('|')
+        .withSeparator(',')
         .withType(CCSPropertyListing.class)
         .build();
 
