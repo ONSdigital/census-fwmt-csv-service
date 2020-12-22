@@ -42,6 +42,13 @@ public class CsvMonitorController {
     return ResponseEntity.ok("AC adapter service activated");
   }
 
+  @GetMapping("/ingestNCCsvFile")
+  public ResponseEntity<String> ingestNCCsvFile() throws GatewayException {
+    final CSVConverterService ncConverterService = csvServiceMap.get("NC");
+    ncConverterService.convertToCanonical();
+    return ResponseEntity.ok("CCS adapter service activated");
+  }
+
   @GetMapping("/ingestAddressLookupCsvFile")
   public ResponseEntity<String> loadAddressLookupFile() throws GatewayException {
     lookupFileLoaderService.loadPostcodeLookupFile();
