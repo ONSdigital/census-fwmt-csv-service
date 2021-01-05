@@ -4,6 +4,8 @@ import uk.gov.ons.census.fwmt.common.rm.dto.ActionInstructionType;
 import uk.gov.ons.census.fwmt.common.rm.dto.FwmtActionInstruction;
 import uk.gov.ons.census.fwmt.csvservice.dto.NCIntListing;
 
+import java.util.UUID;
+
 public final class NonComplianceBuilder {
 
   public static FwmtActionInstruction createNcJob(NCIntListing ncIntListing) {
@@ -13,8 +15,9 @@ public final class NonComplianceBuilder {
         .surveyName("CENSUS")
         .addressType(ncIntListing.getAddressType())
         .addressLevel(ncIntListing.getAddressLevel())
-        .caseId(ncIntListing.getCaseId())
-        .caseRef(ncIntListing.getCaseRef())
+        .caseId(String.valueOf(UUID.randomUUID()))
+        .caseRef("NC" + ncIntListing.getCaseRef())
+        .oldCaseId(ncIntListing.getCaseId())
         .oa(ncIntListing.getOaCode())
         .nc(true)
         .estabType(ncIntListing.getEstablishmentType())

@@ -3,6 +3,7 @@ package uk.gov.ons.fwmt.csvservice.helper;
 import uk.gov.ons.census.fwmt.csvservice.dto.AddressCheckListing;
 import uk.gov.ons.census.fwmt.csvservice.dto.CCSPropertyListing;
 import uk.gov.ons.census.fwmt.csvservice.dto.CEJobListing;
+import uk.gov.ons.census.fwmt.csvservice.dto.NCIntListing;
 
 import java.math.BigDecimal;
 
@@ -55,5 +56,17 @@ public class CSVRecordBuilder {
     addressCheckListing.setAdditionalInformation("Additional information");
 
     return addressCheckListing;
+  }
+
+  public NCIntListing createNCCSVRecord() {
+    NCIntListing ncIntListing = new NCIntListing();
+
+    ncIntListing.setCaseId("ca48b83b-7e29-4b20-9a0f-4f1ab3575c9a");
+    ncIntListing.setCaseRef("9bb60f3a-c0af-4188-965f-e018d39df507");
+    ncIntListing.setEstablishmentType("Household");
+    ncIntListing.setLatitude(Double.valueOf(51));
+    ncIntListing.setLongitude(Double.valueOf(0.11));
+
+    return ncIntListing;
   }
 }
