@@ -31,19 +31,11 @@ logging:
     org.springframework: INFO
 
 gcpBucket:
-#  celocation: "gs://csv-bucket-test/ceTestCSV.csv"
-#  ccslocation: "gs://csv-bucket-test/ccsTestCSV.csv"
 #  addresschecklocation: "gs://csv-bucket-test/AC.csv"
-#  postcodelookuplocation: "gs://csv-bucket-test/addressLookup.csv"
 #  directory: "gs://csv-bucket-test/"
 
-  celocation: "file://${home}/acceptance/data/ceTestCSV.csv"
-  ccslocation: "file://${home}/acceptance/data/ccsTestCSV.csv"
   casereflocation: "file://${home}/acceptance/data/caseRefCount.txt"
-  addresschecklocation: "file://${home}/acceptance/data/AC.csv"
-  postcodelookuplocation: "file://${home}/acceptance/data/addressLookup.csv"
   directory: "file://${home}/acceptance/data/"
-
 
 app:
   testing: false

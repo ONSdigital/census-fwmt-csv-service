@@ -1,8 +1,6 @@
 package uk.gov.ons.fwmt.csvservice.helper;
 
-import uk.gov.ons.census.fwmt.csvservice.dto.AddressCheckListing;
 import uk.gov.ons.census.fwmt.csvservice.dto.CCSPropertyListing;
-import uk.gov.ons.census.fwmt.csvservice.dto.CEJobListing;
 import uk.gov.ons.census.fwmt.csvservice.dto.NCIntListing;
 
 import java.math.BigDecimal;

@@ -2,15 +2,12 @@ package uk.gov.ons.fwmt.csvservice.canonical;
 
 import org.junit.Test;
 import uk.gov.ons.census.fwmt.canonical.v1.CreateFieldWorkerJobRequest;
-import uk.gov.ons.census.fwmt.csvservice.dto.CCSPropertyListing;
-import uk.gov.ons.census.fwmt.csvservice.dto.CEJobListing;
 import uk.gov.ons.fwmt.csvservice.helper.CSVRecordBuilder;
 
 import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static uk.gov.ons.census.fwmt.csvservice.implementation.ccs.CCSCanonicalBuilder.createCCSJob;
 import static uk.gov.ons.census.fwmt.csvservice.implementation.ce.CECanonicalBuilder.createCEJob;
 
 public class CanonicalJobHelperTest {
