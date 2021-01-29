@@ -9,6 +9,9 @@ import java.util.UUID;
 
 public final class CCSCanonicalBuilder {
 
+  private CCSCanonicalBuilder() {
+  }
+
   public static FwmtActionInstruction createCCSJob(CCSPropertyListing ccsPropertyListing, int caseRefCountInt) {
     return FwmtActionInstruction
         .builder()

@@ -8,6 +8,9 @@ import java.util.UUID;
 
 public final class NonComplianceBuilder {
 
+  private NonComplianceBuilder() {
+  }
+
   public static FwmtActionInstruction createNcJob(NCIntListing ncIntListing) {
     return FwmtActionInstruction
         .builder()

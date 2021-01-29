@@ -15,11 +15,6 @@ import java.util.Arrays;
 @Configuration
 public class GatewayEventsConfig {
 
-  public static final String UNABLE_TO_READ_CSV = "UNABLE_TO_READ_CSV";
-  public static final String FAILED_TO_MARSHALL_CANONICAL = "FAILED_TO_MARSHALL_CANONICAL";
-  public static final String FAILED_MATCH_POSTCODE = "FAILED_MATCH_POSTCODE";
-  public static final String POSTCODE_MAP_EMPTY = "POSTCODE_MAP_EMPTY";
-  public static final String LOOKUP_FILE_MISSING_DATA = "LOOKUP_FILE_MISSING_DATA";
   @Value("${app.testing}")
   private boolean testing;
 
