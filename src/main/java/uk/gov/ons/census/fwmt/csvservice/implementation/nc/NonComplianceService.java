@@ -78,8 +78,8 @@ public class NonComplianceService implements CSVConverterService {
   private void createAndSendJob(NCIntListing ncIntListing) {
     FwmtActionInstruction fwmtActionInstruction = NonComplianceBuilder.createNcJob(ncIntListing);
     rmFieldRepublishProducer.republish(fwmtActionInstruction);
-        gatewayEventManager.triggerEvent(String.valueOf(fwmtActionInstruction.getCaseId()),
-            CANONICAL_NON_COMPLIANCE_CREATE_SENT);
+        gatewayEventManager.triggerEvent(String.valueOf(fwmtActionInstruction.getCaseId()), CANONICAL_NON_COMPLIANCE_CREATE_SENT,
+            "Case reference", fwmtActionInstruction.getCaseRef());
   }
 }
 

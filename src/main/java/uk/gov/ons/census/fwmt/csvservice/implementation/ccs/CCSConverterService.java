@@ -48,8 +48,6 @@ public class CCSConverterService implements CSVConverterService {
   @Autowired
   private StorageUtils storageUtils;
 
-  public static final String CSV_CCS_REQUEST_EXTRACTED = "CSV_CCS_REQUEST_EXTRACTED";
-
   public static final String CANONICAL_CCS_CREATE_SENT = "CANONICAL_CCS_CREATE_SENT";
 
   @Override
@@ -80,7 +78,7 @@ public class CCSConverterService implements CSVConverterService {
       caseRefCount = processObject(csvToBean, caseRefCount);
       storageUtils.move(uri, URI.create(directory + "/processed/" + "CCSPL-processed-" + timestamp));
     }
-    updateCaseRefCout(caseRefCount);
+    updateCaseRefCount(caseRefCount);
   }
 
   private CsvToBean<CCSPropertyListing> createCsvBean(InputStream inputStream) {
@@ -103,14 +101,12 @@ public class CCSConverterService implements CSVConverterService {
 
   private void createAndSendJob(CCSPropertyListing ccsPropertyListing, int caseRefCount) {
     FwmtActionInstruction fwmtActionInstruction = createCCSJob(ccsPropertyListing, caseRefCount);
-    gatewayEventManager.triggerEvent(String.valueOf(fwmtActionInstruction.getCaseId()),
-        CSV_CCS_REQUEST_EXTRACTED);
     rmFieldRepublishProducer.republish(fwmtActionInstruction);
-    gatewayEventManager.triggerEvent(String.valueOf(fwmtActionInstruction.getCaseId()),
-        CANONICAL_CCS_CREATE_SENT);
+    gatewayEventManager.triggerEvent(String.valueOf(fwmtActionInstruction.getCaseId()), CANONICAL_CCS_CREATE_SENT,
+        "Case reference", fwmtActionInstruction.getCaseRef());
   }
 
-  private void updateCaseRefCout(int caseRefCount) throws GatewayException {
+  private void updateCaseRefCount(int caseRefCount) throws GatewayException {
     File file;
     try {
       file = File.createTempFile("caseRefCount", ".txt");
