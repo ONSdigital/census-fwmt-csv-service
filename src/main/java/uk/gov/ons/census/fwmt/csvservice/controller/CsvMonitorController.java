@@ -29,4 +29,11 @@ public class CsvMonitorController {
     return ResponseEntity.ok("Non Compliance adapter service activated");
   }
 
+  @GetMapping("/ingestCeCreateFile")
+  public ResponseEntity<String> ingestCeCsvFile() throws GatewayException {
+    final CSVConverterService ceConverterService = csvServiceMap.get("CE");
+    ceConverterService.convertToCanonical();
+    return ResponseEntity.ok("CE Create adapter service activated");
+  }
+
 }
