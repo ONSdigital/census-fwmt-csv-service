@@ -10,7 +10,7 @@ public final class CeCreateBuilder {
   }
 
   public static FwmtActionInstruction buildCeCreate(CeCreate ceCreate) {
-    FwmtActionInstruction returnValue = FwmtActionInstruction
+    return FwmtActionInstruction
         .builder()
         .actionInstruction(ActionInstructionType.CREATE)
         .surveyName("CENSUS")
@@ -39,6 +39,5 @@ public final class CeCreateBuilder {
         .ceActualResponses(ceCreate.getCeActualResponses())
         .undeliveredAsAddress(ceCreate.getUaa())
         .build();
-    return returnValue;
   }
 }
