@@ -48,12 +48,14 @@ public class CanonicalBuilderTests {
   public void createCeCreatJobTest() {
     // Given
     CeCreate ceCreate = new CSVRecordBuilder().createCeCreateRecord();
+    String expectedCaseId = "e8bfa75f-ebbd-487f-9973-279233ad0887";
 
     // When
     FwmtActionInstruction fwmtActionInstruction = buildCeCreate(ceCreate);
 
     //Then
     assertNotNull(fwmtActionInstruction.getCaseId());
+    assertEquals(expectedCaseId,fwmtActionInstruction.getCaseId());
     assertNotNull(fwmtActionInstruction.getEstabUprn());
   }
 }
