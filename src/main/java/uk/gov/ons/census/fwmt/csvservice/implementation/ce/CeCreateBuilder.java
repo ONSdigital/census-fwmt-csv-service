@@ -10,7 +10,7 @@ public final class CeCreateBuilder {
   }
 
   public static FwmtActionInstruction buildCeCreate(CeCreate ceCreate) {
-    return FwmtActionInstruction
+    FwmtActionInstruction returnValue = FwmtActionInstruction
         .builder()
         .actionInstruction(ActionInstructionType.CREATE)
         .surveyName("CENSUS")
@@ -19,9 +19,10 @@ public final class CeCreateBuilder {
         .caseId(ceCreate.getCaseId())
         .caseRef(ceCreate.getCaseReference())
         .uprn(ceCreate.getUprn())
+        .estabUprn(ceCreate.getEstabUprn())
         .secureEstablishment(ceCreate.getSecureEstablishment())
         .estabType(ceCreate.getEstablishmentType())
-        .fieldCoordinatorId(ceCreate.getFieldOfficerId())
+        .fieldOfficerId(ceCreate.getFieldOfficerId())
         .fieldCoordinatorId(ceCreate.getCoordinatorId())
         .organisationName(ceCreate.getOrganisationName())
         .addressLine1(ceCreate.getAddressLine1())
@@ -38,6 +39,6 @@ public final class CeCreateBuilder {
         .ceActualResponses(ceCreate.getCeActualResponses())
         .undeliveredAsAddress(ceCreate.getUaa())
         .build();
+    return returnValue;
   }
-
 }

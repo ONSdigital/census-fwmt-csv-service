@@ -19,6 +19,9 @@ public class CeCreate {
   @CsvBindByName(column = "UPRN")
   private String uprn;
 
+  @CsvBindByName(column = "Estab_UPRN")
+  private String estabUprn;
+
   @CsvBindByName(column = "Secure_Establishment")
   private Boolean secureEstablishment;
 
