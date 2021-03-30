@@ -24,9 +24,9 @@ import java.util.List;
 @Component("CE")
 public class CeCreateConverterService implements CSVConverterService {
 
-  public static final String CSV_NON_COMPLIANCE_REQUEST_EXTRACTED = "CSV_NON_COMPLIANCE_REQUEST_EXTRACTED";
+  public static final String CSV_CE_CREATE_REQUEST_EXTRACTED = "CSV_NON_COMPLIANCE_REQUEST_EXTRACTED";
 
-  public static final String CANONICAL_NON_COMPLIANCE_CREATE_SENT = "CANONICAL_NON_COMPLIANCE_CREATE_SENT";
+  public static final String CANONICAL_CE_CREATE_SENT = "CANONICAL_NON_COMPLIANCE_CREATE_SENT";
 
   @Value("${gcpBucket.directory}")
   private String directory;
@@ -69,7 +69,7 @@ public class CeCreateConverterService implements CSVConverterService {
 
   private void processObject(CsvToBean<CeCreate> csvToBean) {
     for (CeCreate ceCreate : csvToBean) {
-      gatewayEventManager.triggerEvent(String.valueOf(ceCreate.getCaseId()), CSV_NON_COMPLIANCE_REQUEST_EXTRACTED);
+      gatewayEventManager.triggerEvent(String.valueOf(ceCreate.getCaseId()), CSV_CE_CREATE_REQUEST_EXTRACTED);
       createAndSendJob(ceCreate);
     }
   }
@@ -77,7 +77,7 @@ public class CeCreateConverterService implements CSVConverterService {
   private void createAndSendJob(CeCreate ceCreate) {
     FwmtActionInstruction fwmtActionInstruction = CeCreateBuilder.buildCeCreate(ceCreate);
     rmFieldRepublishProducer.republish(fwmtActionInstruction);
-    gatewayEventManager.triggerEvent(String.valueOf(fwmtActionInstruction.getCaseId()), CANONICAL_NON_COMPLIANCE_CREATE_SENT,
+    gatewayEventManager.triggerEvent(String.valueOf(fwmtActionInstruction.getCaseId()), CANONICAL_CE_CREATE_SENT,
         "Case reference", fwmtActionInstruction.getCaseRef());
   }
 }
