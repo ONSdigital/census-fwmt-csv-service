@@ -54,7 +54,6 @@ public class CeCreateConverterService implements CSVConverterService {
 
   @Override
   public void convertToCanonical() throws GatewayException {
-    ArrayList<String> errorCases = new ArrayList<>();
     DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
     LocalDateTime now = LocalDateTime.now();
     String timestamp = dateTimeFormatter.format(now);
@@ -80,11 +79,11 @@ public class CeCreateConverterService implements CSVConverterService {
         gatewayEventManager.triggerErrorEvent(this.getClass(), "Case exists in cache", ceCreate.getCaseId(),
             CSV_CE_CREATE_EXISTS_IN_CACHE);
       }
-      if (!errorList.isEmpty()) {
-        gatewayEventManager.triggerErrorEvent(this.getClass(), "Terminating CSV load", ceCreate.getCaseId(),
-            CSV_CE_CREATE_TERMINATING_INGEST, "Cases", errorList.toString());
-        throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, "Found a case within cache");
-      }
+    }
+    if (!errorList.isEmpty()) {
+      gatewayEventManager.triggerErrorEvent(this.getClass(), "Terminating CSV load", "NA",
+          CSV_CE_CREATE_TERMINATING_INGEST, "Cases", errorList.toString());
+      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, "Found a case within cache");
     }
   }
 
