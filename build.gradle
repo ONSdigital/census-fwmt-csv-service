@@ -102,6 +102,7 @@ dependencies {
 	annotationProcessor("org.projectlombok:lombok")
 
 	implementation('com.google.cloud:google-cloud-nio:0.120.0-alpha')
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 
 	compile 'com.opencsv:opencsv:4.5'
 
