@@ -9,8 +9,7 @@ import uk.gov.census.ffa.storage.utils.StorageUtils;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.common.rm.dto.FwmtActionInstruction;
 import uk.gov.ons.census.fwmt.csvservice.dto.CeCreate;
-import uk.gov.ons.census.fwmt.csvservice.dto.GatewayCache;
-import uk.gov.ons.census.fwmt.csvservice.implementation.GatewayCacheService;
+import uk.gov.ons.census.fwmt.csvservice.implementation.DatabaseLookup;
 import uk.gov.ons.census.fwmt.csvservice.message.RmFieldRepublishProducer;
 import uk.gov.ons.census.fwmt.csvservice.service.CSVConverterService;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
@@ -49,7 +48,7 @@ public class CeCreateConverterService implements CSVConverterService {
   private StorageUtils storageUtils;
 
   @Autowired
-  private GatewayCacheService gatewayCacheService;
+  private DatabaseLookup databaseLookup;
 
   private final List<String> errorList = new ArrayList<>();
 
@@ -63,20 +62,20 @@ public class CeCreateConverterService implements CSVConverterService {
     CsvToBean<CeCreate> csvToBean;
     for (URI uri : ceCreateFiles) {
       InputStream inputStream = storageUtils.getFileInputStream(uri);
-      csvToBean = createCsvBean(inputStream);
 
+      csvToBean = createCsvBean(inputStream);
       validateObject(csvToBean);
+
+      csvToBean = createCsvBean(inputStream);
       processObject(csvToBean);
       storageUtils.move(uri, URI.create(directory + "/processed/" + "CE-Create-processed-" + timestamp));
     }
   }
 
-  @Transactional
   private void validateObject(CsvToBean<CeCreate> csvToBean) throws GatewayException {
     errorList.clear();
     for (CeCreate ceCreate : csvToBean) {
-      GatewayCache gatewayCache = gatewayCacheService.getById(ceCreate.getCaseId());
-      if (gatewayCache != null) {
+      if (databaseLookup.checkIfCaseExists(ceCreate.getCaseId()) != null) {
         errorList.add(ceCreate.getCaseId());
         gatewayEventManager.triggerErrorEvent(this.getClass(), "Case exists in cache", ceCreate.getCaseId(),
             CSV_CE_CREATE_EXISTS_IN_CACHE);
