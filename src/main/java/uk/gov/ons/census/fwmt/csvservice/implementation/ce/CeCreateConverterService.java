@@ -59,22 +59,18 @@ public class CeCreateConverterService implements CSVConverterService {
     String timestamp = dateTimeFormatter.format(now);
     List<URI> ceCreateFiles = storageUtils.getFilenamesInFolder(URI.create(directory), "CECREATE");
 
-    CsvToBean<CeCreate> csvToBean;
     for (URI uri : ceCreateFiles) {
       InputStream inputStream = storageUtils.getFileInputStream(uri);
-
-      csvToBean = createCsvBean(inputStream);
-      validateObject(csvToBean);
-
-      csvToBean = createCsvBean(inputStream);
-      processObject(csvToBean);
+      List<CeCreate> ceCreateList = createCsvBean(inputStream);
+      validateObject(ceCreateList);
+      processObject(ceCreateList);
       storageUtils.move(uri, URI.create(directory + "/processed/" + "CE-Create-processed-" + timestamp));
     }
   }
 
-  private void validateObject(CsvToBean<CeCreate> csvToBean) throws GatewayException {
+  private void validateObject(List<CeCreate> ceCreateList) throws GatewayException {
     errorList.clear();
-    for (CeCreate ceCreate : csvToBean) {
+    for (CeCreate ceCreate : ceCreateList) {
       if (databaseLookup.checkIfCaseExists(ceCreate.getCaseId()) != null) {
         errorList.add(ceCreate.getCaseId());
         gatewayEventManager.triggerErrorEvent(this.getClass(), "Case exists in cache", ceCreate.getCaseId(),
@@ -88,18 +84,18 @@ public class CeCreateConverterService implements CSVConverterService {
     }
   }
 
-  private CsvToBean<CeCreate> createCsvBean(InputStream inputStream) {
+  private List<CeCreate> createCsvBean(InputStream inputStream) {
     CsvToBean<CeCreate> csvToBean;
     csvToBean = new CsvToBeanBuilder(new InputStreamReader(inputStream, StandardCharsets.UTF_8))
         .withSeparator('|')
         .withType(CeCreate.class)
         .build();
 
-    return csvToBean;
+    return csvToBean.parse();
   }
 
-  private void processObject(CsvToBean<CeCreate> csvToBean) {
-    for (CeCreate ceCreate : csvToBean) {
+  private void processObject(List<CeCreate> ceCreateList) {
+    for (CeCreate ceCreate : ceCreateList) {
       gatewayEventManager.triggerEvent(String.valueOf(ceCreate.getCaseId()), CSV_CE_CREATE_REQUEST_EXTRACTED);
       createAndSendJob(ceCreate);
     }
