@@ -2,7 +2,7 @@ import com.github.spotbugs.SpotBugsTask
 
 buildscript {
 	ext {
-		springBootVersion = '2.1.6.RELEASE'
+		springBootVersion = '2.2.4.RELEASE'
 	}
 	repositories {
 		mavenCentral()
@@ -10,7 +10,7 @@ buildscript {
 	}
 	dependencies {
 		classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
-		classpath 'org.jfrog.buildinfo:build-info-extractor-gradle:4.7.2'
+        classpath 'org.jfrog.buildinfo:build-info-extractor-gradle:latest.release'
 	}
 }
 
@@ -20,12 +20,13 @@ plugins {
 	id 'idea'
 	id 'maven'
 	id 'maven-publish'
-	id 'org.springframework.boot' version '2.1.0.RELEASE'
-	id 'io.spring.dependency-management' version '1.0.6.RELEASE'
+	id 'org.springframework.boot' version '2.2.4.RELEASE'
+	id 'io.spring.dependency-management' version '1.0.9.RELEASE'
 	id 'jacoco'
 	id 'com.jfrog.artifactory' version '4.8.1'
 	id 'org.ajoberstar.grgit' version '3.0.0'
 	id 'com.github.spotbugs' version '1.6.5'
+
 }
 
 description = 'census-fwmt-csv-service'
@@ -82,6 +83,8 @@ dependencies {
 	compile('uk.gov.ons.census.fwmt:census-fwmt-events:1.0.50-RELEASE')
 	compile("uk.gov.ons.census.ffa:census-ffa-storage-utils:0.0.1-RELEASE")
 
+	runtimeOnly 'org.postgresql:postgresql'
+
 	compile("com.google.guava:guava:27.0.1-jre")
 
 	implementation('org.springframework.boot:spring-boot-starter-amqp')
@@ -102,6 +105,7 @@ dependencies {
 	annotationProcessor("org.projectlombok:lombok")
 
 	implementation('com.google.cloud:google-cloud-nio:0.120.0-alpha')
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 
 	compile 'com.opencsv:opencsv:4.5'
 

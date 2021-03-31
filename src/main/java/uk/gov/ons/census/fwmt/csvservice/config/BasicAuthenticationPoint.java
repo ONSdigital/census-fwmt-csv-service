@@ -12,16 +12,19 @@ import java.io.PrintWriter;
 @Component
 public class BasicAuthenticationPoint extends BasicAuthenticationEntryPoint {
   @Override
-  public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authEx)
-      throws IOException {
+  public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authEx) {
+    try {
     response.addHeader("WWW-Authenticate", "Basic realm=" + getRealmName());
-    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+      response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
     PrintWriter writer = response.getWriter();
     writer.println("HTTP Status 401 - " + authEx.getMessage());
+    } catch (Exception e) {
+      throw new RuntimeException("issue with Basic Authentication", e);
+    }
   }
 
   @Override
-  public void afterPropertiesSet() throws Exception {
+  public void afterPropertiesSet(){
     setRealmName("census-fwmt-csv-service");
     super.afterPropertiesSet();
   }
