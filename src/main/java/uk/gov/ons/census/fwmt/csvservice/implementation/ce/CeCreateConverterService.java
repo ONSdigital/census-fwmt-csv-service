@@ -14,7 +14,6 @@ import uk.gov.ons.census.fwmt.csvservice.message.RmFieldRepublishProducer;
 import uk.gov.ons.census.fwmt.csvservice.service.CSVConverterService;
 import uk.gov.ons.census.fwmt.events.component.GatewayEventManager;
 
-import javax.transaction.Transactional;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URI;
