@@ -13,8 +13,7 @@ public class DatabaseLookup {
   private GatewayCacheService gatewayCacheService;
 
   @Transactional
-  public GatewayCache checkIfCaseExists(String caseId) {
-    GatewayCache gatewayCache = gatewayCacheService.getById(caseId);
-    return gatewayCache;
+  public GatewayCache getCaseFromCache(String caseId) {
+    return gatewayCacheService.getById(caseId);
   }
 }
