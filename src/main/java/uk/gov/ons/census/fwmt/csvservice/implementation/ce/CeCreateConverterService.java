@@ -9,6 +9,7 @@ import uk.gov.census.ffa.storage.utils.StorageUtils;
 import uk.gov.ons.census.fwmt.common.error.GatewayException;
 import uk.gov.ons.census.fwmt.common.rm.dto.FwmtActionInstruction;
 import uk.gov.ons.census.fwmt.csvservice.dto.CeCreate;
+import uk.gov.ons.census.fwmt.csvservice.dto.GatewayCache;
 import uk.gov.ons.census.fwmt.csvservice.implementation.DatabaseLookup;
 import uk.gov.ons.census.fwmt.csvservice.message.RmFieldRepublishProducer;
 import uk.gov.ons.census.fwmt.csvservice.service.CSVConverterService;
@@ -62,24 +63,24 @@ public class CeCreateConverterService implements CSVConverterService {
       InputStream inputStream = storageUtils.getFileInputStream(uri);
       List<CeCreate> ceCreateList = createCsvBean(inputStream);
       validateObject(ceCreateList);
+      if (!errorList.isEmpty()) {
+        gatewayEventManager.triggerErrorEvent(this.getClass(), "Terminating CSV load", "NA",
+            CSV_CE_CREATE_TERMINATING_INGEST, "Cases", errorList.toString());
+        storageUtils.move(uri, URI.create(directory + "/processed/" + "CE-Create-processed-invalid" + timestamp));
+        throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, "Found a case within cache");
+      }
       processObject(ceCreateList);
       storageUtils.move(uri, URI.create(directory + "/processed/" + "CE-Create-processed-" + timestamp));
     }
   }
 
-  private void validateObject(List<CeCreate> ceCreateList) throws GatewayException {
+  private void validateObject(List<CeCreate> ceCreateList) {
     errorList.clear();
     for (CeCreate ceCreate : ceCreateList) {
-      if (databaseLookup.checkIfCaseExists(ceCreate.getCaseId()) != null) {
+      GatewayCache cache = databaseLookup.getCaseFromCache(ceCreate.getCaseId());
+      if (cache == null || cache.existsInFwmt) {
         errorList.add(ceCreate.getCaseId());
-        gatewayEventManager.triggerErrorEvent(this.getClass(), "Case exists in cache", ceCreate.getCaseId(),
-            CSV_CE_CREATE_EXISTS_IN_CACHE);
       }
-    }
-    if (!errorList.isEmpty()) {
-      gatewayEventManager.triggerErrorEvent(this.getClass(), "Terminating CSV load", "NA",
-          CSV_CE_CREATE_TERMINATING_INGEST, "Cases", errorList.toString());
-      throw new GatewayException(GatewayException.Fault.SYSTEM_ERROR, "Found a case within cache");
     }
   }
 
