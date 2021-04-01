@@ -78,7 +78,7 @@ public class CeCreateConverterService implements CSVConverterService {
     errorList.clear();
     for (CeCreate ceCreate : ceCreateList) {
       GatewayCache cache = databaseLookup.getCaseFromCache(ceCreate.getCaseId());
-      if (cache == null || !cache.existsInFwmt) {
+      if (cache == null || cache.existsInFwmt) {
         errorList.add(ceCreate.getCaseId());
       }
     }
