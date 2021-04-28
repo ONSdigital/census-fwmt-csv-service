@@ -80,7 +80,10 @@ dependencies {
 
 	compile 'uk.gov.ons.census.fwmt:census-fwmt-canonical:1.0.17-RELEASE'
 	compile('uk.gov.ons.census.fwmt:census-fwmt-common:1.2.27-RELEASE')
-	compile('uk.gov.ons.census.fwmt:census-fwmt-events:1.0.50-RELEASE')
+	
+	// This events library is specifically for this release. Branch of this release for code changes
+	compile('uk.gov.ons.census.fwmt:census-fwmt-events:2.0.50-RELEASE') 
+	
 	compile("uk.gov.ons.census.ffa:census-ffa-storage-utils:0.0.1-RELEASE")
 
 	runtimeOnly 'org.postgresql:postgresql'
